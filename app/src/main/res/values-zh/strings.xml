@@ -1,0 +1,542 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">家庭记账本</string>
+    <string name="title_activity_main">家庭记账本</string>
+    <string name="package_name">com.chronie.homemoney</string>
+    <string name="custom_url_scheme">com.chronie.homemoney</string>
+    
+    <!-- 设置 -->
+    <string name="settings">设置</string>
+    <string name="language_settings">语言设置</string>
+    <string name="update_avatar_failed">更新头像失败</string>
+    <string name="select_language">选择语言</string>
+    <string name="api_key_set">已设置：%s</string>
+    <string name="developer_tools">开发者工具</string>
+    <string name="theme_settings">主题设置</string>
+    <string name="dynamic_color">动态配色</string>
+    <string name="dynamic_color_description">跟随壁纸颜色变化（Android 12+）</string>
+    <string name="manual_color_selection">手动选择颜色</string>
+    <string name="primary_color">主色调</string>
+    <string name="dynamic_color_enabled">动态配色已开启</string>
+    <string name="dynamic_color_disabled">动态配色已关闭</string>
+    <string name="primary_color_updated">主色调已更新</string>
+    
+    <!-- 通用 -->
+    <string name="back">返回</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+    <string name="save">保存</string>
+    <string name="delete">删除</string>
+    <string name="edit">编辑</string>
+    <string name="loading">加载中…</string>
+    <string name="error">错误</string>
+    <string name="success">成功</string>
+    
+    <!-- 货币 -->
+    <string name="currency_symbol">¥</string>
+    <string name="currency_format" formatted="false">%s%.2f</string>
+    <string name="currency_format_no_decimal" formatted="false">%s%.0f</string>
+    
+    <!-- 欢迎页 -->
+    <string name="welcome_message">欢迎使用家庭记账本</string>
+    <string name="getting_started">开始使用</string>
+    
+    <!-- 开发者选项 -->
+    <string name="developer_options">开发者选项</string>
+    <string name="developer_mode">开发者模式</string>
+    <string name="developer_mode_description">启用后可访问本地数据库等高级功能</string>
+    
+    <!-- 数据库测试 -->
+    <string name="database_test">本地数据库</string>
+    <string name="add_test_data">添加测试数据</string>
+    <string name="clear_data">清空所有数据</string>
+    <string name="database_statistics">数据统计</string>
+    <string name="record_count">记录数：%d</string>
+    <string name="total_amount">总金额</string>
+    <string name="total_amount_database">总金额：¥%.2f</string>
+    <string name="expense_records">支出记录</string>
+    <string name="no_data">暂无数据</string>
+    <string name="synced">已同步</string>
+    <string name="not_synced">未同步</string>
+    
+    <!-- 同步 -->
+    <string name="sync_title">数据同步</string>
+    <string name="sync_status">同步状态</string>
+    <string name="sync_status_idle">空闲</string>
+    <string name="sync_status_syncing">同步中…</string>
+    <string name="sync_select_method">选择同步方式</string>
+    <string name="sync_cloud">云端同步</string>
+    <string name="sync_other_devices">其他设备同步</string>
+    <string name="sync_lan">局域网</string>
+    <string name="sync_bluetooth">蓝牙</string>
+    <string name="sync_nfc">NFC</string>
+    <string name="device_sync_title">%s同步</string>
+    <string name="device_sync_searching">正在搜索%s设备…</string>
+    <string name="device_sync_searching_devices">正在搜索设备…</string>
+    <string name="device_sync_found_devices">已找到%d个设备：</string>
+    <string name="sync_status_success">成功</string>
+    <string name="sync_status_failed">失败</string>
+    <string name="sync_status_conflict">冲突</string>
+    <string name="sync_last_time">最后同步</string>
+    <string name="sync_never">从未同步</string>
+    <string name="sync_pending_count">待同步项</string>
+    <string name="sync_manual_trigger">立即同步</string>
+    <string name="sync_syncing">同步中…</string>
+    <string name="add_success">添加成功</string>
+    <string name="add_failed">添加失败：%s</string>
+    <string name="clear_success">清空成功</string>
+    <string name="clear_failed">清空失败：%s</string>
+    <string name="load_success">数据加载成功</string>
+    <string name="load_failed">加载失败：%s</string>
+    <string name="device_sync_connecting">正在连接到%s…</string>
+    <string name="device_sync_connect_failed">连接失败</string>
+    <string name="device_sync_synchronizing">正在同步数据…</string>
+    <string name="device_sync_success">同步完成</string>
+    <string name="device_sync_failed">同步失败：%s</string>
+    
+    <!-- 删除确认对话框 -->
+    <string name="delete_confirm_title">删除确认</string>
+    <string name="delete_confirm_message">确定要删除这条支出记录吗？</string>
+    <string name="delete_second_confirm_title">确认删除</string>
+    <string name="delete_second_confirm_message">此操作无法撤销，确定要删除吗？</string>
+    
+    <!-- 支出分类 -->
+    <string name="expense_type_daily_goods">日常用品</string>
+    <string name="expense_type_luxury">奢侈品</string>
+    <string name="expense_type_communication">通讯</string>
+    <string name="expense_type_food">食品</string>
+    <string name="expense_type_snacks">零食糖果</string>
+    <string name="expense_type_cold_drinks">冷饮</string>
+    <string name="expense_type_convenience_food">方便食品</string>
+    <string name="expense_type_textiles">纺织品</string>
+    <string name="expense_type_beverages">饮品</string>
+    <string name="expense_type_condiments">调味品</string>
+    <string name="expense_type_transportation">交通出行</string>
+    <string name="expense_type_dining">餐饮</string>
+    <string name="expense_type_medical">医疗</string>
+    <string name="expense_type_fruits">水果</string>
+    <string name="expense_type_other">其他</string>
+    <string name="expense_type_seafood">水产品</string>
+    <string name="expense_type_dairy">乳制品</string>
+    <string name="expense_type_gifts">礼物人情</string>
+    <string name="expense_type_travel">旅行度假</string>
+    <string name="expense_type_government">政务</string>
+    <string name="expense_type_utilities">水电煤气</string>
+    <string name="expense_type_beauty">美容美发</string>
+    <string name="expense_type_bean_products">豆制品</string>
+    <string name="expense_type_cosmetics">个护美妆</string>
+    <string name="expense_type_electronics">电子产品</string>
+    <string name="expense_type_household_appliances">家用电器</string>
+    <string name="expense_type_hardware">五金</string>
+    <string name="expense_type_clothing">服装</string>
+    
+    <!-- 支出列表 -->
+    <string name="expense_list_title">支出</string>
+    <string name="expense_list_empty">暂无支出记录</string>
+    <string name="expense_list_empty_description">添加记录或调整筛选条件</string>
+    <string name="expense_list_reset_filters">重置筛选</string>
+    <string name="expense_list_search_hint">搜索备注…</string>
+    <string name="expense_list_filter_type">分类</string>
+    <string name="expense_list_filter_month">月份</string>
+    <string name="expense_list_filter_amount_range">金额范围</string>
+    <string name="expense_list_filter_min_amount">最小金额</string>
+    <string name="expense_list_filter_max_amount">最大金额</string>
+    <string name="expense_list_all_types">全部分类</string>
+    <string name="expense_list_all_months">全部月份</string>
+    <string name="expense_list_sort">排序</string>
+    <string name="expense_list_sort_date_desc">日期 从新到旧</string>
+    <string name="expense_list_sort_date_asc">日期 从旧到新</string>
+    <string name="expense_list_sort_amount_desc">金额 从高到低</string>
+    <string name="expense_list_sort_amount_asc">金额 从低到高</string>
+    <string name="expense_list_apply_filters">应用筛选</string>
+    <string name="expense_list_clear_filters">清除筛选</string>
+    <string name="expense_list_filter_title">筛选与搜索</string>
+    <string name="expense_list_filter_date_range">日期范围</string>
+    <string name="expense_list_filter_start_date">开始日期</string>
+    <string name="expense_list_filter_end_date">结束日期</string>
+    <string name="expense_list_filter_all_types">全部分类</string>
+    <string name="expense_list_filter_select_types">选择分类</string>
+    <string name="expense_list_filtered_count">筛选结果：%d 条</string>
+    <string name="common_search">搜索</string>
+    <string name="common_filter">筛选</string>
+    
+    <!-- 支出统计 -->
+    <string name="expense_stats_count">记录总数</string>
+    <string name="expense_stats_total">总金额</string>
+    <string name="expense_stats_average">平均值</string>
+    <string name="expense_stats_median">中位数</string>
+    <string name="expense_stats_range">金额区间</string>
+    
+    <!-- 支出表格 -->
+    <string name="expense_type">分类</string>
+    <string name="expense_remark">备注</string>
+    <string name="expense_amount">金额</string>
+    
+    <!-- 通用 -->
+    <string name="common_loading">加载中…</string>
+    <string name="common_error">错误</string>
+    <string name="common_retry">重试</string>
+    <string name="common_refresh">刷新</string>
+    <string name="common_more_functions">更多功能</string>
+    <string name="common_actions">操作</string>
+    
+    <!-- 添加支出 -->
+    <string name="add_expense_title">记一笔</string>
+    <string name="add_expense_type_label">分类 *</string>
+    <string name="add_expense_type_hint">选择分类</string>
+    <string name="add_expense_amount_label">金额 *</string>
+    <string name="add_expense_amount_hint">0.00</string>
+    <string name="add_expense_date_label">日期 *</string>
+    <string name="add_expense_remark_label">备注</string>
+    <string name="add_expense_remark_hint">输入备注…</string>
+    <string name="add_expense_save_success">保存成功</string>
+    <string name="add_expense_save_failed">保存失败：%s</string>
+    <string name="add_expense_validation_type_required">请选择分类</string>
+    <string name="add_expense_validation_amount_required">请输入金额</string>
+    <string name="add_expense_validation_amount_invalid">金额需大于0</string>
+    <string name="add_expense_validation_date_required">请选择日期</string>
+    <string name="edit_expense_title">编辑支出</string>
+    
+    <!-- AI 智能识别 -->
+    <string name="ai_expense_title">智能记账</string>
+    <string name="ai_expense_select_images">选择图片</string>
+    <string name="ai_expense_add_images">添加图片</string>
+    <string name="ai_expense_or_input_text">或输入文字</string>
+    <string name="ai_expense_text_hint">例如：今天买了西红柿12元，黄瓜8元，鸡蛋15元</string>
+    <string name="ai_expense_start_recognition">开始识别</string>
+    <string name="ai_expense_recognizing">识别中…</string>
+    <string name="ai_expense_results">识别结果</string>
+    <string name="ai_expense_save_all">全部保存</string>
+    <string name="ai_expense_saving">保存中…</string>
+    <string name="ai_expense_edit_record">编辑</string>
+    <string name="ai_expense_delete_record">删除</string>
+    <string name="ai_expense_edited">已编辑</string>
+    <string name="ai_expense_no_input">请输入文字或选择图片</string>
+    <string name="ai_expense_no_records">未识别到消费记录</string>
+    <string name="ai_expense_recognition_failed">识别失败：%s</string>
+    <string name="ai_expense_save_success">保存成功</string>
+    <string name="ai_expense_save_failed">保存失败：%s</string>
+    <string name="ai_expense_no_valid_records">无有效记录</string>
+    <string name="ai_expense_select_type">选择分类</string>
+    <string name="ai_expense_amount">金额</string>
+    <string name="ai_expense_remark">备注</string>
+    <string name="search_category">搜索分类…</string>
+    <string name="search_results_count">%d 个结果</string>
+    <string name="no_results_found">未找到匹配项</string>
+    <string name="clear">清除</string>
+    <string name="ai_expense_click_to_add">点击添加图片</string>
+    <string name="ai_expense_records_count">识别结果（%d条）</string>
+    <string name="ai_expense_select_image_source">选择图片</string>
+    <string name="ai_expense_take_photo">拍照</string>
+    <string name="ai_expense_choose_from_gallery">从相册选择</string>
+    
+    <!-- AI 设置 -->
+    <string name="settings_ai_title">AI设置</string>
+    <string name="settings_ai_api_key">硅基流动API密钥</string>
+    <string name="settings_ai_api_key_hint">输入API密钥</string>
+    <string name="settings_ai_api_key_description">用于智能识别功能</string>
+    <string name="settings_ai_get_api_key">没有密钥？获取一个</string>
+    <string name="settings_ai_api_key_saved">API密钥已保存</string>
+    <string name="ai_expense_entry_description">拍照或输入文字快速记账</string>
+    
+    <!-- 预算管理 -->
+    <string name="budget_enable_title">开启预算管理</string>
+    <string name="budget_enable_description">设置月度预算，合理规划支出</string>
+    <string name="budget_enable_button">开启预算</string>
+    <string name="budget_enable_feature">启用预算</string>
+    <string name="budget_monthly_progress">月度预算进度</string>
+    <string name="budget_settings">预算设置</string>
+    <string name="budget_settings_title">预算设置</string>
+    <string name="budget_monthly_limit">月度预算</string>
+    <string name="budget_warning_threshold">预警比例 (%)</string>
+    <string name="budget_warning_threshold_hint">达到此比例时预警（0-100）</string>
+    <string name="budget_remaining">剩余预算</string>
+    <string name="budget_daily_average">日均支出</string>
+    <string name="budget_recommended_daily">建议日均</string>
+    <string name="budget_expand">展开</string>
+    <string name="budget_collapse">收起</string>
+    <string name="budget_alert_normal_title">预算正常</string>
+    <string name="budget_alert_normal_message">剩余 %1$s，可用额度 %2$.0f%%</string>
+    <string name="budget_alert_warning_title">预算预警</string>
+    <string name="budget_alert_warning_message">剩余 %1$s（%2$.0f%%），请注意控制支出</string>
+    <string name="common_save">保存</string>
+    <string name="common_cancel">取消</string>
+    <string name="budget_alert_over_title">超出预算</string>
+    <string name="budget_alert_over_message">已超支 %1$s，请合理规划</string>
+    <string name="budget_error_invalid_limit">请输入有效的预算金额</string>
+    <string name="budget_error_invalid_threshold">预警比例需在0-100之间</string>
+    
+    <!-- 图表 -->
+    <string name="charts_title">统计分析</string>
+    <string name="statistics_summary">统计概览</string>
+    <string name="count">记录数</string>
+    <string name="average_amount">平均金额</string>
+    <string name="median_amount">金额中位数</string>
+    <string name="trend_chart">趋势图</string>
+    <string name="category_breakdown">分类占比</string>
+    <string name="weekday_analysis">星期分布</string>
+    <string name="records">条</string>
+    <string name="expense_details">支出详情</string>
+    <string name="percentage_of_total">占总比</string>
+    <string name="select_time_range">选择时间范围</string>
+    <string name="this_week">本周</string>
+    <string name="this_month">本月</string>
+    <string name="last_month">上月</string>
+    <string name="this_quarter">本季度</string>
+    <string name="this_year">今年</string>
+    <string name="custom_range">自定义</string>
+    <string name="close">关闭</string>
+    <string name="retry">重试</string>
+    
+    <!-- 星期 -->
+    <string name="sunday">星期日</string>
+    <string name="monday">星期一</string>
+    <string name="tuesday">星期二</string>
+    <string name="wednesday">星期三</string>
+    <string name="thursday">星期四</string>
+    <string name="friday">星期五</string>
+    <string name="saturday">星期六</string>
+    <string name="sunday_short">日</string>
+    <string name="monday_short">一</string>
+    <string name="tuesday_short">二</string>
+    <string name="wednesday_short">三</string>
+    <string name="thursday_short">四</string>
+    <string name="friday_short">五</string>
+    <string name="saturday_short">六</string>
+
+    <!-- 数据导入导出 -->
+    <string name="data_import_export">导入导出</string>
+    <string name="data_import_export_description">导出或导入Excel格式的账单数据</string>
+    <string name="export_data">导出数据</string>
+    <string name="import_data">导入数据</string>
+    <string name="export_all_data">导出全部数据</string>
+    <string name="export_date_range">导出日期范围</string>
+    <string name="export_select_range">选择日期范围</string>
+    <string name="export_start_date">开始日期</string>
+    <string name="export_end_date">结束日期</string>
+    <string name="export_in_progress">导出中…</string>
+    <string name="export_success">导出成功：%s</string>
+    <string name="export_failed">导出失败：%s</string>
+    <string name="import_in_progress">导入中…</string>
+    <string name="import_success">导入成功：%d 条记录</string>
+    <string name="import_failed">导入失败：%s</string>
+    <string name="import_select_file">选择Excel文件</string>
+    <string name="import_validation_error">数据错误：%s</string>
+    <string name="import_confirm_title">确认导入</string>
+    <string name="import_confirm_message">发现 %d 条记录，是否导入？</string>
+    <string name="export_filename_prefix">支出记录</string>
+    <string name="excel_header_date">日期</string>
+    <string name="excel_header_type">分类</string>
+    <string name="excel_header_amount">金额</string>
+    <string name="excel_header_remark">备注</string>
+    <string name="permission_storage_required">需要存储权限</string>
+    <string name="no_records_to_export">暂无记录可导出</string>
+
+    <!-- 意见反馈 -->
+    <string name="feedback_title">意见反馈</string>
+    <string name="feedback_description">分享您的建议，帮助我们改进</string>
+
+    <!-- 用户认证 -->
+    <string name="auth_login_title">登录</string>
+    <string name="auth_username_label">用户名</string>
+    <string name="auth_username_hint">请输入用户名</string>
+    <string name="auth_login_button">登录</string>
+    <string name="auth_logout_button">退出登录</string>
+    <string name="auth_current_user">当前用户</string>
+    <string name="auth_not_logged_in">未登录</string>
+    <string name="auth_login_required">请先登录</string>
+    <string name="auth_username_empty">用户名不能为空</string>
+    <string name="auth_login_success">登录成功</string>
+    <string name="auth_login_failed">登录失败</string>
+    <string name="auth_logout_success">已退出登录</string>
+    <string name="auth_logging_in">登录中…</string>
+    <string name="auth_welcome_back">欢迎回来，%s！</string>
+    <string name="auth_login_hint">输入用户名登录或注册</string>
+    <string name="auth_account_info">账户信息</string>
+    <string name="auth_logout_confirm_title">退出登录</string>
+    <string name="auth_logout_confirm_message">确定要退出登录吗？</string>
+    <string name="crop_image_failed">图片处理失败：%s</string>
+    <string name="membership_title">账号</string>
+    <string name="auth_logged_in">已登录</string>
+    <string name="auth_skip_login">跳过</string>
+
+    <!-- 健康检查 -->
+    <string name="health_check_channel_name">服务器连接状态</string>
+    <string name="health_check_channel_description">监控服务器连接</string>
+    <string name="health_check_running">正在监控服务器</string>
+    <string name="health_check_monitoring">检查服务器连接…</string>
+    <string name="server_connection_error">连接失败</string>
+    <string name="server_connection_error_message">无法连接服务器，请检查网络</string>
+    <string name="server_connection_restored">连接已恢复</string>
+
+    <!-- 颜色选择器 -->
+    <string name="color_picker_title">选择主题色</string>
+    <string name="color_picker_search_hint">搜索颜色…</string>
+    <string name="current_theme_color">当前主题色</string>
+    <string name="color_group_default">默认</string>
+    <string name="color_group_red">红色系</string>
+    <string name="color_group_orange">橙色系</string>
+    <string name="color_group_yellow">黄色系</string>
+    <string name="color_group_yellow_green">黄绿色系</string>
+    <string name="color_group_green">绿色系</string>
+    <string name="color_group_cyan">青色系</string>
+    <string name="color_group_blue">蓝色系</string>
+    <string name="color_group_indigo">靛蓝色系</string>
+    <string name="color_group_purple">紫色系</string>
+    <string name="color_group_pink">粉色系</string>
+    <string name="color_group_brown">棕色系</string>
+    <string name="color_group_gray">灰色系</string>
+    <string name="color_group_special">特殊色系</string>
+
+    <!-- 颜色名称 - 红色 -->
+    <string name="color_red_light">浅红色</string>
+    <string name="color_red_bright">亮红色</string>
+    <string name="color_red_pure">纯红色</string>
+    <string name="color_red_standard">标准红</string>
+    <string name="color_red_deep">深红色</string>
+    <string name="color_red_dark">暗红色</string>
+
+    <!-- 颜色名称 - 橙色 -->
+    <string name="color_orange_light">浅橙色</string>
+    <string name="color_orange_bright">亮橙色</string>
+    <string name="color_orange_pure">纯橙色</string>
+    <string name="color_orange_standard">标准橙</string>
+    <string name="color_orange_deep">深橙色</string>
+    <string name="color_orange_dark">暗橙色</string>
+
+    <!-- 颜色名称 - 黄色 -->
+    <string name="color_yellow_light">浅黄色</string>
+    <string name="color_yellow_bright">亮黄色</string>
+    <string name="color_yellow_pure">纯黄色</string>
+    <string name="color_yellow_amber">琥珀黄</string>
+    <string name="color_yellow_gold">金色</string>
+    <string name="color_yellow_standard">标准黄</string>
+
+    <!-- 颜色名称 - 黄绿色 -->
+    <string name="color_yellow_green_light">浅黄绿</string>
+    <string name="color_yellow_green_bright">亮黄绿</string>
+    <string name="color_yellow_green_pure">纯黄绿</string>
+    <string name="color_yellow_green_standard">标准黄绿</string>
+    <string name="color_yellow_green_deep">深黄绿</string>
+
+    <!-- 颜色名称 - 绿色 -->
+    <string name="color_green_light">浅绿色</string>
+    <string name="color_green_bright">亮绿色</string>
+    <string name="color_green_pure">纯绿色</string>
+    <string name="color_green_standard">标准绿</string>
+    <string name="color_green_deep">深绿色</string>
+    <string name="color_green_dark">暗绿色</string>
+    <string name="color_green_forest">森林绿</string>
+
+    <!-- 颜色名称 - 青色 -->
+    <string name="color_cyan_light">浅青色</string>
+    <string name="color_cyan_bright">亮青色</string>
+    <string name="color_cyan_pure">纯青色</string>
+    <string name="color_cyan_standard">标准青</string>
+    <string name="color_cyan_deep">深青色</string>
+    <string name="color_cyan_dark">暗青色</string>
+
+    <!-- 颜色名称 - 蓝色 -->
+    <string name="color_blue_light">浅蓝色</string>
+    <string name="color_blue_bright">亮蓝色</string>
+    <string name="color_blue_pure">纯蓝色</string>
+    <string name="color_blue_sky">天蓝色</string>
+    <string name="color_blue_standard">标准蓝</string>
+    <string name="color_blue_deep">深蓝色</string>
+    <string name="color_blue_dark">暗蓝色</string>
+
+    <!-- 颜色名称 - 靛蓝色 -->
+    <string name="color_indigo_light">浅靛蓝</string>
+    <string name="color_indigo_bright">亮靛蓝</string>
+    <string name="color_indigo_pure">纯靛蓝</string>
+    <string name="color_indigo_standard">标准靛蓝</string>
+    <string name="color_indigo_deep">深靛蓝</string>
+    <string name="color_indigo_dark">暗靛蓝</string>
+
+    <!-- 颜色名称 - 紫色 -->
+    <string name="color_purple_light">浅紫色</string>
+    <string name="color_purple_bright">亮紫色</string>
+    <string name="color_purple_pure">纯紫色</string>
+    <string name="color_purple_standard">标准紫</string>
+    <string name="color_purple_deep">深紫色</string>
+    <string name="color_purple_dark">暗紫色</string>
+
+    <!-- 颜色名称 - 粉色 -->
+    <string name="color_pink_light">浅粉色</string>
+    <string name="color_pink_bright">亮粉色</string>
+    <string name="color_pink_pure">纯粉色</string>
+    <string name="color_pink_standard">标准粉</string>
+    <string name="color_pink_deep">深粉色</string>
+
+    <!-- 颜色名称 - 棕色 -->
+    <string name="color_brown_light">浅棕色</string>
+    <string name="color_brown_bright">亮棕色</string>
+    <string name="color_brown_pure">纯棕色</string>
+    <string name="color_brown_standard">标准棕</string>
+    <string name="color_brown_deep">深棕色</string>
+    <string name="color_brown_dark">暗棕色</string>
+
+    <!-- 颜色名称 - 灰色 -->
+    <string name="color_gray_very_light">极浅灰</string>
+    <string name="color_gray_light">浅灰色</string>
+    <string name="color_gray_bright">亮灰色</string>
+    <string name="color_gray_standard_light">标准浅灰</string>
+    <string name="color_gray_medium">中灰色</string>
+    <string name="color_gray_standard">灰色</string>
+    <string name="color_gray_deep">深灰色</string>
+    <string name="color_gray_dark">暗灰色</string>
+
+    <!-- 颜色名称 - 特殊色 -->
+    <string name="color_special_coral_light">浅珊瑚</string>
+    <string name="color_special_coral">珊瑚红</string>
+    <string name="color_special_coral_bright">亮珊瑚</string>
+    <string name="color_special_mint_light">浅薄荷</string>
+    <string name="color_special_mint">薄荷绿</string>
+    <string name="color_special_mint_deep">深薄荷</string>
+    <string name="color_special_lavender_light">浅薰衣草</string>
+    <string name="color_special_lavender">薰衣草紫</string>
+    <string name="color_special_lavender_deep">深薰衣草</string>
+    <string name="color_special_turquoise">绿松石</string>
+    <string name="color_special_sapphire">蓝宝石</string>
+    <string name="color_special_malachite">孔雀石</string>
+    <string name="color_special_neon_green">霓虹绿</string>
+    <string name="color_special_neon_cyan">霓虹青</string>
+    <string name="color_special_neon_blue">霓虹蓝</string>
+    <string name="color_special_neon_pink">霓虹粉</string>
+    <string name="color_special_neon_orange">霓虹橙</string>
+    
+    <!-- 日期格式化 -->
+    <string name="date_today">今天</string>
+    <string name="date_yesterday">昨天</string>
+    <string name="date_days_ago">%d天前</string>
+    
+    <!-- 局域网同步 -->
+    <string name="lan_sync_title">局域网同步</string>
+    <string name="sync_options">同步选项</string>
+    <string name="search_nearby_devices">搜索附近设备</string>
+    <string name="search_nearby_devices_desc">发现同一WiFi网络下的设备</string>
+    <string name="wait_for_connection">等待连接</string>
+    <string name="wait_for_connection_desc">其他设备可以发现此设备</string>
+    <string name="this_device">本机设备</string>
+    <string name="lan_sync_ready">准备就绪，可与同一网络下的其他设备同步</string>
+    <string name="sync_info_title">局域网同步说明</string>
+    <string name="sync_info_content">1. 将所有设备连接到同一WiFi网络\n2. 搜索附近设备\n3. 选择要同步的设备\n4. 数据将在设备间同步</string>
+    <string name="edit_device_name">编辑设备名称</string>
+    <string name="device_name">设备名称</string>
+    <string name="searching_devices">正在搜索设备</string>
+    <string name="make_sure_same_wifi">请确保所有设备连接到同一WiFi网络</string>
+    <string name="searching">正在搜索…</string>
+    <string name="no_devices_found">未找到设备</string>
+    <string name="device_name_updated">设备名称已更新</string>
+    <string name="sync_in_progress">正在同步...</string>
+    <string name="sync_request_title">同步请求</string>
+    <string name="sync_request_message">是否要与该设备同步数据？</string>
+    <string name="accept">接受</string>
+    <string name="reject">拒绝</string>
+    <string name="incoming_sync_request_title">收到同步请求</string>
+    <string name="incoming_sync_request_message">想要与您的设备同步数据</string>
+    
+    <!-- 开源许可证 -->
+    <string name="open_source_licenses">开源许可证</string>
+    <string name="open_source_licenses_description">查看第三方组件许可证</string>
+</resources>

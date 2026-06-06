@@ -1,0 +1,543 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Home Finance</string>
+    <string name="title_activity_main">Home Finance</string>
+    <string name="package_name">com.chronie.homemoney</string>
+    <string name="custom_url_scheme">com.chronie.homemoney</string>
+    
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="language_settings">Language</string>
+    <string name="update_avatar_failed">Failed to update avatar</string>
+    <string name="select_language">Select Language</string>
+    <string name="api_key_set">Set: %s...</string>
+    <string name="developer_tools">Developer Tools</string>
+    <string name="theme_settings">Theme Settings</string>
+    <string name="dynamic_color">Dynamic Color</string>
+    <string name="dynamic_color_description">Use colors from your wallpaper (Android 12+)</string>
+    <string name="manual_color_selection">Manual Color Selection</string>
+    <string name="primary_color">Primary Color</string>
+    <string name="dynamic_color_enabled">Dynamic color enabled</string>
+    <string name="dynamic_color_disabled">Dynamic color disabled</string>
+    <string name="primary_color_updated">Primary color updated</string>
+    
+    <!-- Common -->
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">OK</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="loading">Loading…</string>
+    <string name="error">Error</string>
+    <string name="success">Success</string>
+    
+    <!-- Currency -->
+    <string name="currency_symbol">$</string>
+    <string name="currency_format" formatted="false">%s%.2f</string>
+    <string name="currency_format_no_decimal" formatted="false">%s%.0f</string>
+    
+    <!-- Welcome -->
+    <string name="welcome_message">Welcome to Home Finance</string>
+    <string name="getting_started">Get Started</string>
+    
+    <!-- Developer Options -->
+    <string name="developer_options">Developer Options</string>
+    <string name="developer_mode">Developer Mode</string>
+    <string name="developer_mode_description">Enable local database development features</string>
+    
+    <!-- Database Test -->
+    <string name="database_test">Local Database</string>
+    <string name="add_test_data">Add one Local Test Data</string>
+    <string name="clear_data">Clear All Local Data</string>
+    <string name="database_statistics">Local Database Stats</string>
+    <string name="record_count">Records: %d</string>
+    <string name="total_amount">Total</string>
+    <string name="total_amount_database">Total: $%.2f</string>
+    <string name="expense_records">Expenses</string>
+    <string name="no_data">No data</string>
+    <string name="synced">Synced</string>
+    <string name="not_synced">Not Synced</string>
+    
+    <!-- Sync -->
+    <string name="sync_title">Sync</string>
+    <string name="sync_status">Sync Status</string>
+    <string name="sync_status_idle">Ready</string>
+    <string name="sync_status_syncing">Syncing…</string>
+    <string name="sync_select_method">Select Sync Method</string>
+    <string name="sync_cloud">Cloud Sync</string>
+    <string name="sync_other_devices">Other Devices Sync</string>
+    <string name="sync_lan">LAN Sync</string>
+    <string name="sync_bluetooth">Bluetooth Sync</string>
+    <string name="sync_nfc">NFC Sync</string>
+    <string name="sync_status_success">Success</string>
+    <string name="sync_status_failed">Failed</string>
+    <string name="sync_status_conflict">Conflict</string>
+    <string name="sync_last_time">Last Sync</string>
+    <string name="sync_never">Never</string>
+    <string name="sync_pending_count">Pending</string>
+    <string name="sync_manual_trigger">Sync Now</string>
+    <string name="sync_syncing">Syncing…</string>
+    <string name="add_success">Added</string>
+    <string name="add_failed">Add failed: %s</string>
+    <string name="clear_success">Cleared</string>
+    <string name="clear_failed">Clear failed: %s</string>
+    <string name="load_success">Loaded</string>
+    <string name="load_failed">Load failed: %s</string>
+    <string name="device_sync_title">%s Device Sync</string>
+    <string name="device_sync_searching">Searching for %s devices...</string>
+    <string name="device_sync_searching_devices">Searching for devices...</string>
+    <string name="device_sync_found_devices">Found %d devices:</string>
+    <string name="device_sync_connecting">Connecting to %s...</string>
+    <string name="device_sync_connect_failed">Connection failed</string>
+    <string name="device_sync_synchronizing">Synchronizing...</string>
+    <string name="device_sync_success">Synchronization completed successfully</string>
+    <string name="device_sync_failed">Synchronization failed: %s</string>
+    
+    <!-- Delete Confirmation Dialog -->
+    <string name="delete_confirm_title">Delete Confirmation</string>
+    <string name="delete_confirm_message">Are you sure you want to delete this expense record?</string>
+    <string name="delete_second_confirm_title">Confirm Deletion</string>
+    <string name="delete_second_confirm_message">This action cannot be undone. Are you sure you want to delete?</string>
+    
+    
+    <!-- Expense Types -->
+    <string name="expense_type_daily_goods">Daily Goods</string>
+    <string name="expense_type_luxury">Luxury</string>
+    <string name="expense_type_communication">Communication</string>
+    <string name="expense_type_food">Food</string>
+    <string name="expense_type_snacks">Snacks</string>
+    <string name="expense_type_cold_drinks">Beverages</string>
+    <string name="expense_type_convenience_food">Convenience Food</string>
+    <string name="expense_type_textiles">Clothing</string>
+    <string name="expense_type_beverages">Drinks</string>
+    <string name="expense_type_condiments">Condiments</string>
+    <string name="expense_type_transportation">Transportation</string>
+    <string name="expense_type_dining">Dining Out</string>
+    <string name="expense_type_medical">Healthcare</string>
+    <string name="expense_type_fruits">Fruits</string>
+    <string name="expense_type_other">Other</string>
+    <string name="expense_type_seafood">Seafood</string>
+    <string name="expense_type_dairy">Dairy</string>
+    <string name="expense_type_gifts">Gifts</string>
+    <string name="expense_type_travel">Travel</string>
+    <string name="expense_type_government">Government Fees</string>
+    <string name="expense_type_utilities">Utilities</string>
+    <string name="expense_type_beauty">Beauty Salon</string>
+    <string name="expense_type_bean_products">Bean Products</string>
+    <string name="expense_type_cosmetics">Cosmetics</string>
+    <string name="expense_type_electronics">Electronics</string>
+    <string name="expense_type_household_appliances">Home Appliances</string>
+    <string name="expense_type_hardware">Hardware</string>
+    <string name="expense_type_clothing">Clothing &amp; Accessories</string>
+    
+    <!-- Expense List -->
+    <string name="expense_list_title">Expenses</string>
+    <string name="expense_list_empty">No expenses</string>
+    <string name="expense_list_empty_description">Add expenses or adjust filters</string>
+    <string name="expense_list_reset_filters">Reset</string>
+    <string name="expense_list_search_hint">Search notes…</string>
+    <string name="expense_list_filter_type">Category</string>
+    <string name="expense_list_filter_month">Month</string>
+    <string name="expense_list_filter_amount_range">Amount Range</string>
+    <string name="expense_list_filter_min_amount">Min</string>
+    <string name="expense_list_filter_max_amount">Max</string>
+    <string name="expense_list_all_types">All Categories</string>
+    <string name="expense_list_all_months">All Months</string>
+    <string name="expense_list_sort">Sort By</string>
+    <string name="expense_list_sort_date_desc">Date (Newest)</string>
+    <string name="expense_list_sort_date_asc">Date (Oldest)</string>
+    <string name="expense_list_sort_amount_desc">Amount (High to Low)</string>
+    <string name="expense_list_sort_amount_asc">Amount (Low to High)</string>
+    <string name="expense_list_apply_filters">Apply</string>
+    <string name="expense_list_clear_filters">Clear</string>
+    <string name="expense_list_filter_title">Filters</string>
+    <string name="expense_list_filter_date_range">Date Range</string>
+    <string name="expense_list_filter_start_date">From</string>
+    <string name="expense_list_filter_end_date">To</string>
+    <string name="expense_list_filter_all_types">All Categories</string>
+    <string name="expense_list_filter_select_types">Select Categories</string>
+    <string name="expense_list_filtered_count">%d results</string>
+    <string name="common_search">Search</string>
+    <string name="common_filter">Filter</string>
+    
+    <!-- Expense Statistics -->
+    <string name="expense_stats_count">Total Records</string>
+    <string name="expense_stats_total">Total Amount</string>
+    <string name="expense_stats_average">Average</string>
+    <string name="expense_stats_median">Median</string>
+    <string name="expense_stats_range">Range</string>
+    
+    <!-- Expense Table -->
+    <string name="expense_type">Category</string>
+    <string name="expense_remark">Notes</string>
+    <string name="expense_amount">Amount</string>
+    
+    <!-- Common -->
+    <string name="common_loading">Loading…</string>
+    <string name="common_error">Error</string>
+    <string name="common_retry">Retry</string>
+    <string name="common_refresh">Refresh</string>
+    <string name="common_more_functions">More</string>
+    <string name="common_actions">Actions</string>
+    
+    <!-- Add Expense -->
+    <string name="add_expense_title">Add Expense</string>
+    <string name="add_expense_type_label">Category *</string>
+    <string name="add_expense_type_hint">Select category</string>
+    <string name="add_expense_amount_label">Amount *</string>
+    <string name="add_expense_amount_hint">0.00</string>
+    <string name="add_expense_date_label">Date *</string>
+    <string name="add_expense_remark_label">Notes</string>
+    <string name="add_expense_remark_hint">Add notes…</string>
+    <string name="add_expense_save_success">Expense added</string>
+    <string name="add_expense_save_failed">Failed to add: %s</string>
+    <string name="add_expense_validation_type_required">Select a category</string>
+    <string name="add_expense_validation_amount_required">Enter amount</string>
+    <string name="add_expense_validation_amount_invalid">Amount must be greater than 0</string>
+    <string name="add_expense_validation_date_required">Select date</string>
+    <string name="edit_expense_title">Edit Expense</string>
+
+    <!-- AI Expense Recognition -->
+    <string name="ai_expense_title">Smart Scan</string>
+    <string name="ai_expense_select_images">Select Photos</string>
+    <string name="ai_expense_add_images">Add Photos</string>
+    <string name="ai_expense_or_input_text">Or Enter Text</string>
+    <string name="ai_expense_text_hint">Example: groceries $45, gas $35 today</string>
+    <string name="ai_expense_start_recognition">Scan Receipt</string>
+    <string name="ai_expense_recognizing">Scanning…</string>
+    <string name="ai_expense_results">Scan Results</string>
+    <string name="ai_expense_save_all">Save All</string>
+    <string name="ai_expense_saving">Saving…</string>
+    <string name="ai_expense_edit_record">Edit</string>
+    <string name="ai_expense_delete_record">Delete</string>
+    <string name="ai_expense_edited">Edited</string>
+    <string name="ai_expense_no_input">Enter text or select photos</string>
+    <string name="ai_expense_no_records">No expenses found</string>
+    <string name="ai_expense_recognition_failed">Scan failed: %s</string>
+    <string name="ai_expense_save_success">Saved</string>
+    <string name="ai_expense_save_failed">Save failed: %s</string>
+    <string name="ai_expense_no_valid_records">No valid expenses to save</string>
+    <string name="ai_expense_select_type">Category</string>
+    <string name="ai_expense_amount">Amount</string>
+    <string name="ai_expense_remark">Notes</string>
+    <string name="search_category">Search category…</string>
+    <string name="search_results_count">%d results</string>
+    <string name="no_results_found">No matching results</string>
+    <string name="clear">Clear</string>
+    <string name="ai_expense_click_to_add">Tap to add photos</string>
+    <string name="ai_expense_records_count">Results (%d)</string>
+    <string name="ai_expense_select_image_source">Select Image Source</string>
+    <string name="ai_expense_take_photo">Take Photo</string>
+    <string name="ai_expense_choose_from_gallery">Choose from Gallery</string>
+    
+    <!-- AI Settings -->
+    <string name="settings_ai_title">AI Settings</string>
+    <string name="settings_ai_api_key">API Key</string>
+    <string name="settings_ai_api_key_hint">Enter API Key</string>
+    <string name="settings_ai_api_key_description">For smart receipt scanning</string>
+    <string name="settings_ai_get_api_key">Haven\'t got an API key? Get one here</string>
+    <string name="settings_ai_api_key_saved">API Key saved</string>
+    <string name="ai_expense_entry_description">Scan receipts or enter text to add expenses</string>
+
+    <!-- Budget Management -->
+    <string name="budget_enable_title">Budget</string>
+    <string name="budget_enable_description">Set monthly budget to track spending</string>
+    <string name="budget_enable_button">Enable Budget</string>
+    <string name="budget_enable_feature">Enable Budget</string>
+    <string name="budget_monthly_progress">Monthly Budget</string>
+    <string name="budget_settings">Budget Settings</string>
+    <string name="budget_settings_title">Budget Settings</string>
+    <string name="budget_monthly_limit">Monthly Budget</string>
+    <string name="budget_warning_threshold">Alert Level (%)</string>
+    <string name="budget_warning_threshold_hint">Show alert at this percentage (0-100)</string>
+    <string name="budget_remaining">Remaining</string>
+    <string name="budget_daily_average">Daily Average</string>
+    <string name="budget_recommended_daily">Daily Budget</string>
+    <string name="budget_expand">Show More</string>
+    <string name="budget_collapse">Show Less</string>
+    <string name="budget_alert_normal_title">On Track</string>
+    <string name="budget_alert_normal_message">%1$s remaining (%2$.0f%%)</string>
+    <string name="budget_alert_warning_title">Approaching Limit</string>
+    <string name="budget_alert_warning_message">%1$s left (%2$.0f%%), watch spending</string>
+    <string name="budget_alert_over_title">Over Budget</string>
+    <string name="budget_alert_over_message">Over by %1$s, adjust spending</string>
+    <string name="common_save">Save</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="budget_error_invalid_limit">Enter valid amount</string>
+    <string name="budget_error_invalid_threshold">Enter 0-100</string>
+
+    <!-- Charts -->
+    <string name="charts_title">Analytics</string>
+    <string name="statistics_summary">Summary</string>
+    <string name="count">Count</string>
+    <string name="average_amount">Average</string>
+    <string name="median_amount">Median</string>
+    <string name="trend_chart">Trends</string>
+    <string name="category_breakdown">By Category</string>
+    <string name="weekday_analysis">Weekday Insights</string>
+    <string name="records">records</string>
+    <string name="expense_details">Expense Details</string>
+    <string name="percentage_of_total">Percentage of Total</string>
+    <string name="select_time_range">Time Period</string>
+    <string name="this_week">This Week</string>
+    <string name="this_month">This Month</string>
+    <string name="last_month">Last Month</string>
+    <string name="this_quarter">This Quarter</string>
+    <string name="this_year">This Year</string>
+    <string name="custom_range">Custom</string>
+    <string name="close">Close</string>
+    <string name="retry">Retry</string>
+    
+    <!-- Weekdays -->
+    <string name="sunday">Sunday</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday_short">Sun</string>
+    <string name="monday_short">Mon</string>
+    <string name="tuesday_short">Tue</string>
+    <string name="wednesday_short">Wed</string>
+    <string name="thursday_short">Thu</string>
+    <string name="friday_short">Fri</string>
+    <string name="saturday_short">Sat</string>
+
+    <!-- Data Import/Export -->
+    <string name="data_import_export">Import &amp; Export</string>
+    <string name="data_import_export_description">Export or import data as Excel files</string>
+    <string name="export_data">Export</string>
+    <string name="import_data">Import</string>
+    <string name="export_all_data">Export All</string>
+    <string name="export_date_range">Date Range</string>
+    <string name="export_select_range">Select Dates</string>
+    <string name="export_start_date">Start Date</string>
+    <string name="export_end_date">End Date</string>
+    <string name="export_in_progress">Exporting…</string>
+    <string name="export_success">Exported: %s</string>
+    <string name="export_failed">Export failed: %s</string>
+    <string name="import_in_progress">Importing…</string>
+    <string name="import_success">Imported %d records</string>
+    <string name="import_failed">Import failed: %s</string>
+    <string name="import_select_file">Select File</string>
+    <string name="import_validation_error">Data error: %s</string>
+    <string name="import_confirm_title">Import</string>
+    <string name="import_confirm_message">Import %d records?</string>
+    <string name="export_filename_prefix">expenses</string>
+    <string name="excel_header_date">Date</string>
+    <string name="excel_header_type">Category</string>
+    <string name="excel_header_amount">Amount</string>
+    <string name="excel_header_remark">Notes</string>
+    <string name="permission_storage_required">Storage access required</string>
+    <string name="no_records_to_export">No records to export</string>
+
+    <!-- Feedback -->
+    <string name="feedback_title">Feedback</string>
+    <string name="feedback_description">Help us improve with your suggestions</string>
+
+    <!-- Authentication -->
+    <string name="auth_login_title">Login</string>
+    <string name="auth_username_label">Username</string>
+    <string name="auth_username_hint">Enter username</string>
+    <string name="auth_login_button">Login</string>
+    <string name="auth_logout_button">Logout</string>
+    <string name="auth_current_user">Current User</string>
+    <string name="auth_not_logged_in">Not logged in</string>
+    <string name="auth_login_required">Please login first</string>
+    <string name="auth_username_empty">Username cannot be empty</string>
+    <string name="auth_login_success">Login successful</string>
+    <string name="auth_login_failed">Login failed</string>
+    <string name="auth_logout_success">Logged out</string>
+    <string name="auth_logging_in">Logging in…</string>
+    <string name="auth_welcome_back">Welcome back, %s!</string>
+    <string name="auth_login_hint">Enter username to login or register</string>
+    <string name="auth_account_info">Account</string>
+    <string name="auth_logout_confirm_title">Logout</string>
+    <string name="auth_logout_confirm_message">Are you sure you want to logout?</string>
+    <string name="crop_image_failed">Failed to process cropped image: %s</string>
+    <string name="membership_title">Account</string>
+    <string name="auth_logged_in">Logged in</string>
+    <string name="auth_skip_login">Skip</string>
+
+    <!-- Health Check -->
+    <string name="health_check_channel_name">Server Connection Monitor</string>
+    <string name="health_check_channel_description">Monitors server connection status</string>
+    <string name="health_check_running">Monitoring Server</string>
+    <string name="health_check_monitoring">Checking server connection…</string>
+    <string name="server_connection_error">Server Connection Lost</string>
+    <string name="server_connection_error_message">Unable to connect to server. Check network connection</string>
+    <string name="server_connection_restored">Server connection restored</string>
+
+    <!-- Color Picker -->
+    <string name="color_picker_title">Select Theme Color</string>
+    <string name="color_picker_search_hint">Search color names...</string>
+    <string name="current_theme_color">Current Theme Color</string>
+    <string name="color_group_default">Default</string>
+    <string name="color_group_red">Red</string>
+    <string name="color_group_orange">Orange</string>
+    <string name="color_group_yellow">Yellow</string>
+    <string name="color_group_yellow_green">Yellow Green</string>
+    <string name="color_group_green">Green</string>
+    <string name="color_group_cyan">Cyan</string>
+    <string name="color_group_blue">Blue</string>
+    <string name="color_group_indigo">Indigo</string>
+    <string name="color_group_purple">Purple</string>
+    <string name="color_group_pink">Pink</string>
+    <string name="color_group_brown">Brown</string>
+    <string name="color_group_gray">Gray</string>
+    <string name="color_group_special">Special</string>
+
+    <!-- Color Names - Red -->
+    <string name="color_red_light">Light Red</string>
+    <string name="color_red_bright">Bright Red</string>
+    <string name="color_red_pure">Pure Red</string>
+    <string name="color_red_standard">Standard Red</string>
+    <string name="color_red_deep">Deep Red</string>
+    <string name="color_red_dark">Dark Red</string>
+
+    <!-- Color Names - Orange -->
+    <string name="color_orange_light">Light Orange</string>
+    <string name="color_orange_bright">Bright Orange</string>
+    <string name="color_orange_pure">Pure Orange</string>
+    <string name="color_orange_standard">Standard Orange</string>
+    <string name="color_orange_deep">Deep Orange</string>
+    <string name="color_orange_dark">Dark Orange</string>
+
+    <!-- Color Names - Yellow -->
+    <string name="color_yellow_light">Light Yellow</string>
+    <string name="color_yellow_bright">Bright Yellow</string>
+    <string name="color_yellow_pure">Pure Yellow</string>
+    <string name="color_yellow_amber">Amber Yellow</string>
+    <string name="color_yellow_gold">Golden Yellow</string>
+    <string name="color_yellow_standard">Standard Yellow</string>
+
+    <!-- Color Names - Yellow Green -->
+    <string name="color_yellow_green_light">Light Yellow Green</string>
+    <string name="color_yellow_green_bright">Bright Yellow Green</string>
+    <string name="color_yellow_green_pure">Pure Yellow Green</string>
+    <string name="color_yellow_green_standard">Standard Yellow Green</string>
+    <string name="color_yellow_green_deep">Deep Yellow Green</string>
+
+    <!-- Color Names - Green -->
+    <string name="color_green_light">Light Green</string>
+    <string name="color_green_bright">Bright Green</string>
+    <string name="color_green_pure">Pure Green</string>
+    <string name="color_green_standard">Standard Green</string>
+    <string name="color_green_deep">Deep Green</string>
+    <string name="color_green_dark">Dark Green</string>
+    <string name="color_green_forest">Forest Green</string>
+
+    <!-- Color Names - Cyan -->
+    <string name="color_cyan_light">Light Cyan</string>
+    <string name="color_cyan_bright">Bright Cyan</string>
+    <string name="color_cyan_pure">Pure Cyan</string>
+    <string name="color_cyan_standard">Standard Cyan</string>
+    <string name="color_cyan_deep">Deep Cyan</string>
+    <string name="color_cyan_dark">Dark Cyan</string>
+
+    <!-- Color Names - Blue -->
+    <string name="color_blue_light">Light Blue</string>
+    <string name="color_blue_bright">Bright Blue</string>
+    <string name="color_blue_pure">Pure Blue</string>
+    <string name="color_blue_sky">Sky Blue</string>
+    <string name="color_blue_standard">Standard Blue</string>
+    <string name="color_blue_deep">Deep Blue</string>
+    <string name="color_blue_dark">Dark Blue</string>
+
+    <!-- Color Names - Indigo -->
+    <string name="color_indigo_light">Light Indigo</string>
+    <string name="color_indigo_bright">Bright Indigo</string>
+    <string name="color_indigo_pure">Pure Indigo</string>
+    <string name="color_indigo_standard">Standard Indigo</string>
+    <string name="color_indigo_deep">Deep Indigo</string>
+    <string name="color_indigo_dark">Dark Indigo</string>
+
+    <!-- Color Names - Purple -->
+    <string name="color_purple_light">Light Purple</string>
+    <string name="color_purple_bright">Bright Purple</string>
+    <string name="color_purple_pure">Pure Purple</string>
+    <string name="color_purple_standard">Standard Purple</string>
+    <string name="color_purple_deep">Deep Purple</string>
+    <string name="color_purple_dark">Dark Purple</string>
+
+    <!-- Color Names - Pink -->
+    <string name="color_pink_light">Light Pink</string>
+    <string name="color_pink_bright">Bright Pink</string>
+    <string name="color_pink_pure">Pure Pink</string>
+    <string name="color_pink_standard">Standard Pink</string>
+    <string name="color_pink_deep">Deep Pink</string>
+
+    <!-- Color Names - Brown -->
+    <string name="color_brown_light">Light Brown</string>
+    <string name="color_brown_bright">Bright Brown</string>
+    <string name="color_brown_pure">Pure Brown</string>
+    <string name="color_brown_standard">Standard Brown</string>
+    <string name="color_brown_deep">Deep Brown</string>
+    <string name="color_brown_dark">Dark Brown</string>
+
+    <!-- Color Names - Gray -->
+    <string name="color_gray_very_light">Very Light Gray</string>
+    <string name="color_gray_light">Light Gray</string>
+    <string name="color_gray_bright">Bright Gray</string>
+    <string name="color_gray_standard_light">Standard Light Gray</string>
+    <string name="color_gray_medium">Medium Gray</string>
+    <string name="color_gray_standard">Gray</string>
+    <string name="color_gray_deep">Deep Gray</string>
+    <string name="color_gray_dark">Dark Gray</string>
+
+    <!-- Color Names - Special -->
+    <string name="color_special_coral_light">Light Coral</string>
+    <string name="color_special_coral">Coral Red</string>
+    <string name="color_special_coral_bright">Bright Coral</string>
+    <string name="color_special_mint_light">Light Mint</string>
+    <string name="color_special_mint">Mint Green</string>
+    <string name="color_special_mint_deep">Deep Mint</string>
+    <string name="color_special_lavender_light">Light Lavender</string>
+    <string name="color_special_lavender">Lavender Purple</string>
+    <string name="color_special_lavender_deep">Deep Lavender</string>
+    <string name="color_special_turquoise">Turquoise</string>
+    <string name="color_special_sapphire">Sapphire</string>
+    <string name="color_special_malachite">Malachite</string>
+    <string name="color_special_neon_green">Neon Green</string>
+    <string name="color_special_neon_cyan">Neon Cyan</string>
+    <string name="color_special_neon_blue">Neon Blue</string>
+    <string name="color_special_neon_pink">Neon Pink</string>
+    <string name="color_special_neon_orange">Neon Orange</string>
+    
+    <!-- Date Formatting -->
+    <string name="date_today">Today</string>
+    <string name="date_yesterday">Yesterday</string>
+    <string name="date_days_ago">%d days ago</string>
+    
+    <!-- LAN Sync -->
+    <string name="lan_sync_title">LAN Sync</string>
+    <string name="sync_options">Sync Options</string>
+    <string name="search_nearby_devices">Search Nearby Devices</string>
+    <string name="search_nearby_devices_desc">Discover devices on the same WiFi network</string>
+    <string name="wait_for_connection">Wait for Connection</string>
+    <string name="wait_for_connection_desc">Other devices can discover this device</string>
+    <string name="this_device">This Device</string>
+    <string name="lan_sync_ready">Ready to sync with other devices on the same network</string>
+    <string name="sync_info_title">How LAN Sync Works</string>
+    <string name="sync_info_content">1. Connect all devices to the same WiFi network\n2. Search for nearby devices\n3. Select a device to sync with\n4. Data will be synchronized between devices</string>
+    <string name="edit_device_name">Edit Device Name</string>
+    <string name="device_name">Device Name</string>
+    <string name="searching_devices">Searching Devices</string>
+    <string name="make_sure_same_wifi">Make sure all devices are connected to the same WiFi network</string>
+    <string name="searching">Searching…</string>
+    <string name="no_devices_found">No devices found</string>
+    <string name="device_name_updated">Device name updated</string>
+    <string name="sync_in_progress">Synchronizing...</string>
+    <string name="sync_request_title">Sync Request</string>
+    <string name="sync_request_message">Do you want to synchronize data with this device?</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="incoming_sync_request_title">Incoming Sync Request</string>
+    <string name="incoming_sync_request_message">wants to synchronize data with your device</string>
+    
+    <!-- Open Source Licenses -->
+    <string name="open_source_licenses">Open Source Licenses</string>
+    <string name="open_source_licenses_description">View licenses of third-party components</string>
+</resources>

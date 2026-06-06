@@ -1,0 +1,542 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Buku Kira-Kira Keluarga</string>
+    <string name="title_activity_main">Buku Kira-Kira Keluarga</string>
+    <string name="package_name">com.chronie.homemoney</string>
+    <string name="custom_url_scheme">com.chronie.homemoney</string>
+    
+    <!-- Tetapan -->
+    <string name="settings">Tetapan</string>
+    <string name="language_settings">Tetapan Bahasa</string>
+    <string name="update_avatar_failed">Gagal mengemas kini avatar</string>
+    <string name="select_language">Pilih Bahasa</string>
+    <string name="api_key_set">Telah ditetapkan: %s</string>
+    <string name="developer_tools">Alatan Pembangun</string>
+    <string name="theme_settings">Tetapan Tema</string>
+    <string name="dynamic_color">Warna Dinamik</string>
+    <string name="dynamic_color_description">Mengikut warna kertas dinding (Android 12+)</string>
+    <string name="manual_color_selection">Pilih Warna Secara Manual</string>
+    <string name="primary_color">Warna Utama</string>
+    <string name="dynamic_color_enabled">Warna dinamik diaktifkan</string>
+    <string name="dynamic_color_disabled">Warna dinamik dinyahaktifkan</string>
+    <string name="primary_color_updated">Warna utama telah dikemas kini</string>
+    
+    <!-- Umum -->
+    <string name="back">Kembali</string>
+    <string name="cancel">Batal</string>
+    <string name="confirm">Sahkan</string>
+    <string name="save">Simpan</string>
+    <string name="delete">Padam</string>
+    <string name="edit">Edit</string>
+    <string name="loading">Memuatkan…</string>
+    <string name="error">Ralat</string>
+    <string name="success">Berjaya</string>
+    
+    <!-- Mata Wang -->
+    <string name="currency_symbol">RM</string>
+    <string name="currency_format" formatted="false">%s%.2f</string>
+    <string name="currency_format_no_decimal" formatted="false">%s%.0f</string>
+    
+    <!-- Halaman Selamat Datang -->
+    <string name="welcome_message">Selamat Datang ke Buku Kira-Kira Keluarga</string>
+    <string name="getting_started">Mula Sekarang</string>
+    
+    <!-- Opsyen Pembangun -->
+    <string name="developer_options">Opsyen Pembangun</string>
+    <string name="developer_mode">Mod Pembangun</string>
+    <string name="developer_mode_description">Aktifkan untuk akses pangkalan data tempatan dan fungsi lanjutan yang lain</string>
+    
+    <!-- Ujian Pangkalan Data -->
+    <string name="database_test">Pangkalan Data Tempatan</string>
+    <string name="add_test_data">Tambah Data Ujian</string>
+    <string name="clear_data">Kosongkan Semua Data</string>
+    <string name="database_statistics">Statistik Data</string>
+    <string name="record_count">Jumlah Rekod: %d</string>
+    <string name="total_amount">Jumlah Keseluruhan</string>
+    <string name="total_amount_database">Jumlah Keseluruhan: RM%.2f</string>
+    <string name="expense_records">Rekod Perbelanjaan</string>
+    <string name="no_data">Tiada data</string>
+    <string name="synced">Telah disinkronkan</string>
+    <string name="not_synced">Belum disinkronkan</string>
+    
+    <!-- Penyinkronan -->
+    <string name="sync_title">Penyinkronan Data</string>
+    <string name="sync_status">Status Penyinkronan</string>
+    <string name="sync_status_idle">Sedia</string>
+    <string name="sync_status_syncing">Menyinkronkan…</string>
+    <string name="sync_select_method">Pilih Kaedah Penyinkronan</string>
+    <string name="sync_cloud">Penyinkronan Awan</string>
+    <string name="sync_other_devices">Penyinkronan Peranti Lain</string>
+    <string name="sync_lan">LAN</string>
+    <string name="sync_bluetooth">Bluetooth</string>
+    <string name="sync_nfc">NFC</string>
+    <string name="device_sync_title">Penyinkronan %s</string>
+    <string name="device_sync_searching">Mencari peranti %s…</string>
+    <string name="device_sync_searching_devices">Mencari peranti…</string>
+    <string name="device_sync_found_devices">Menemui %d peranti:</string>
+    <string name="sync_status_success">Berjaya</string>
+    <string name="sync_status_failed">Gagal</string>
+    <string name="sync_status_conflict">Konflik</string>
+    <string name="sync_last_time">Penyinkronan Terakhir</string>
+    <string name="sync_never">Belum pernah disinkronkan</string>
+    <string name="sync_pending_count">Item tertunda</string>
+    <string name="sync_manual_trigger">Sinkron Sekarang</string>
+    <string name="sync_syncing">Menyinkronkan…</string>
+    <string name="add_success">Berjaya ditambah</string>
+    <string name="add_failed">Gagal menambah: %s</string>
+    <string name="clear_success">Berjaya dikosongkan</string>
+    <string name="clear_failed">Gagal mengosongkan: %s</string>
+    <string name="load_success">Data berjaya dimuatkan</string>
+    <string name="load_failed">Gagal memuatkan: %s</string>
+    <string name="device_sync_connecting">Menyambung ke %s…</string>
+    <string name="device_sync_connect_failed">Sambungan gagal</string>
+    <string name="device_sync_synchronizing">Menyinkronkan data…</string>
+    <string name="device_sync_success">Penyinkronan selesai</string>
+    <string name="device_sync_failed">Penyinkronan gagal: %s</string>
+    
+    <!-- Dialog Pengesahan Padam -->
+    <string name="delete_confirm_title">Pengesahan Padam</string>
+    <string name="delete_confirm_message">Adakah anda pasti mahu memadam rekod perbelanjaan ini?</string>
+    <string name="delete_second_confirm_title">Sahkan Pemadaman</string>
+    <string name="delete_second_confirm_message">Tindakan ini tidak boleh dibatalkan. Pasti mahu padam?</string>
+    
+    <!-- Kategori Perbelanjaan -->
+    <string name="expense_type_daily_goods">Barangan Harian</string>
+    <string name="expense_type_luxury">Barangan Mewah</string>
+    <string name="expense_type_communication">Komunikasi</string>
+    <string name="expense_type_food">Makanan</string>
+    <string name="expense_type_snacks">Snek &amp; Gula-gula</string>
+    <string name="expense_type_cold_drinks">Minuman Sejuk</string>
+    <string name="expense_type_convenience_food">Makanan Segera</string>
+    <string name="expense_type_textiles">Tekstil &amp; Pakaian</string>
+    <string name="expense_type_beverages">Minuman</string>
+    <string name="expense_type_condiments">Bahan Perasa</string>
+    <string name="expense_type_transportation">Pengangkutan</string>
+    <string name="expense_type_dining">Makan di Luar</string>
+    <string name="expense_type_medical">Perubatan &amp; Kesihatan</string>
+    <string name="expense_type_fruits">Buah-buahan</string>
+    <string name="expense_type_other">Lain-lain</string>
+    <string name="expense_type_seafood">Makanan Laut</string>
+    <string name="expense_type_dairy">Produk Tenusu</string>
+    <string name="expense_type_gifts">Hadiah &amp; Sumbangan</string>
+    <string name="expense_type_travel">Percutian &amp; Pelancongan</string>
+    <string name="expense_type_government">Urusan Kerajaan</string>
+    <string name="expense_type_utilities">Utiliti (Air/Elektrik)</string>
+    <string name="expense_type_beauty">Kecantikan &amp; Salon</string>
+    <string name="expense_type_bean_products">Produk Kacang</string>
+    <string name="expense_type_cosmetics">Kosmetik</string>
+    <string name="expense_type_electronics">Elektronik</string>
+    <string name="expense_type_household_appliances">Alatan Rumah</string>
+    <string name="expense_type_hardware">Bahan Keras</string>
+    <string name="expense_type_clothing">Pakaian</string>
+    
+    <!-- Senarai Perbelanjaan -->
+    <string name="expense_list_title">Perbelanjaan</string>
+    <string name="expense_list_empty">Tiada rekod perbelanjaan</string>
+    <string name="expense_list_empty_description">Tambah rekod atau laraskan penapis</string>
+    <string name="expense_list_reset_filters">Set Semula Penapis</string>
+    <string name="expense_list_search_hint">Cari nota…</string>
+    <string name="expense_list_filter_type">Kategori</string>
+    <string name="expense_list_filter_month">Bulan</string>
+    <string name="expense_list_filter_amount_range">Julat Amaun</string>
+    <string name="expense_list_filter_min_amount">Amaun Minimum</string>
+    <string name="expense_list_filter_max_amount">Amaun Maksimum</string>
+    <string name="expense_list_all_types">Semua Kategori</string>
+    <string name="expense_list_all_months">Semua Bulan</string>
+    <string name="expense_list_sort">Isih</string>
+    <string name="expense_list_sort_date_desc">Tarikh (Terbaharu)</string>
+    <string name="expense_list_sort_date_asc">Tarikh (Terlama)</string>
+    <string name="expense_list_sort_amount_desc">Amaun (Tinggi ke Rendah)</string>
+    <string name="expense_list_sort_amount_asc">Amaun (Rendah ke Tinggi)</string>
+    <string name="expense_list_apply_filters">Gunakan Penapis</string>
+    <string name="expense_list_clear_filters">Kosongkan Penapis</string>
+    <string name="expense_list_filter_title">Tapis &amp; Cari</string>
+    <string name="expense_list_filter_date_range">Julat Tarikh</string>
+    <string name="expense_list_filter_start_date">Tarikh Mula</string>
+    <string name="expense_list_filter_end_date">Tarikh Tamat</string>
+    <string name="expense_list_filter_all_types">Semua Kategori</string>
+    <string name="expense_list_filter_select_types">Pilih Kategori</string>
+    <string name="expense_list_filtered_count">Hasil Penapis: %d item</string>
+    <string name="common_search">Cari</string>
+    <string name="common_filter">Tapis</string>
+    
+    <!-- Statistik Perbelanjaan -->
+    <string name="expense_stats_count">Jumlah Rekod</string>
+    <string name="expense_stats_total">Jumlah Keseluruhan</string>
+    <string name="expense_stats_average">Purata</string>
+    <string name="expense_stats_median">Median</string>
+    <string name="expense_stats_range">Julat Amaun</string>
+    
+    <!-- Jadual Perbelanjaan -->
+    <string name="expense_type">Kategori</string>
+    <string name="expense_remark">Nota</string>
+    <string name="expense_amount">Amaun</string>
+    
+    <!-- Umum -->
+    <string name="common_loading">Memuatkan…</string>
+    <string name="common_error">Ralat</string>
+    <string name="common_retry">Cuba Lagi</string>
+    <string name="common_refresh">Segarkan</string>
+    <string name="common_more_functions">Fungsi Lain</string>
+    <string name="common_actions">Tindakan</string>
+    
+    <!-- Tambah Perbelanjaan -->
+    <string name="add_expense_title">Tambah Rekod</string>
+    <string name="add_expense_type_label">Kategori *</string>
+    <string name="add_expense_type_hint">Pilih kategori</string>
+    <string name="add_expense_amount_label">Amaun *</string>
+    <string name="add_expense_amount_hint">0.00</string>
+    <string name="add_expense_date_label">Tarikh *</string>
+    <string name="add_expense_remark_label">Nota</string>
+    <string name="add_expense_remark_hint">Masukkan nota…</string>
+    <string name="add_expense_save_success">Berjaya disimpan</string>
+    <string name="add_expense_save_failed">Gagal menyimpan: %s</string>
+    <string name="add_expense_validation_type_required">Sila pilih kategori</string>
+    <string name="add_expense_validation_amount_required">Sila masukkan amaun</string>
+    <string name="add_expense_validation_amount_invalid">Amaun mestilah lebih daripada 0</string>
+    <string name="add_expense_validation_date_required">Sila pilih tarikh</string>
+    <string name="edit_expense_title">Edit Perbelanjaan</string>
+    
+    <!-- Pengecaman AI Pintar -->
+    <string name="ai_expense_title">Rekod Pintar AI</string>
+    <string name="ai_expense_select_images">Pilih Gambar</string>
+    <string name="ai_expense_add_images">Tambah Gambar</string>
+    <string name="ai_expense_or_input_text">atau masukkan teks</string>
+    <string name="ai_expense_text_hint">Contoh: Beli tomato RM12, timun RM8, telur RM15 hari ini</string>
+    <string name="ai_expense_start_recognition">Mula Pengecaman</string>
+    <string name="ai_expense_recognizing">Mengenal pasti…</string>
+    <string name="ai_expense_results">Hasil Pengecaman</string>
+    <string name="ai_expense_save_all">Simpan Semua</string>
+    <string name="ai_expense_saving">Menyimpan…</string>
+    <string name="ai_expense_edit_record">Edit</string>
+    <string name="ai_expense_delete_record">Padam</string>
+    <string name="ai_expense_edited">Telah diedit</string>
+    <string name="ai_expense_no_input">Sila masukkan teks atau pilih gambar</string>
+    <string name="ai_expense_no_records">Tiada rekod perbelanjaan dikesan</string>
+    <string name="ai_expense_recognition_failed">Pengecaman gagal: %s</string>
+    <string name="ai_expense_save_success">Berjaya disimpan</string>
+    <string name="ai_expense_save_failed">Gagal menyimpan: %s</string>
+    <string name="ai_expense_no_valid_records">Tiada rekod sah</string>
+    <string name="ai_expense_select_type">Pilih Kategori</string>
+    <string name="ai_expense_amount">Amaun</string>
+    <string name="ai_expense_remark">Nota</string>
+    <string name="search_category">Cari kategori…</string>
+    <string name="search_results_count">%d hasil</string>
+    <string name="no_results_found">Tiada padanan</string>
+    <string name="clear">Padam</string>
+    <string name="ai_expense_click_to_add">Klik untuk tambah gambar</string>
+    <string name="ai_expense_records_count">Hasil Pengecaman (%d item)</string>
+    <string name="ai_expense_select_image_source">Pilih Sumber Gambar</string>
+    <string name="ai_expense_take_photo">Ambil Foto</string>
+    <string name="ai_expense_choose_from_gallery">Pilih dari Galeri</string>
+    
+    <!-- Tetapan AI -->
+    <string name="settings_ai_title">Tetapan AI</string>
+    <string name="settings_ai_api_key">Kunci API SiliconFlow</string>
+    <string name="settings_ai_api_key_hint">Masukkan Kunci API</string>
+    <string name="settings_ai_api_key_description">Digunakan untuk ciri pengecaman pintar</string>
+    <string name="settings_ai_get_api_key">Tiada kunci? Dapatkan satu di sini</string>
+    <string name="settings_ai_api_key_saved">Kunci API telah disimpan</string>
+    <string name="ai_expense_entry_description">Tangkap foto atau masukkan teks untuk merekod dengan cepat</string>
+    
+    <!-- Pengurusan Bajet -->
+    <string name="budget_enable_title">Aktifkan Pengurusan Bajet</string>
+    <string name="budget_enable_description">Tetapkan bajet bulanan untuk perancangan perbelanjaan yang lebih baik</string>
+    <string name="budget_enable_button">Aktifkan Bajet</string>
+    <string name="budget_enable_feature">Aktifkan Fitur Bajet</string>
+    <string name="budget_monthly_progress">Progres Bajet Bulanan</string>
+    <string name="budget_settings">Tetapan Bajet</string>
+    <string name="budget_settings_title">Tetapan Bajet</string>
+    <string name="budget_monthly_limit">Bajet Bulanan</string>
+    <string name="budget_warning_threshold">Nisbah Amaran (%)</string>
+    <string name="budget_warning_threshold_hint">Amaran apabila mencapai nisbah ini (0-100)</string>
+    <string name="budget_remaining">Sisa Bajet</string>
+    <string name="budget_daily_average">Purata Harian</string>
+    <string name="budget_recommended_daily">Saranan Harian</string>
+    <string name="budget_expand">Kembangkan</string>
+    <string name="budget_collapse">Lipat</string>
+    <string name="budget_alert_normal_title">Bajet Normal</string>
+    <string name="budget_alert_normal_message">Baki %1$s, baki kuota %2$.0f%%</string>
+    <string name="budget_alert_warning_title">Amaran Bajet</string>
+    <string name="budget_alert_warning_message">Baki %1$s (%2$.0f%%), sila kawal perbelanjaan anda</string>
+    <string name="common_save">Simpan</string>
+    <string name="common_cancel">Batal</string>
+    <string name="budget_alert_over_title">Melebihi Bajet</string>
+    <string name="budget_alert_over_message">Telah melebihi bajet sebanyak %1$s</string>
+    <string name="budget_error_invalid_limit">Sila masukkan amaun bajet yang sah</string>
+    <string name="budget_error_invalid_threshold">Nisbah amaran mestilah antara 0-100</string>
+    
+    <!-- Carta -->
+    <string name="charts_title">Analisis Statistik</string>
+    <string name="statistics_summary">Ringkasan Statistik</string>
+    <string name="count">Jumlah</string>
+    <string name="average_amount">Purata Amaun</string>
+    <string name="median_amount">Median Amaun</string>
+    <string name="trend_chart">Carta Aliran</string>
+    <string name="category_breakdown">Pecahan Kategori</string>
+    <string name="weekday_analysis">Agihan Hari</string>
+    <string name="records">item</string>
+    <string name="expense_details">Butiran Perbelanjaan</string>
+    <string name="percentage_of_total">Peratusan Keseluruhan</string>
+    <string name="select_time_range">Pilih Julat Masa</string>
+    <string name="this_week">Minggu Ini</string>
+    <string name="this_month">Bulan Ini</string>
+    <string name="last_month">Bulan Lepas</string>
+    <string name="this_quarter">Suku Tahun Ini</string>
+    <string name="this_year">Tahun Ini</string>
+    <string name="custom_range">Kustom</string>
+    <string name="close">Tutup</string>
+    <string name="retry">Cuba Lagi</string>
+    
+    <!-- Hari -->
+    <string name="sunday">Ahad</string>
+    <string name="monday">Isnin</string>
+    <string name="tuesday">Selasa</string>
+    <string name="wednesday">Rabu</string>
+    <string name="thursday">Khamis</string>
+    <string name="friday">Jumaat</string>
+    <string name="saturday">Sabtu</string>
+    <string name="sunday_short">Ahd</string>
+    <string name="monday_short">Isn</string>
+    <string name="tuesday_short">Sel</string>
+    <string name="wednesday_short">Rab</string>
+    <string name="thursday_short">Kha</string>
+    <string name="friday_short">Jum</string>
+    <string name="saturday_short">Sab</string>
+
+    <!-- Import & Eksport Data -->
+    <string name="data_import_export">Import &amp; Eksport</string>
+    <string name="data_import_export_description">Eksport atau import data bil dalam format Excel</string>
+    <string name="export_data">Eksport Data</string>
+    <string name="import_data">Import Data</string>
+    <string name="export_all_data">Eksport Semua Data</string>
+    <string name="export_date_range">Julat Tarikh Eksport</string>
+    <string name="export_select_range">Pilih Julat Tarikh</string>
+    <string name="export_start_date">Tarikh Mula</string>
+    <string name="export_end_date">Tarikh Tamat</string>
+    <string name="export_in_progress">Mengeksport…</string>
+    <string name="export_success">Eksport berjaya: %s</string>
+    <string name="export_failed">Eksport gagal: %s</string>
+    <string name="import_in_progress">Mengimport…</string>
+    <string name="import_success">Import berjaya: %d rekod</string>
+    <string name="import_failed">Import gagal: %s</string>
+    <string name="import_select_file">Pilih Fail Excel</string>
+    <string name="import_validation_error">Ralat data: %s</string>
+    <string name="import_confirm_title">Sahkan Import</string>
+    <string name="import_confirm_message">Menemui %d rekod, adakah anda mahu import?</string>
+    <string name="export_filename_prefix">Rekod_Perbelanjaan</string>
+    <string name="excel_header_date">Tarikh</string>
+    <string name="excel_header_type">Kategori</string>
+    <string name="excel_header_amount">Amaun</string>
+    <string name="excel_header_remark">Nota</string>
+    <string name="permission_storage_required">Izin storan diperlukan</string>
+    <string name="no_records_to_export">Tiada rekod untuk dieksport</string>
+
+    <!-- Maklum Balas -->
+    <string name="feedback_title">Maklum Balas</string>
+    <string name="feedback_description">Kongsi cadangan anda untuk membantu kami menjadi lebih baik</string>
+
+    <!-- Autentikasi Pengguna -->
+    <string name="auth_login_title">Log Masuk</string>
+    <string name="auth_username_label">Nama Pengguna</string>
+    <string name="auth_username_hint">Masukkan nama pengguna</string>
+    <string name="auth_login_button">Log Masuk</string>
+    <string name="auth_logout_button">Log Keluar</string>
+    <string name="auth_current_user">Pengguna Sekarang</string>
+    <string name="auth_not_logged_in">Belum log masuk</string>
+    <string name="auth_login_required">Sila log masuk terlebih dahulu</string>
+    <string name="auth_username_empty">Nama pengguna tidak boleh kosong</string>
+    <string name="auth_login_success">Berjaya log masuk</string>
+    <string name="auth_login_failed">Gagal log masuk</string>
+    <string name="auth_logout_success">Telah log keluar</string>
+    <string name="auth_logging_in">Log masuk…</string>
+    <string name="auth_welcome_back">Selamat kembali, %s!</string>
+    <string name="auth_login_hint">Masukkan nama pengguna untuk log masuk atau daftar</string>
+    <string name="auth_account_info">Maklumat Akaun</string>
+    <string name="auth_logout_confirm_title">Log Keluar</string>
+    <string name="auth_logout_confirm_message">Adakah anda pasti mahu log keluar?</string>
+    <string name="crop_image_failed">Pemprosesan imej gagal: %s</string>
+    <string name="membership_title">Akaun</string>
+    <string name="auth_logged_in">Telah log masuk</string>
+    <string name="auth_skip_login">Langkau</string>
+
+    <!-- Pemeriksaan Kesihatan -->
+    <string name="health_check_channel_name">Status Sambungan Pelayan</string>
+    <string name="health_check_channel_description">Memantau sambungan pelayan</string>
+    <string name="health_check_running">Memantau pelayan</string>
+    <string name="health_check_monitoring">Memeriksa sambungan pelayan…</string>
+    <string name="server_connection_error">Sambungan Gagal</string>
+    <string name="server_connection_error_message">Gagal menyambung ke pelayan, sila periksa rangkaian anda</string>
+    <string name="server_connection_restored">Sambungan dipulihkan</string>
+
+    <!-- Pemilih Warna -->
+    <string name="color_picker_title">Pilih Warna Tema</string>
+    <string name="color_picker_search_hint">Cari warna…</string>
+    <string name="current_theme_color">Warna Tema Sekarang</string>
+    <string name="color_group_default">Lalai</string>
+    <string name="color_group_red">Merah</string>
+    <string name="color_group_orange">Oren</string>
+    <string name="color_group_yellow">Kuning</string>
+    <string name="color_group_yellow_green">Hijau Kuning</string>
+    <string name="color_group_green">Hijau</string>
+    <string name="color_group_cyan">Sian</string>
+    <string name="color_group_blue">Biru</string>
+    <string name="color_group_indigo">Indigo</string>
+    <string name="color_group_purple">Ungu</string>
+    <string name="color_group_pink">Merah Jambu</string>
+    <string name="color_group_brown">Cokelat</string>
+    <string name="color_group_gray">Kelabu</string>
+    <string name="color_group_special">Istimewa</string>
+
+    <!-- Nama Warna - Merah -->
+    <string name="color_red_light">Merah Muda</string>
+    <string name="color_red_bright">Merah Terang</string>
+    <string name="color_red_pure">Merah Tulen</string>
+    <string name="color_red_standard">Merah Standard</string>
+    <string name="color_red_deep">Merah Tua</string>
+    <string name="color_red_dark">Merah Gelap</string>
+
+    <!-- Nama Warna - Oren -->
+    <string name="color_orange_light">Oren Muda</string>
+    <string name="color_orange_bright">Oren Terang</string>
+    <string name="color_orange_pure">Oren Tulen</string>
+    <string name="color_orange_standard">Oren Standard</string>
+    <string name="color_orange_deep">Oren Tua</string>
+    <string name="color_orange_dark">Oren Gelap</string>
+
+    <!-- Nama Warna - Kuning -->
+    <string name="color_yellow_light">Kuning Muda</string>
+    <string name="color_yellow_bright">Kuning Terang</string>
+    <string name="color_yellow_pure">Kuning Tulen</string>
+    <string name="color_yellow_amber">Amber</string>
+    <string name="color_yellow_gold">Emas</string>
+    <string name="color_yellow_standard">Kuning Standard</string>
+
+    <!-- Nama Warna - Hijau Kuning -->
+    <string name="color_yellow_green_light">Hijau Kuning Muda</string>
+    <string name="color_yellow_green_bright">Hijau Kuning Terang</string>
+    <string name="color_yellow_green_pure">Hijau Kuning Tulen</string>
+    <string name="color_yellow_green_standard">Hijau Kuning Standard</string>
+    <string name="color_yellow_green_deep">Hijau Kuning Tua</string>
+
+    <!-- Nama Warna - Hijau -->
+    <string name="color_green_light">Hijau Muda</string>
+    <string name="color_green_bright">Hijau Terang</string>
+    <string name="color_green_pure">Hijau Tulen</string>
+    <string name="color_green_standard">Hijau Standard</string>
+    <string name="color_green_deep">Hijau Tua</string>
+    <string name="color_green_dark">Hijau Gelap</string>
+    <string name="color_green_forest">Hijau Hutan</string>
+
+    <!-- Nama Warna - Sian -->
+    <string name="color_cyan_light">Sian Muda</string>
+    <string name="color_cyan_bright">Sian Terang</string>
+    <string name="color_cyan_pure">Sian Tulen</string>
+    <string name="color_cyan_standard">Sian Standard</string>
+    <string name="color_cyan_deep">Sian Tua</string>
+    <string name="color_cyan_dark">Sian Gelap</string>
+
+    <!-- Nama Warna - Biru -->
+    <string name="color_blue_light">Biru Muda</string>
+    <string name="color_blue_bright">Biru Terang</string>
+    <string name="color_blue_pure">Biru Tulen</string>
+    <string name="color_blue_sky">Biru Langit</string>
+    <string name="color_blue_standard">Biru Standard</string>
+    <string name="color_blue_deep">Biru Tua</string>
+    <string name="color_blue_dark">Biru Gelap</string>
+
+    <!-- Nama Warna - Indigo -->
+    <string name="color_indigo_light">Indigo Muda</string>
+    <string name="color_indigo_bright">Indigo Terang</string>
+    <string name="color_indigo_pure">Indigo Tulen</string>
+    <string name="color_indigo_standard">Indigo Standard</string>
+    <string name="color_indigo_deep">Indigo Tua</string>
+    <string name="color_indigo_dark">Indigo Gelap</string>
+
+    <!-- Nama Warna - Ungu -->
+    <string name="color_purple_light">Ungu Muda</string>
+    <string name="color_purple_bright">Ungu Terang</string>
+    <string name="color_purple_pure">Ungu Tulen</string>
+    <string name="color_purple_standard">Ungu Standard</string>
+    <string name="color_purple_deep">Ungu Tua</string>
+    <string name="color_purple_dark">Ungu Gelap</string>
+
+    <!-- Nama Warna - Merah Jambu -->
+    <string name="color_pink_light">Pink Muda</string>
+    <string name="color_pink_bright">Pink Terang</string>
+    <string name="color_pink_pure">Pink Tulen</string>
+    <string name="color_pink_standard">Pink Standard</string>
+    <string name="color_pink_deep">Pink Tua</string>
+
+    <!-- Nama Warna - Cokelat -->
+    <string name="color_brown_light">Cokelat Muda</string>
+    <string name="color_brown_bright">Cokelat Terang</string>
+    <string name="color_brown_pure">Cokelat Tulen</string>
+    <string name="color_brown_standard">Cokelat Standard</string>
+    <string name="color_brown_deep">Cokelat Tua</string>
+    <string name="color_brown_dark">Cokelat Gelap</string>
+
+    <!-- Nama Warna - Kelabu -->
+    <string name="color_gray_very_light">Kelabu Sangat Muda</string>
+    <string name="color_gray_light">Kelabu Muda</string>
+    <string name="color_gray_bright">Kelabu Terang</string>
+    <string name="color_gray_standard_light">Kelabu Standard Muda</string>
+    <string name="color_gray_medium">Kelabu Sederhana</string>
+    <string name="color_gray_standard">Kelabu</string>
+    <string name="color_gray_deep">Kelabu Tua</string>
+    <string name="color_gray_dark">Kelabu Gelap</string>
+
+    <!-- Nama Warna - Istimewa -->
+    <string name="color_special_coral_light">Coral Muda</string>
+    <string name="color_special_coral">Merah Coral</string>
+    <string name="color_special_coral_bright">Coral Terang</string>
+    <string name="color_special_mint_light">Mint Muda</string>
+    <string name="color_special_mint">Hijau Mint</string>
+    <string name="color_special_mint_deep">Mint Tua</string>
+    <string name="color_special_lavender_light">Lavender Muda</string>
+    <string name="color_special_lavender">Ungu Lavender</string>
+    <string name="color_special_lavender_deep">Lavender Tua</string>
+    <string name="color_special_turquoise">Turquoise</string>
+    <string name="color_special_sapphire">Nilam</string>
+    <string name="color_special_malachite">Malachite</string>
+    <string name="color_special_neon_green">Hijau Neon</string>
+    <string name="color_special_neon_cyan">Sian Neon</string>
+    <string name="color_special_neon_blue">Biru Neon</string>
+    <string name="color_special_neon_pink">Pink Neon</string>
+    <string name="color_special_neon_orange">Oren Neon</string>
+    
+    <!-- Format Tarikh -->
+    <string name="date_today">Hari Ini</string>
+    <string name="date_yesterday">Semalam</string>
+    <string name="date_days_ago">%d hari lalu</string>
+    
+    <!-- Sinkronisasi LAN -->
+    <string name="lan_sync_title">Penyinkronan LAN</string>
+    <string name="sync_options">Opsyen Penyinkronan</string>
+    <string name="search_nearby_devices">Cari Peranti Berdekatan</string>
+    <string name="search_nearby_devices_desc">Cari peranti dalam rangkaian WiFi yang sama</string>
+    <string name="wait_for_connection">Tunggu Sambungan</string>
+    <string name="wait_for_connection_desc">Biarkan peranti lain menemui peranti ini</string>
+    <string name="this_device">Peranti Ini</string>
+    <string name="lan_sync_ready">Sedia untuk sinkron dengan peranti lain di rangkaian yang sama</string>
+    <string name="sync_info_title">Panduan Penyinkronan LAN</string>
+    <string name="sync_info_content">1. Sambungkan semua peranti ke WiFi yang sama\n2. Cari peranti berdekatan\n3. Pilih peranti yang mahu disinkronkan\n4. Data akan disinkronkan antara peranti</string>
+    <string name="edit_device_name">Edit Nama Peranti</string>
+    <string name="device_name">Nama Peranti</string>
+    <string name="searching_devices">Mencari peranti…</string>
+    <string name="make_sure_same_wifi">Pastikan semua peranti disambungkan ke WiFi yang sama</string>
+    <string name="searching">Mencari…</string>
+    <string name="no_devices_found">Tiada peranti ditemui</string>
+    <string name="device_name_updated">Nama peranti telah dikemas kini</string>
+    <string name="sync_in_progress">Sedang menyinkronkan...</string>
+    <string name="sync_request_title">Permintaan Sinkron</string>
+    <string name="sync_request_message">Adakah anda mahu menyinkronkan data dengan peranti ini?</string>
+    <string name="accept">Terima</string>
+    <string name="reject">Tolak</string>
+    <string name="incoming_sync_request_title">Permintaan Sinkron Masuk</string>
+    <string name="incoming_sync_request_message">ingin menyinkronkan data dengan peranti anda</string>
+    
+    <!-- Lesen Sumber Terbuka -->
+    <string name="open_source_licenses">Lesen Sumber Terbuka</string>
+    <string name="open_source_licenses_description">Lihat lesen komponen pihak ketiga</string>
+</resources>

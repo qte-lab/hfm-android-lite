@@ -1,0 +1,542 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Sổ thu chi gia đình</string>
+    <string name="title_activity_main">Sổ thu chi gia đình</string>
+    <string name="package_name">com.chronie.homemoney</string>
+    <string name="custom_url_scheme">com.chronie.homemoney</string>
+    
+    <!-- Cài đặt -->
+    <string name="settings">Cài đặt</string>
+    <string name="language_settings">Cài đặt ngôn ngữ</string>
+    <string name="update_avatar_failed">Cập nhật ảnh đại diện thất bại</string>
+    <string name="select_language">Chọn ngôn ngữ</string>
+    <string name="api_key_set">Đã cài đặt: %s</string>
+    <string name="developer_tools">Công cụ nhà phát triển</string>
+    <string name="theme_settings">Cài đặt chủ đề</string>
+    <string name="dynamic_color">Màu động</string>
+    <string name="dynamic_color_description">Thay đổi theo màu hình nền (Android 12+)</string>
+    <string name="manual_color_selection">Chọn màu thủ công</string>
+    <string name="primary_color">Màu chính</string>
+    <string name="dynamic_color_enabled">Màu động đã bật</string>
+    <string name="dynamic_color_disabled">Màu động đã tắt</string>
+    <string name="primary_color_updated">Đã cập nhật màu chính</string>
+    
+    <!-- Chung -->
+    <string name="back">Quay lại</string>
+    <string name="cancel">Hủy</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="save">Lưu</string>
+    <string name="delete">Xóa</string>
+    <string name="edit">Chỉnh sửa</string>
+    <string name="loading">Đang tải…</string>
+    <string name="error">Lỗi</string>
+    <string name="success">Thành công</string>
+    
+    <!-- Tiền tệ -->
+    <string name="currency_symbol">₫</string>
+    <string name="currency_format" formatted="false">%s%.2f</string>
+    <string name="currency_format_no_decimal" formatted="false">%s%.0f</string>
+    
+    <!-- Màn hình chào -->
+    <string name="welcome_message">Chào mừng đến với Sổ thu chi gia đình</string>
+    <string name="getting_started">Bắt đầu sử dụng</string>
+    
+    <!-- Tùy chọn nhà phát triển -->
+    <string name="developer_options">Tùy chọn nhà phát triển</string>
+    <string name="developer_mode">Chế độ nhà phát triển</string>
+    <string name="developer_mode_description">Bật để truy cập các tính năng nâng cao như cơ sở dữ liệu cục bộ</string>
+    
+    <!-- Kiểm tra cơ sở dữ liệu -->
+    <string name="database_test">Cơ sở dữ liệu cục bộ</string>
+    <string name="add_test_data">Thêm dữ liệu thử nghiệm</string>
+    <string name="clear_data">Xóa toàn bộ dữ liệu</string>
+    <string name="database_statistics">Thống kê dữ liệu</string>
+    <string name="record_count">Số bản ghi: %d</string>
+    <string name="total_amount">Tổng tiền</string>
+    <string name="total_amount_database">Tổng tiền: ₫%.2f</string>
+    <string name="expense_records">Lịch sử chi tiêu</string>
+    <string name="no_data">Không có dữ liệu</string>
+    <string name="synced">Đã đồng bộ</string>
+    <string name="not_synced">Chưa đồng bộ</string>
+    
+    <!-- Đồng bộ -->
+    <string name="sync_title">Đồng bộ dữ liệu</string>
+    <string name="sync_status">Trạng thái đồng bộ</string>
+    <string name="sync_status_idle">Đang rảnh</string>
+    <string name="sync_status_syncing">Đang đồng bộ…</string>
+    <string name="sync_select_method">Chọn phương thức đồng bộ</string>
+    <string name="sync_cloud">Đồng bộ đám mây</string>
+    <string name="sync_other_devices">Đồng bộ với thiết bị khác</string>
+    <string name="sync_lan">Mạng LAN</string>
+    <string name="sync_bluetooth">Bluetooth</string>
+    <string name="sync_nfc">NFC</string>
+    <string name="device_sync_title">Đồng bộ %s</string>
+    <string name="device_sync_searching">Đang tìm kiếm thiết bị %s…</string>
+    <string name="device_sync_searching_devices">Đang tìm kiếm thiết bị…</string>
+    <string name="device_sync_found_devices">Đã tìm thấy %d thiết bị:</string>
+    <string name="sync_status_success">Thành công</string>
+    <string name="sync_status_failed">Thất bại</string>
+    <string name="sync_status_conflict">Xung đột</string>
+    <string name="sync_last_time">Lần đồng bộ cuối</string>
+    <string name="sync_never">Chưa từng đồng bộ</string>
+    <string name="sync_pending_count">Mục chờ đồng bộ</string>
+    <string name="sync_manual_trigger">Đồng bộ ngay</string>
+    <string name="sync_syncing">Đang đồng bộ…</string>
+    <string name="add_success">Thêm thành công</string>
+    <string name="add_failed">Thêm thất bại: %s</string>
+    <string name="clear_success">Xóa thành công</string>
+    <string name="clear_failed">Xóa thất bại: %s</string>
+    <string name="load_success">Tải dữ liệu thành công</string>
+    <string name="load_failed">Tải thất bại: %s</string>
+    <string name="device_sync_connecting">Đang kết nối với %s…</string>
+    <string name="device_sync_connect_failed">Kết nối thất bại</string>
+    <string name="device_sync_synchronizing">Đang đồng bộ dữ liệu…</string>
+    <string name="device_sync_success">Đồng bộ hoàn tất</string>
+    <string name="device_sync_failed">Đồng bộ thất bại: %s</string>
+    
+    <!-- Hộp thoại xác nhận xóa -->
+    <string name="delete_confirm_title">Xác nhận xóa</string>
+    <string name="delete_confirm_message">Bạn có chắc chắn muốn xóa bản ghi chi tiêu này không?</string>
+    <string name="delete_second_confirm_title">Xác nhận xóa</string>
+    <string name="delete_second_confirm_message">Hành động này không thể hoàn tác, bạn có chắc chắn muốn xóa không?</string>
+    
+    <!-- Danh mục chi tiêu -->
+    <string name="expense_type_daily_goods">Đồ dùng hàng ngày</string>
+    <string name="expense_type_luxury">Hàng xa xỉ</string>
+    <string name="expense_type_communication">Viễn thông</string>
+    <string name="expense_type_food">Thực phẩm</string>
+    <string name="expense_type_snacks">Đồ ăn vặt</string>
+    <string name="expense_type_cold_drinks">Đồ uống lạnh</string>
+    <string name="expense_type_convenience_food">Thức ăn nhanh</string>
+    <string name="expense_type_textiles">Hàng dệt may</string>
+    <string name="expense_type_beverages">Đồ uống</string>
+    <string name="expense_type_condiments">Gia vị</string>
+    <string name="expense_type_transportation">Đi lại</string>
+    <string name="expense_type_dining">Ăn uống</string>
+    <string name="expense_type_medical">Y tế</string>
+    <string name="expense_type_fruits">Trái cây</string>
+    <string name="expense_type_other">Khác</string>
+    <string name="expense_type_seafood">Hải sản</string>
+    <string name="expense_type_dairy">Sản phẩm từ sữa</string>
+    <string name="expense_type_gifts">Quà tặng/Giao tế</string>
+    <string name="expense_type_travel">Du lịch</string>
+    <string name="expense_type_government">Dịch vụ công</string>
+    <string name="expense_type_utilities">Điện nước</string>
+    <string name="expense_type_beauty">Làm đẹp/Tóc</string>
+    <string name="expense_type_bean_products">Sản phẩm đậu</string>
+    <string name="expense_type_cosmetics">Mỹ phẩm</string>
+    <string name="expense_type_electronics">Điện tử</string>
+    <string name="expense_type_household_appliances">Điện gia dụng</string>
+    <string name="expense_type_hardware">Đồ kim loại</string>
+    <string name="expense_type_clothing">Quần áo</string>
+    
+    <!-- Danh sách chi tiêu -->
+    <string name="expense_list_title">Chi tiêu</string>
+    <string name="expense_list_empty">Chưa có lịch sử chi tiêu</string>
+    <string name="expense_list_empty_description">Thêm bản ghi hoặc điều chỉnh điều kiện lọc</string>
+    <string name="expense_list_reset_filters">Đặt lại bộ lọc</string>
+    <string name="expense_list_search_hint">Tìm kiếm ghi chú…</string>
+    <string name="expense_list_filter_type">Danh mục</string>
+    <string name="expense_list_filter_month">Tháng</string>
+    <string name="expense_list_filter_amount_range">Khoảng tiền</string>
+    <string name="expense_list_filter_min_amount">Số tiền tối thiểu</string>
+    <string name="expense_list_filter_max_amount">Số tiền tối đa</string>
+    <string name="expense_list_all_types">Tất cả danh mục</string>
+    <string name="expense_list_all_months">Tất cả các tháng</string>
+    <string name="expense_list_sort">Sắp xếp</string>
+    <string name="expense_list_sort_date_desc">Ngày: Mới nhất đến Cũ nhất</string>
+    <string name="expense_list_sort_date_asc">Ngày: Cũ nhất đến Mới nhất</string>
+    <string name="expense_list_sort_amount_desc">Số tiền: Cao đến Thấp</string>
+    <string name="expense_list_sort_amount_asc">Số tiền: Thấp đến Cao</string>
+    <string name="expense_list_apply_filters">Áp dụng bộ lọc</string>
+    <string name="expense_list_clear_filters">Xóa bộ lọc</string>
+    <string name="expense_list_filter_title">Lọc và Tìm kiếm</string>
+    <string name="expense_list_filter_date_range">Phạm vi ngày</string>
+    <string name="expense_list_filter_start_date">Ngày bắt đầu</string>
+    <string name="expense_list_filter_end_date">Ngày kết thúc</string>
+    <string name="expense_list_filter_all_types">Tất cả danh mục</string>
+    <string name="expense_list_filter_select_types">Chọn danh mục</string>
+    <string name="expense_list_filtered_count">Kết quả lọc: %d bản ghi</string>
+    <string name="common_search">Tìm kiếm</string>
+    <string name="common_filter">Lọc</string>
+    
+    <!-- Thống kê chi tiêu -->
+    <string name="expense_stats_count">Tổng số bản ghi</string>
+    <string name="expense_stats_total">Tổng số tiền</string>
+    <string name="expense_stats_average">Trung bình</string>
+    <string name="expense_stats_median">Trung vị</string>
+    <string name="expense_stats_range">Khoảng tiền</string>
+    
+    <!-- Bảng chi tiêu -->
+    <string name="expense_type">Danh mục</string>
+    <string name="expense_remark">Ghi chú</string>
+    <string name="expense_amount">Số tiền</string>
+    
+    <!-- Chung -->
+    <string name="common_loading">Đang tải…</string>
+    <string name="common_error">Lỗi</string>
+    <string name="common_retry">Thử lại</string>
+    <string name="common_refresh">Làm mới</string>
+    <string name="common_more_functions">Chức năng khác</string>
+    <string name="common_actions">Thao tác</string>
+    
+    <!-- Thêm chi tiêu -->
+    <string name="add_expense_title">Ghi chép</string>
+    <string name="add_expense_type_label">Danh mục *</string>
+    <string name="add_expense_type_hint">Chọn danh mục</string>
+    <string name="add_expense_amount_label">Số tiền *</string>
+    <string name="add_expense_amount_hint">0.00</string>
+    <string name="add_expense_date_label">Ngày *</string>
+    <string name="add_expense_remark_label">Ghi chú</string>
+    <string name="add_expense_remark_hint">Nhập ghi chú…</string>
+    <string name="add_expense_save_success">Lưu thành công</string>
+    <string name="add_expense_save_failed">Lưu thất bại: %s</string>
+    <string name="add_expense_validation_type_required">Vui lòng chọn danh mục</string>
+    <string name="add_expense_validation_amount_required">Vui lòng nhập số tiền</string>
+    <string name="add_expense_validation_amount_invalid">Số tiền phải lớn hơn 0</string>
+    <string name="add_expense_validation_date_required">Vui lòng chọn ngày</string>
+    <string name="edit_expense_title">Chỉnh sửa chi tiêu</string>
+    
+    <!-- Nhận diện thông minh AI -->
+    <string name="ai_expense_title">Ghi chép thông minh</string>
+    <string name="ai_expense_select_images">Chọn hình ảnh</string>
+    <string name="ai_expense_add_images">Thêm hình ảnh</string>
+    <string name="ai_expense_or_input_text">Hoặc nhập văn bản</string>
+    <string name="ai_expense_text_hint">Ví dụ: Hôm nay mua cà chua 12k, dưa chuột 8k, trứng 15k</string>
+    <string name="ai_expense_start_recognition">Bắt đầu nhận diện</string>
+    <string name="ai_expense_recognizing">Đang nhận diện…</string>
+    <string name="ai_expense_results">Kết quả nhận diện</string>
+    <string name="ai_expense_save_all">Lưu tất cả</string>
+    <string name="ai_expense_saving">Đang lưu…</string>
+    <string name="ai_expense_edit_record">Chỉnh sửa</string>
+    <string name="ai_expense_delete_record">Xóa</string>
+    <string name="ai_expense_edited">Đã chỉnh sửa</string>
+    <string name="ai_expense_no_input">Vui lòng nhập văn bản hoặc chọn hình ảnh</string>
+    <string name="ai_expense_no_records">Không nhận diện được bản ghi chi tiêu nào</string>
+    <string name="ai_expense_recognition_failed">Nhận diện thất bại: %s</string>
+    <string name="ai_expense_save_success">Lưu thành công</string>
+    <string name="ai_expense_save_failed">Lưu thất bại: %s</string>
+    <string name="ai_expense_no_valid_records">Không có bản ghi hợp lệ</string>
+    <string name="ai_expense_select_type">Chọn danh mục</string>
+    <string name="ai_expense_amount">Số tiền</string>
+    <string name="ai_expense_remark">Ghi chú</string>
+    <string name="search_category">Tìm kiếm danh mục…</string>
+    <string name="search_results_count">%d kết quả</string>
+    <string name="no_results_found">Không tìm thấy kết quả phù hợp</string>
+    <string name="clear">Xóa</string>
+    <string name="ai_expense_click_to_add">Chạm để thêm hình ảnh</string>
+    <string name="ai_expense_records_count">Kết quả nhận diện (%d bản ghi)</string>
+    <string name="ai_expense_select_image_source">Chọn nguồn hình ảnh</string>
+    <string name="ai_expense_take_photo">Chụp ảnh</string>
+    <string name="ai_expense_choose_from_gallery">Chọn từ thư viện</string>
+    
+    <!-- Cài đặt AI -->
+    <string name="settings_ai_title">Cài đặt AI</string>
+    <string name="settings_ai_api_key">Khóa API SiliconFlow</string>
+    <string name="settings_ai_api_key_hint">Nhập khóa API</string>
+    <string name="settings_ai_api_key_description">Sử dụng cho tính năng nhận diện thông minh</string>
+    <string name="settings_ai_get_api_key">Chưa có khóa? Lấy ngay một khóa</string>
+    <string name="settings_ai_api_key_saved">Đã lưu khóa API</string>
+    <string name="ai_expense_entry_description">Chụp ảnh hoặc nhập văn bản để ghi chép nhanh</string>
+    
+    <!-- Quản lý ngân sách -->
+    <string name="budget_enable_title">Bật quản lý ngân sách</string>
+    <string name="budget_enable_description">Thiết lập ngân sách hàng tháng để lập kế hoạch chi tiêu hợp lý</string>
+    <string name="budget_enable_button">Bật ngân sách</string>
+    <string name="budget_enable_feature">Kích hoạt ngân sách</string>
+    <string name="budget_monthly_progress">Tiến độ ngân sách tháng</string>
+    <string name="budget_settings">Cài đặt ngân sách</string>
+    <string name="budget_settings_title">Cài đặt ngân sách</string>
+    <string name="budget_monthly_limit">Ngân sách tháng</string>
+    <string name="budget_warning_threshold">Tỷ lệ cảnh báo (%)</string>
+    <string name="budget_warning_threshold_hint">Cảnh báo khi đạt tỷ lệ này (0-100)</string>
+    <string name="budget_remaining">Ngân sách còn lại</string>
+    <string name="budget_daily_average">Chi tiêu trung bình ngày</string>
+    <string name="budget_recommended_daily">Đề xuất mỗi ngày</string>
+    <string name="budget_expand">Mở rộng</string>
+    <string name="budget_collapse">Thu gọn</string>
+    <string name="budget_alert_normal_title">Ngân sách bình thường</string>
+    <string name="budget_alert_normal_message">Còn lại %1$s, hạn mức khả dụng %2$.0f%%</string>
+    <string name="budget_alert_warning_title">Cảnh báo ngân sách</string>
+    <string name="budget_alert_warning_message">Còn lại %1$s (%2$.0f%%), hãy chú ý kiểm soát chi tiêu</string>
+    <string name="common_save">Lưu</string>
+    <string name="common_cancel">Hủy</string>
+    <string name="budget_alert_over_title">Vượt quá ngân sách</string>
+    <string name="budget_alert_over_message">Đã chi vượt mức %1$s, vui lòng lập kế hoạch hợp lý</string>
+    <string name="budget_error_invalid_limit">Vui lòng nhập số tiền ngân sách hợp lệ</string>
+    <string name="budget_error_invalid_threshold">Tỷ lệ cảnh báo phải nằm trong khoảng từ 0-100</string>
+    
+    <!-- Biểu đồ -->
+    <string name="charts_title">Phân tích thống kê</string>
+    <string name="statistics_summary">Tổng quan thống kê</string>
+    <string name="count">Số bản ghi</string>
+    <string name="average_amount">Số tiền trung bình</string>
+    <string name="median_amount">Trung vị số tiền</string>
+    <string name="trend_chart">Biểu đồ xu hướng</string>
+    <string name="category_breakdown">Tỷ trọng danh mục</string>
+    <string name="weekday_analysis">Phân bố theo thứ</string>
+    <string name="records">Mục</string>
+    <string name="expense_details">Chi tiết chi tiêu</string>
+    <string name="percentage_of_total">Tỷ lệ tổng</string>
+    <string name="select_time_range">Chọn phạm vi thời gian</string>
+    <string name="this_week">Tuần này</string>
+    <string name="this_month">Tháng này</string>
+    <string name="last_month">Tháng trước</string>
+    <string name="this_quarter">Quý này</string>
+    <string name="this_year">Năm nay</string>
+    <string name="custom_range">Tùy chỉnh</string>
+    <string name="close">Đóng</string>
+    <string name="retry">Thử lại</string>
+    
+    <!-- Thứ trong tuần -->
+    <string name="sunday">Chủ Nhật</string>
+    <string name="monday">Thứ Hai</string>
+    <string name="tuesday">Thứ Ba</string>
+    <string name="wednesday">Thứ Tư</string>
+    <string name="thursday">Thứ Năm</string>
+    <string name="friday">Thứ Sáu</string>
+    <string name="saturday">Thứ Bảy</string>
+    <string name="sunday_short">CN</string>
+    <string name="monday_short">T2</string>
+    <string name="tuesday_short">T3</string>
+    <string name="wednesday_short">T4</string>
+    <string name="thursday_short">T5</string>
+    <string name="friday_short">T6</string>
+    <string name="saturday_short">T7</string>
+
+    <!-- Nhập/Xuất dữ liệu -->
+    <string name="data_import_export">Nhập/Xuất</string>
+    <string name="data_import_export_description">Xuất hoặc nhập dữ liệu hóa đơn định dạng Excel</string>
+    <string name="export_data">Xuất dữ liệu</string>
+    <string name="import_data">Nhập dữ liệu</string>
+    <string name="export_all_data">Xuất toàn bộ dữ liệu</string>
+    <string name="export_date_range">Xuất theo phạm vi ngày</string>
+    <string name="export_select_range">Chọn phạm vi ngày</string>
+    <string name="export_start_date">Ngày bắt đầu</string>
+    <string name="export_end_date">Ngày kết thúc</string>
+    <string name="export_in_progress">Đang xuất…</string>
+    <string name="export_success">Xuất thành công: %s</string>
+    <string name="export_failed">Xuất thất bại: %s</string>
+    <string name="import_in_progress">Đang nhập…</string>
+    <string name="import_success">Nhập thành công: %d bản ghi</string>
+    <string name="import_failed">Nhập thất bại: %s</string>
+    <string name="import_select_file">Chọn tệp Excel</string>
+    <string name="import_validation_error">Lỗi dữ liệu: %s</string>
+    <string name="import_confirm_title">Xác nhận nhập</string>
+    <string name="import_confirm_message">Tìm thấy %d bản ghi, bạn có muốn nhập không?</string>
+    <string name="export_filename_prefix">Lịch_sử_chi_tiêu</string>
+    <string name="excel_header_date">Ngày</string>
+    <string name="excel_header_type">Danh mục</string>
+    <string name="excel_header_amount">Số tiền</string>
+    <string name="excel_header_remark">Ghi chú</string>
+    <string name="permission_storage_required">Cần quyền lưu trữ</string>
+    <string name="no_records_to_export">Không có bản ghi nào để xuất</string>
+
+    <!-- Phản hồi -->
+    <string name="feedback_title">Phản hồi ý kiến</string>
+    <string name="feedback_description">Chia sẻ gợi ý của bạn để giúp chúng tôi cải thiện</string>
+
+    <!-- Xác thực người dùng -->
+    <string name="auth_login_title">Đăng nhập</string>
+    <string name="auth_username_label">Tên đăng nhập</string>
+    <string name="auth_username_hint">Vui lòng nhập tên đăng nhập</string>
+    <string name="auth_login_button">Đăng nhập</string>
+    <string name="auth_logout_button">Đăng xuất</string>
+    <string name="auth_current_user">Người dùng hiện tại</string>
+    <string name="auth_not_logged_in">Chưa đăng nhập</string>
+    <string name="auth_login_required">Vui lòng đăng nhập trước</string>
+    <string name="auth_username_empty">Tên đăng nhập không được để trống</string>
+    <string name="auth_login_success">Đăng nhập thành công</string>
+    <string name="auth_login_failed">Đăng nhập thất bại</string>
+    <string name="auth_logout_success">Đã đăng xuất</string>
+    <string name="auth_logging_in">Đang đăng nhập…</string>
+    <string name="auth_welcome_back">Chào mừng trở lại, %s!</string>
+    <string name="auth_login_hint">Nhập tên đăng nhập để đăng nhập hoặc đăng ký</string>
+    <string name="auth_account_info">Thông tin tài khoản</string>
+    <string name="auth_logout_confirm_title">Đăng xuất</string>
+    <string name="auth_logout_confirm_message">Bạn có chắc chắn muốn đăng xuất không?</string>
+    <string name="crop_image_failed">Xử lý hình ảnh thất bại: %s</string>
+    <string name="membership_title">Tài khoản</string>
+    <string name="auth_logged_in">Đã đăng nhập</string>
+    <string name="auth_skip_login">Bỏ qua</string>
+
+    <!-- Kiểm tra sức khỏe hệ thống -->
+    <string name="health_check_channel_name">Trạng thái kết nối máy chủ</string>
+    <string name="health_check_channel_description">Giám sát kết nối máy chủ</string>
+    <string name="health_check_running">Đang giám sát máy chủ</string>
+    <string name="health_check_monitoring">Kiểm tra kết nối máy chủ…</string>
+    <string name="server_connection_error">Kết nối thất bại</string>
+    <string name="server_connection_error_message">Không thể kết nối với máy chủ, vui lòng kiểm tra mạng</string>
+    <string name="server_connection_restored">Đã khôi phục kết nối</string>
+
+    <!-- Bộ chọn màu -->
+    <string name="color_picker_title">Chọn màu chủ đề</string>
+    <string name="color_picker_search_hint">Tìm kiếm màu…</string>
+    <string name="current_theme_color">Màu chủ đề hiện tại</string>
+    <string name="color_group_default">Mặc định</string>
+    <string name="color_group_red">Hệ Đỏ</string>
+    <string name="color_group_orange">Hệ Cam</string>
+    <string name="color_group_yellow">Hệ Vàng</string>
+    <string name="color_group_yellow_green">Hệ Vàng xanh</string>
+    <string name="color_group_green">Hệ Xanh lá</string>
+    <string name="color_group_cyan">Hệ Lục lam</string>
+    <string name="color_group_blue">Hệ Xanh lam</string>
+    <string name="color_group_indigo">Hệ Chàm</string>
+    <string name="color_group_purple">Hệ Tím</string>
+    <string name="color_group_pink">Hệ Hồng</string>
+    <string name="color_group_brown">Hệ Nâu</string>
+    <string name="color_group_gray">Hệ Xám</string>
+    <string name="color_group_special">Hệ Màu đặc biệt</string>
+
+    <!-- Tên màu - Đỏ -->
+    <string name="color_red_light">Đỏ nhạt</string>
+    <string name="color_red_bright">Đỏ tươi</string>
+    <string name="color_red_pure">Đỏ thuần</string>
+    <string name="color_red_standard">Đỏ tiêu chuẩn</string>
+    <string name="color_red_deep">Đỏ thẫm</string>
+    <string name="color_red_dark">Đỏ sẫm</string>
+
+    <!-- Tên màu - Cam -->
+    <string name="color_orange_light">Cam nhạt</string>
+    <string name="color_orange_bright">Cam tươi</string>
+    <string name="color_orange_pure">Cam thuần</string>
+    <string name="color_orange_standard">Cam tiêu chuẩn</string>
+    <string name="color_orange_deep">Cam đậm</string>
+    <string name="color_orange_dark">Cam sẫm</string>
+
+    <!-- Tên màu - Vàng -->
+    <string name="color_yellow_light">Vàng nhạt</string>
+    <string name="color_yellow_bright">Vàng tươi</string>
+    <string name="color_yellow_pure">Vàng thuần</string>
+    <string name="color_yellow_amber">Vàng hổ phách</string>
+    <string name="color_yellow_gold">Màu vàng kim</string>
+    <string name="color_yellow_standard">Vàng tiêu chuẩn</string>
+
+    <!-- Tên màu - Vàng xanh -->
+    <string name="color_yellow_green_light">Vàng xanh nhạt</string>
+    <string name="color_yellow_green_bright">Vàng xanh tươi</string>
+    <string name="color_yellow_green_pure">Vàng xanh thuần</string>
+    <string name="color_yellow_green_standard">Vàng xanh tiêu chuẩn</string>
+    <string name="color_yellow_green_deep">Vàng xanh đậm</string>
+
+    <!-- Tên màu - Xanh lá -->
+    <string name="color_green_light">Xanh lá nhạt</string>
+    <string name="color_green_bright">Xanh lá tươi</string>
+    <string name="color_green_pure">Xanh lá thuần</string>
+    <string name="color_green_standard">Xanh lá tiêu chuẩn</string>
+    <string name="color_green_deep">Xanh lá đậm</string>
+    <string name="color_green_dark">Xanh lá sẫm</string>
+    <string name="color_green_forest">Xanh rừng</string>
+
+    <!-- Tên màu - Lục lam -->
+    <string name="color_cyan_light">Lục lam nhạt</string>
+    <string name="color_cyan_bright">Lục lam tươi</string>
+    <string name="color_cyan_pure">Lục lam thuần</string>
+    <string name="color_cyan_standard">Lục lam tiêu chuẩn</string>
+    <string name="color_cyan_deep">Lục lam đậm</string>
+    <string name="color_cyan_dark">Lục lam sẫm</string>
+
+    <!-- Tên màu - Xanh lam -->
+    <string name="color_blue_light">Xanh lam nhạt</string>
+    <string name="color_blue_bright">Xanh lam tươi</string>
+    <string name="color_blue_pure">Xanh lam thuần</string>
+    <string name="color_blue_sky">Xanh da trời</string>
+    <string name="color_blue_standard">Xanh lam tiêu chuẩn</string>
+    <string name="color_blue_deep">Xanh lam đậm</string>
+    <string name="color_blue_dark">Xanh lam sẫm</string>
+
+    <!-- Tên màu - Chàm -->
+    <string name="color_indigo_light">Chàm nhạt</string>
+    <string name="color_indigo_bright">Chàm tươi</string>
+    <string name="color_indigo_pure">Chàm thuần</string>
+    <string name="color_indigo_standard">Chàm tiêu chuẩn</string>
+    <string name="color_indigo_deep">Chàm đậm</string>
+    <string name="color_indigo_dark">Chàm sẫm</string>
+
+    <!-- Tên màu - Tím -->
+    <string name="color_purple_light">Tím nhạt</string>
+    <string name="color_purple_bright">Tím tươi</string>
+    <string name="color_purple_pure">Tím thuần</string>
+    <string name="color_purple_standard">Tím tiêu chuẩn</string>
+    <string name="color_purple_deep">Tím đậm</string>
+    <string name="color_purple_dark">Tím sẫm</string>
+
+    <!-- Tên màu - Hồng -->
+    <string name="color_pink_light">Hồng nhạt</string>
+    <string name="color_pink_bright">Hồng tươi</string>
+    <string name="color_pink_pure">Hồng thuần</string>
+    <string name="color_pink_standard">Hồng tiêu chuẩn</string>
+    <string name="color_pink_deep">Hồng đậm</string>
+
+    <!-- Tên màu - Nâu -->
+    <string name="color_brown_light">Nâu nhạt</string>
+    <string name="color_brown_bright">Nâu tươi</string>
+    <string name="color_brown_pure">Nâu thuần</string>
+    <string name="color_brown_standard">Nâu tiêu chuẩn</string>
+    <string name="color_brown_deep">Nâu đậm</string>
+    <string name="color_brown_dark">Nâu sẫm</string>
+
+    <!-- Tên màu - Xám -->
+    <string name="color_gray_very_light">Xám rất nhạt</string>
+    <string name="color_gray_light">Xám nhạt</string>
+    <string name="color_gray_bright">Xám sáng</string>
+    <string name="color_gray_standard_light">Xám nhạt tiêu chuẩn</string>
+    <string name="color_gray_medium">Xám vừa</string>
+    <string name="color_gray_standard">Xám</string>
+    <string name="color_gray_deep">Xám đậm</string>
+    <string name="color_gray_dark">Xám sẫm</string>
+
+    <!-- Tên màu - Đặc biệt -->
+    <string name="color_special_coral_light">San hô nhạt</string>
+    <string name="color_special_coral">Đỏ san hô</string>
+    <string name="color_special_coral_bright">San hô tươi</string>
+    <string name="color_special_mint_light">Bạc hà nhạt</string>
+    <string name="color_special_mint">Xanh bạc hà</string>
+    <string name="color_special_mint_deep">Bạc hà đậm</string>
+    <string name="color_special_lavender_light">Oải hương nhạt</string>
+    <string name="color_special_lavender">Tím oải hương</string>
+    <string name="color_special_lavender_deep">Oải hương đậm</string>
+    <string name="color_special_turquoise">Ngọc lam</string>
+    <string name="color_special_sapphire">Xanh sapphire</string>
+    <string name="color_special_malachite">Xanh khổng tước</string>
+    <string name="color_special_neon_green">Xanh lá neon</string>
+    <string name="color_special_neon_cyan">Lục lam neon</string>
+    <string name="color_special_neon_blue">Xanh lam neon</string>
+    <string name="color_special_neon_pink">Hồng neon</string>
+    <string name="color_special_neon_orange">Cam neon</string>
+    
+    <!-- Định dạng ngày tháng -->
+    <string name="date_today">Hôm nay</string>
+    <string name="date_yesterday">Hôm qua</string>
+    <string name="date_days_ago">%d ngày trước</string>
+    
+    <!-- Đồng bộ LAN -->
+    <string name="lan_sync_title">Đồng bộ mạng LAN</string>
+    <string name="sync_options">Tùy chọn đồng bộ</string>
+    <string name="search_nearby_devices">Tìm kiếm thiết bị gần đây</string>
+    <string name="search_nearby_devices_desc">Khám phá các thiết bị trong cùng mạng WiFi</string>
+    <string name="wait_for_connection">Đang chờ kết nối</string>
+    <string name="wait_for_connection_desc">Các thiết bị khác có thể tìm thấy thiết bị này</string>
+    <string name="this_device">Thiết bị này</string>
+    <string name="lan_sync_ready">Đã sẵn sàng, có thể đồng bộ với thiết bị khác cùng mạng</string>
+    <string name="sync_info_title">Hướng dẫn đồng bộ mạng LAN</string>
+    <string name="sync_info_content">1. Kết nối tất cả thiết bị vào cùng mạng WiFi\n2. Tìm kiếm thiết bị gần đây\n3. Chọn thiết bị để đồng bộ\n4. Dữ liệu sẽ được đồng bộ giữa các thiết bị</string>
+    <string name="edit_device_name">Sửa tên thiết bị</string>
+    <string name="device_name">Tên thiết bị</string>
+    <string name="searching_devices">Đang tìm kiếm thiết bị</string>
+    <string name="make_sure_same_wifi">Hãy đảm bảo tất cả thiết bị kết nối cùng mạng WiFi</string>
+    <string name="searching">Đang tìm kiếm…</string>
+    <string name="no_devices_found">Không tìm thấy thiết bị</string>
+    <string name="device_name_updated">Đã cập nhật tên thiết bị</string>
+    <string name="sync_in_progress">Đang đồng bộ...</string>
+    <string name="sync_request_title">Yêu cầu đồng bộ</string>
+    <string name="sync_request_message">Bạn có muốn đồng bộ dữ liệu với thiết bị này không?</string>
+    <string name="accept">Chấp nhận</string>
+    <string name="reject">Từ chối</string>
+    <string name="incoming_sync_request_title">Nhận yêu cầu đồng bộ</string>
+    <string name="incoming_sync_request_message">Đang muốn đồng bộ dữ liệu với thiết bị của bạn</string>
+    
+    <!-- Giấy phép mã nguồn mở -->
+    <string name="open_source_licenses">Giấy phép mã nguồn mở</string>
+    <string name="open_source_licenses_description">Xem giấy phép của các thành phần bên thứ ba</string>
+</resources>
