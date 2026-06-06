@@ -124,7 +124,6 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .clickable {
                         showLanguageBottomSheet = true
-                        openSystemAppLanguageSettings(context)
                     },
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = MaterialTheme.shapes.medium
@@ -546,36 +545,6 @@ fun AppVersionInfo(context: Context) {
             .padding(top = 16.dp, bottom = 8.dp)
             .wrapContentWidth(Alignment.CenterHorizontally)
     )
-}
-
-fun openSystemAppLanguageSettings(context: Context) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        try {
-            val intent = Intent(Settings.ACTION_APP_LOCALE_SETTINGS).apply {
-                data = Uri.fromParts("package", context.packageName, null)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            context.startActivity(intent)
-        } catch (e: Exception) {
-            openAppInfoSettings(context)
-        }
-    }
-}
-
-fun openAppInfoSettings(context: Context) {
-    try {
-        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-            data = Uri.fromParts("package", context.packageName, null)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-        context.startActivity(intent)
-    } catch (e: Exception) {
-        Toast.makeText(
-            context,
-            "Failed to open settings",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
