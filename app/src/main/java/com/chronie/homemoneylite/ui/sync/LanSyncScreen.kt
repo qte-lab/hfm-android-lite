@@ -331,7 +331,7 @@ fun SyncActionCard(
 ) {
     val scale by animateFloatAsState(
         targetValue = if (enabled) 1f else 0.98f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+        animationSpec = tween(200)
     )
     
     Card(
@@ -667,7 +667,7 @@ fun DeviceListItem(
 ) {
     val scale by animateFloatAsState(
         targetValue = 1f,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+        animationSpec = tween(200)
     )
     
     Card(

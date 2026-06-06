@@ -2,7 +2,7 @@ package com.chronie.homemoneylite.ui.main
 
 import android.content.Context
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -214,10 +214,7 @@ private fun BottomNavigationBarImpl(
                                     animationScope.launch {
                                         backgroundPosition.animateTo(
                                             targetValue = item.index.toFloat(),
-                                            animationSpec = spring(
-                                                dampingRatio = 0.7f,
-                                                stiffness = 300f
-                                            )
+                                            animationSpec = tween(200)
                                         )
                                         currentIndex = item.index
                                         onTabSelected(item.index)
