@@ -76,9 +76,9 @@
 -dontwarn org.tukaani.xz.**
 
 # Retrofit and DTO classes
--keep class com.chronie.homemoney.data.remote.dto.** { *; }
--keep class com.chronie.homemoney.data.remote.api.** { *; }
--keep class com.chronie.homemoney.domain.model.** { *; }
+-keep class com.chronie.homemoneylite.data.remote.dto.** { *; }
+-keep class com.chronie.homemoneylite.data.remote.api.** { *; }
+-keep class com.chronie.homemoneylite.domain.model.** { *; }
 
 # Retrofit
 -keepattributes Signature

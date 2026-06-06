@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">Buku Kira-Kira Keluarga</string>
     <string name="title_activity_main">Buku Kira-Kira Keluarga</string>
-    <string name="package_name">com.chronie.homemoney</string>
-    <string name="custom_url_scheme">com.chronie.homemoney</string>
+    <string name="package_name">com.chronie.homemoneylite</string>
+    <string name="custom_url_scheme">com.chronie.homemoneylite</string>
     
     <!-- Tetapan -->
     <string name="settings">Tetapan</string>

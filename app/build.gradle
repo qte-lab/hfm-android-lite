@@ -34,11 +34,11 @@ def getLocalProperty(String key) {
 }
 
 android {
-    namespace "com.chronie.homemoney"
+    namespace "com.chronie.homemoneylite"
     compileSdk rootProject.ext.compileSdkVersion
     
     defaultConfig {
-        applicationId "com.chronie.homemoney"
+        applicationId "com.chronie.homemoneylite"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         

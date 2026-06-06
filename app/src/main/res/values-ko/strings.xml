@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">가계부</string>
     <string name="title_activity_main">가계부</string>
-    <string name="package_name">com.chronie.homemoney</string>
-    <string name="custom_url_scheme">com.chronie.homemoney</string>
+    <string name="package_name">com.chronie.homemoneylite</string>
+    <string name="custom_url_scheme">com.chronie.homemoneylite</string>
     
     <!-- 설정 -->
     <string name="settings">설정</string>

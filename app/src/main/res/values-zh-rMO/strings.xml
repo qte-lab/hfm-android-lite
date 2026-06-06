@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">家庭記帳簿</string>
     <string name="title_activity_main">家庭記帳簿</string>
-    <string name="package_name">com.chronie.homemoney</string>
-    <string name="custom_url_scheme">com.chronie.homemoney</string>
+    <string name="package_name">com.chronie.homemoneylite</string>
+    <string name="custom_url_scheme">com.chronie.homemoneylite</string>
     
     <!-- Settings -->
     <string name="settings">設定</string>

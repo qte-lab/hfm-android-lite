@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">บัญชีครัวเรือน</string>
     <string name="title_activity_main">บัญชีครัวเรือน</string>
-    <string name="package_name">com.chronie.homemoney</string>
-    <string name="custom_url_scheme">com.chronie.homemoney</string>
+    <string name="package_name">com.chronie.homemoneylite</string>
+    <string name="custom_url_scheme">com.chronie.homemoneylite</string>
     
     <!-- การตั้งค่า (Settings) -->
     <string name="settings">การตั้งค่า</string>

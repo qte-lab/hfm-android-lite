@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">Sổ thu chi gia đình</string>
     <string name="title_activity_main">Sổ thu chi gia đình</string>
-    <string name="package_name">com.chronie.homemoney</string>
-    <string name="custom_url_scheme">com.chronie.homemoney</string>
+    <string name="package_name">com.chronie.homemoneylite</string>
+    <string name="custom_url_scheme">com.chronie.homemoneylite</string>
     
     <!-- Cài đặt -->
     <string name="settings">Cài đặt</string>
