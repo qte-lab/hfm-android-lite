@@ -337,30 +337,6 @@
     <string name="feedback_title">Feedback</string>
     <string name="feedback_description">Help us improve with your suggestions</string>
 
-    <!-- Authentication -->
-    <string name="auth_login_title">Login</string>
-    <string name="auth_username_label">Username</string>
-    <string name="auth_username_hint">Enter username</string>
-    <string name="auth_login_button">Login</string>
-    <string name="auth_logout_button">Logout</string>
-    <string name="auth_current_user">Current User</string>
-    <string name="auth_not_logged_in">Not logged in</string>
-    <string name="auth_login_required">Please login first</string>
-    <string name="auth_username_empty">Username cannot be empty</string>
-    <string name="auth_login_success">Login successful</string>
-    <string name="auth_login_failed">Login failed</string>
-    <string name="auth_logout_success">Logged out</string>
-    <string name="auth_logging_in">Logging in…</string>
-    <string name="auth_welcome_back">Welcome back, %s!</string>
-    <string name="auth_login_hint">Enter username to login or register</string>
-    <string name="auth_account_info">Account</string>
-    <string name="auth_logout_confirm_title">Logout</string>
-    <string name="auth_logout_confirm_message">Are you sure you want to logout?</string>
-    <string name="crop_image_failed">Failed to process cropped image: %s</string>
-    <string name="membership_title">Account</string>
-    <string name="auth_logged_in">Logged in</string>
-    <string name="auth_skip_login">Skip</string>
-
     <!-- Health Check -->
     <string name="health_check_channel_name">Server Connection Monitor</string>
     <string name="health_check_channel_description">Monitors server connection status</string>

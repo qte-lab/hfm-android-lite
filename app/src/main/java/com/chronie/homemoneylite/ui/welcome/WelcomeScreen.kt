@@ -1,169 +1,57 @@
 package com.chronie.homemoneylite.ui.welcome
 
-import android.content.Context
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.chronie.homemoneylite.R
-import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
 
 @Composable
 fun WelcomeScreen(
-    context: Context,
-    onSettingsClick: () -> Unit,
-    onGetStartedClick: () -> Unit,
-    onNavigateToMembership: () -> Unit = {},
-    viewModel: WelcomeViewModel = hiltViewModel()
+    onGetStartedClick: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    val username by viewModel.username.collectAsState()
+    val context = LocalContext.current
+    val adUrl = "https://m.tb.cn/h.RlwomIHlT9pVpOi"
 
-    // 监听跳过登录事件
-    LaunchedEffect(Unit) {
-        viewModel.skipLoginEvent.collect {
-            onGetStartedClick()
-        }
-    }
-
-    LaunchedEffect(uiState) {
-        if (uiState is WelcomeUiState.Error) {
-            // 错误会在UI中显示，3秒后自动清除
-            kotlinx.coroutines.delay(3000)
-            viewModel.clearError()
-        }
-    }
-
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .safeDrawingPadding()
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .clickable {
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(adUrl))
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+                onGetStartedClick()
+            },
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = context.getString(R.string.app_name),
-            style = MaterialTheme.typography.headlineLarge,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.primary
+        Image(
+            painter = painterResource(R.drawable.ad_splash),
+            contentDescription = "广告",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
-
         Text(
-            text = context.getString(R.string.welcome_message),
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface
+            text = "点击前往淘宝",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
         )
-
-        Spacer(modifier = Modifier.height(48.dp))
-
-        when (uiState) {
-            is WelcomeUiState.CheckingLogin -> {
-                ExpressiveLoadingIndicator()
-            }
-            is WelcomeUiState.NotLoggedIn -> {
-                LoginForm(
-                    username = username,
-                    onUsernameChange = viewModel::onUsernameChange,
-                    onLoginClick = viewModel::login,
-                    onSkipLogin = { viewModel.skipLogin() },
-                    context = context
-                )
-            }
-            is WelcomeUiState.Loading -> {
-                ExpressiveLoadingIndicator()
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = context.getString(R.string.auth_logging_in),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-            is WelcomeUiState.LoggedIn -> {
-                val state = uiState as WelcomeUiState.LoggedIn
-                Text(
-                    text = context.getString(R.string.auth_welcome_back, state.username),
-                    style = MaterialTheme.typography.titleMedium,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                Button(
-                    onClick = onGetStartedClick,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(context.getString(R.string.getting_started))
-                }
-            }
-            is WelcomeUiState.Error -> {
-                val errorMessage = (uiState as WelcomeUiState.Error).message
-                Text(
-                    text = errorMessage,
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                LoginForm(
-                    username = username,
-                    onUsernameChange = viewModel::onUsernameChange,
-                    onLoginClick = viewModel::login,
-                    onSkipLogin = { viewModel.skipLogin() },
-                    context = context
-                )
-            }
-        }
     }
-}
-
-@Composable
-private fun LoginForm(
-    username: String,
-    onUsernameChange: (String) -> Unit,
-    onLoginClick: () -> Unit,
-    onSkipLogin: () -> Unit,
-    context: Context
-) {
-    OutlinedTextField(
-        value = username,
-        onValueChange = onUsernameChange,
-        label = { Text(context.getString(R.string.auth_username_label)) },
-        placeholder = { Text(context.getString(R.string.auth_username_hint)) },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth()
-    )
-
-    Spacer(modifier = Modifier.height(24.dp))
-
-    Button(
-        onClick = onLoginClick,
-        modifier = Modifier.fillMaxWidth(),
-        enabled = username.isNotBlank()
-    ) {
-        Text(context.getString(R.string.auth_login_button))
-    }
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    // 跳过登录按钮
-    TextButton(
-        onClick = onSkipLogin,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(context.getString(R.string.auth_skip_login))
-    }
-
-    Spacer(modifier = Modifier.height(8.dp))
-
-    Text(
-        text = context.getString(R.string.auth_login_hint),
-        style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        textAlign = TextAlign.Center
-    )
 }

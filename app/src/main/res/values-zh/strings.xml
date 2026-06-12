@@ -336,30 +336,6 @@
     <string name="feedback_title">意见反馈</string>
     <string name="feedback_description">分享您的建议，帮助我们改进</string>
 
-    <!-- 用户认证 -->
-    <string name="auth_login_title">登录</string>
-    <string name="auth_username_label">用户名</string>
-    <string name="auth_username_hint">请输入用户名</string>
-    <string name="auth_login_button">登录</string>
-    <string name="auth_logout_button">退出登录</string>
-    <string name="auth_current_user">当前用户</string>
-    <string name="auth_not_logged_in">未登录</string>
-    <string name="auth_login_required">请先登录</string>
-    <string name="auth_username_empty">用户名不能为空</string>
-    <string name="auth_login_success">登录成功</string>
-    <string name="auth_login_failed">登录失败</string>
-    <string name="auth_logout_success">已退出登录</string>
-    <string name="auth_logging_in">登录中…</string>
-    <string name="auth_welcome_back">欢迎回来，%s！</string>
-    <string name="auth_login_hint">输入用户名登录或注册</string>
-    <string name="auth_account_info">账户信息</string>
-    <string name="auth_logout_confirm_title">退出登录</string>
-    <string name="auth_logout_confirm_message">确定要退出登录吗？</string>
-    <string name="crop_image_failed">图片处理失败：%s</string>
-    <string name="membership_title">账号</string>
-    <string name="auth_logged_in">已登录</string>
-    <string name="auth_skip_login">跳过</string>
-
     <!-- 健康检查 -->
     <string name="health_check_channel_name">服务器连接状态</string>
     <string name="health_check_channel_description">监控服务器连接</string>

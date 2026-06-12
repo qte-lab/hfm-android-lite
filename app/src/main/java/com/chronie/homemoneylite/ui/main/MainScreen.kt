@@ -79,10 +79,6 @@ fun MainScreen(
                     SettingsScreen(
                         context = context,
                         onNavigateToDatabaseTest = onNavigateToDatabaseTest,
-                        onNavigateToMembership = {
-                            android.util.Log.d("MainScreen", "收到 onNavigateToMembership 回调")
-                            onNavigateToSettings()
-                        },
                         onNavigateToLanSync = onNavigateToLanSync,
                         onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses,
                         onLogout = {

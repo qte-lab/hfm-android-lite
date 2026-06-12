@@ -336,30 +336,6 @@
     <string name="feedback_title">意見回饋</string>
     <string name="feedback_description">分享您的建議，助我們改進</string>
 
-    <!-- 用戶登入 -->
-    <string name="auth_login_title">登入</string>
-    <string name="auth_username_label">用戶名稱</string>
-    <string name="auth_username_hint">請輸入用戶名稱</string>
-    <string name="auth_login_button">登入</string>
-    <string name="auth_logout_button">登出</string>
-    <string name="auth_current_user">目前用戶</string>
-    <string name="auth_not_logged_in">未登入</string>
-    <string name="auth_login_required">請先登入</string>
-    <string name="auth_username_empty">用戶名稱不能空白</string>
-    <string name="auth_login_success">登入成功</string>
-    <string name="auth_login_failed">登入失敗</string>
-    <string name="auth_logout_success">已登出</string>
-    <string name="auth_logging_in">登入中…</string>
-    <string name="auth_welcome_back">歡迎回來，%s！</string>
-    <string name="auth_login_hint">輸入用戶名稱即可登入或註冊</string>
-    <string name="auth_account_info">帳戶資料</string>
-    <string name="auth_logout_confirm_title">確認登出</string>
-    <string name="auth_logout_confirm_message">確定要登出？</string>
-    <string name="crop_image_failed">裁剪相片失敗：%s</string>
-    <string name="membership_title">帳戶</string>
-    <string name="auth_logged_in">已登入</string>
-    <string name="auth_skip_login">跳過</string>
-
     <!-- 連線檢查 -->
     <string name="health_check_channel_name">伺服器連線監察</string>
     <string name="health_check_channel_description">監察伺服器連線狀態</string>

@@ -40,7 +40,6 @@ import com.chronie.homemoneylite.ui.sync.LanSyncScreen
 import com.chronie.homemoneylite.ui.test.DatabaseTestScreen
 import com.chronie.homemoneylite.ui.theme.HomeMoneyTheme
 import com.chronie.homemoneylite.ui.welcome.WelcomeScreen
-import com.chronie.homemoneylite.ui.membership.MembershipScreen
 import com.chronie.homemoneylite.domain.usecase.CheckLoginStatusUseCase
 import com.chronie.homemoneylite.service.HealthCheckService
 import dagger.hilt.android.AndroidEntryPoint
@@ -178,31 +177,8 @@ fun HomeMoneyApp(
     ) {
         composable("welcome") {
             WelcomeScreen(
-                context = context,
-                onSettingsClick = {
-                    navController.navigate("settings")
-                },
                 onGetStartedClick = {
                     navController.navigate("main") {
-                        popUpTo(0) { inclusive = true }
-                    }
-                },
-                onNavigateToMembership = {
-                    navController.navigate("membership") {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
-            )
-        }
-
-        composable("membership") {
-            MembershipScreen(
-                context = context,
-                onNavigateBack = {
-                    navController.popBackStack()
-                },
-                onLogout = {
-                    navController.navigate("welcome") {
                         popUpTo(0) { inclusive = true }
                     }
                 }
@@ -214,9 +190,6 @@ fun HomeMoneyApp(
                 context = context,
                 onNavigateToDatabaseTest = {
                     navController.navigate("database_test")
-                },
-                onNavigateToMembership = {
-                    navController.navigate("membership")
                 },
                 onNavigateToLanSync = {
                     navController.navigate("lan_sync")
