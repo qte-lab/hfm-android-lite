@@ -8,22 +8,6 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.compose'
 }
 
-// 使用更兼容的日期格式化方式
-def getBuildDate() {
-    def calendar = Calendar.getInstance()
-    def year = calendar.get(Calendar.YEAR)
-    def month = calendar.get(Calendar.MONTH) + 1
-    def day = calendar.get(Calendar.DAY_OF_MONTH)
-    return String.format("%04d%02d%02d", year, month, day)
-}
-
-def getBuildTime() {
-    def calendar = Calendar.getInstance()
-    def hour = calendar.get(Calendar.HOUR_OF_DAY)
-    def minute = calendar.get(Calendar.MINUTE)
-    return String.format("%02d%02d", hour, minute)
-}
-
 def getLocalProperty(String key) {
     Properties properties = new Properties()
     def localPropertiesFile = rootProject.file('local.properties')
@@ -46,12 +30,8 @@ android {
             abiFilters 'arm64-v8a', 'armeabi-v7a'
         }
         
-        def buildDate = getBuildDate()
-        def defaultBuildNumber = getBuildTime()
-        def buildNumber = project.hasProperty("buildNumber") ? project.buildNumber : defaultBuildNumber
-        
-        versionCode = (System.currentTimeMillis() / 1000).intValue()
-        versionName = "1.${buildDate}.${buildNumber}"
+        versionCode = 1000
+        versionName = "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
         aaptOptions {
