@@ -1,173 +1,66 @@
-# Home Money - Android Native Application
+# HFM Lite- Android Native Application
 
 ## Overview
 
-This is the native Android implementation of the Home Money financial tracking application. The app is built using modern Android development practices with Kotlin, Jetpack Compose, and follows Clean Architecture principles. It provides a comprehensive set of features for expense tracking, budget management, data synchronization, and more.
+This is the native Android implementation of the Home Money financial tracking lite version application, designed to provide a comprehensive and modern solution for personal finance management. Built with **Kotlin** and **Jetpack Compose**, the app adheres to **Clean Architecture principles** to ensure maintainability, scalability, and testability.
 
 ## Features
 
 ### Core Functionality
-- **Expense Tracking**: Add, view, edit, and delete expense records with support for 21 expense categories
-- **AI-Powered Recognition**: Intelligent expense recognition from images and text using SiliconFlow API
-- **Budget Management**: Set monthly spending limits with warning thresholds and real-time usage tracking
-- **Data Synchronization**: Automatic background sync with server, offline support with local caching
-- **Search & Filtering**: Advanced filtering by date range, expense type, amount range, and keywords
-- **Multi-language Support**: Full internationalization support for English, Simplified Chinese, Traditional Chinese, Hong Kong, Macau, and Singapore variants
 
-### New & Enhanced Features
-- **LAN Device Sync**: Peer-to-peer data synchronization between devices over local network using Bluetooth
-- **Data Visualization**: Interactive charts and radar charts for weekday spending analysis
-- **Membership Management**: User profile and membership features
-- **Excel Import/Export**: Import expenses from Excel files and export data for backup
-- **Image Cropping**: Built-in image cropping for AI expense recognition
-- **Error Reporting**: Automatic crash reporting and error logging for debugging
-- **Health Check Service**: Server health monitoring
+*   **Expense Tracking**: Users can easily add, view, edit, and delete expense records, categorized across 21 predefined categories.
+*   **AI-Powered Recognition**: Leverage the **SiliconFlow API** for intelligent expense recognition from images and text, streamlining the data entry process.
+*   **Budget Management**: Set monthly spending limits with customizable warning thresholds and monitor real-time usage to stay within financial goals.
+*   **Data Synchronization**: Enjoy seamless financial management with automatic background synchronization with a server and robust offline support through local caching.
+*   **Search & Filtering**: Advanced search capabilities allow users to filter expenses by date range, expense type, amount range, and keywords.
+*   **Multi-language Support**: The application offers full internationalization, supporting English, Simplified Chinese (zh-cn), Traditional Chinese (zh-tw), Hong Kong (zh-hk), Macau (zh-mo) variants.
 
-### Technical Features
-- **Encrypted Database**: SQLCipher-encrypted local storage for sensitive financial data
-- **Material Design 3 Expressive**: Modern UI following Google's latest design guidelines with expressive components
-- **Edge-to-Edge Display**: Immersive full-screen experience
-- **Developer Mode**: Built-in database testing and debugging tools
-- **Customizable Theme**: Color picker for personalizing the app appearance
+### Enhanced Features
 
-## Architecture
+*   **LAN Device Sync**: Facilitates peer-to-peer data synchronization between devices over a local network using Bluetooth, enhancing data accessibility and backup options.
+*   **Data Visualization**: Provides interactive charts and radar charts for insightful weekday spending analysis, helping users understand their financial habits.
+*   **Excel Import/Export**: Allows for easy import of expense data from Excel files and export of data for backup or further analysis.
+*   **Image Cropping**: Includes a built-in image cropping tool specifically designed to optimize images for AI expense recognition.
+*   **Error Reporting**: Features automatic crash reporting and error logging to aid in debugging and improving application stability.
+*   **Health Check Service**: Monitors server health to ensure continuous and reliable operation.
+*   **Welcome Screen with Ad Functionality**: The welcome screen now includes integrated advertising functionality.
 
-### Clean Architecture Layers
+### Technical Highlights
 
-```
-┌─────────────────────────────────────────┐
-│         Presentation Layer              │
-│  (Compose UI + ViewModels)              │
-├─────────────────────────────────────────┤
-│         Domain Layer                    │
-│  (Use Cases + Models + Repositories)    │
-├─────────────────────────────────────────┤
-│         Data Layer                      │
-│  (Room DB + Retrofit + Mappers)         │
-├─────────────────────────────────────────┤
-│         Framework Layer                 │
-│  (Android SDK + Third-party Libraries)  │
-└─────────────────────────────────────────┘
-```
+*   **Encrypted Database**: Sensitive financial data is secured using **SQLCipher-encrypted local storage**.
+*   **Material Design 3 Expressive UI**: The user interface follows Google's latest Material Design 3 guidelines, offering a modern and expressive user experience.
+*   **Edge-to-Edge Display**: Provides an immersive full-screen experience by utilizing the entire display area.
+*   **Developer Mode**: A built-in developer mode offers tools for database testing and debugging.
+*   **Customizable Theme**: Users can personalize the app's appearance with a color picker for theme customization.
 
-### Key Components
+## Technical Stack
 
-#### Data Layer
-- **Room Database**: Encrypted local storage with SQLCipher
-- **Retrofit**: RESTful API client for server communication
-- **Repository Pattern**: Abstraction layer for data sources
-- **Data Mappers**: Convert between Entity, Domain, and DTO models
-- **Excel Integration**: fastExcel for import/export functionality
+*   **Language**: Kotlin
+*   **UI Toolkit**: Jetpack Compose
+*   **Architecture**: Clean Architecture
+*   **Database Encryption**: SQLCipher
+*   **API Integration**: SiliconFlow API (for AI recognition)
+*   **Minimum SDK Version**: 24
+*   **Compile SDK Version**: 37
+*   **Target SDK Version**: 32
 
-#### Domain Layer
-- **Use Cases**: Business logic encapsulation
-- **Domain Models**: Pure Kotlin data classes
-- **Repository Interfaces**: Contracts for data operations
-- **Sync Managers**: LAN and server synchronization
+## Recent Changes
 
-#### Presentation Layer
-- **Jetpack Compose**: Modern declarative UI framework
-- **ViewModels**: UI state management with Kotlin Flow
-- **Navigation Component**: Type-safe navigation between screens
-- **Material 3 Expressive**: Enhanced UI components
-
-## Tech Stack
-
-### Core Technologies
-- **Language**: Kotlin 2.3.20
-- **UI Framework**: Jetpack Compose (BOM 2026.03.01)
-- **Dependency Injection**: Hilt 2.59.2
-- **Database**: Room 2.8.4 with SQLCipher 4.14.0
-- **Networking**: Retrofit 3.0.0 + OkHttp 5.3.2
-- **Async**: Kotlin Coroutines 1.10.2 + Flow
-
-### Key Libraries
-- **Material Design 3**: Modern UI components (1.5.0-alpha16)
-- **Material Expressive**: Enhanced Material components (1.14.0-alpha10)
-- **Navigation Compose**: Type-safe navigation (2.9.7)
-- **Paging 3**: Efficient data loading (3.4.2)
-- **WorkManager**: Background task scheduling (2.11.2)
-- **Coil**: Image loading and caching (2.7.0)
-- **Gson**: JSON serialization
-- **DataStore**: Preferences storage (1.2.1)
-- **fastExcel**: Excel file handling (0.20.0)
-- **uCrop**: Image cropping (2.2.11)
-- **m3color**: Material 3 color utilities (2025.4)
-
-### Security
-- **SQLCipher**: Database encryption
-- **EncryptedSharedPreferences**: Secure key storage
-- **Android Keystore**: Hardware-backed key management
-- **Error Reporting**: Secure error logging
-
-## Project Structure
-
-```
-android/
-├── app/
-│   ├── src/
-│   │   ├── main/
-│   │   │   ├── java/com/chronie/homemoney/
-│   │   │   │   ├── core/              # Core utilities
-│   │   │   │   │   ├── common/        # Common utilities (Language, DeveloperMode)
-│   │   │   │   │   ├── error/         # Error reporting system
-│   │   │   │   │   └── network/       # Network monitoring
-│   │   │   │   ├── data/              # Data layer
-│   │   │   │   │   ├── local/         # Room database
-│   │   │   │   │   │   ├── dao/       # Data access objects
-│   │   │   │   │   │   └── entity/    # Database entities
-│   │   │   │   │   ├── remote/        # API layer
-│   │   │   │   │   │   ├── api/       # Retrofit interfaces
-│   │   │   │   │   │   ├── dto/       # Data transfer objects
-│   │   │   │   │   │   └── interceptor/ # HTTP interceptors
-│   │   │   │   │   ├── repository/    # Repository implementations
-│   │   │   │   │   ├── mapper/        # Data mappers
-│   │   │   │   │   └── sync/          # Sync management (LAN + Server)
-│   │   │   │   ├── di/                # Dependency injection
-│   │   │   │   ├── domain/            # Domain layer
-│   │   │   │   │   ├── model/         # Domain models
-│   │   │   │   │   ├── repository/    # Repository interfaces
-│   │   │   │   │   ├── usecase/       # Use cases
-│   │   │   │   │   └── sync/          # Sync interfaces
-│   │   │   │   ├── service/           # Background services
-│   │   │   │   ├── ui/                # Presentation layer
-│   │   │   │   │   ├── budget/        # Budget management
-│   │   │   │   │   ├── charts/        # Data visualization
-│   │   │   │   │   ├── components/    # Reusable UI components
-│   │   │   │   │   ├── expense/       # Expense tracking
-│   │   │   │   │   ├── main/          # Main screen
-│   │   │   │   │   ├── membership/    # Membership features
-│   │   │   │   │   ├── settings/      # Settings
-│   │   │   │   │   ├── sync/          # LAN sync screen
-│   │   │   │   │   ├── test/          # Testing screens
-│   │   │   │   │   ├── theme/         # Material theme
-│   │   │   │   │   └── welcome/       # Welcome screen
-│   │   │   │   ├── worker/            # Background workers
-│   │   │   │   └── MainActivity.kt    # Main activity
-│   │   │   ├── res/                   # Resources
-│   │   │   │   ├── values/            # English strings
-│   │   │   │   ├── values-zh/         # Simplified Chinese
-│   │   │   │   ├── values-zh-rHK/     # Hong Kong Chinese
-│   │   │   │   ├── values-zh-rMO/     # Macau Chinese
-│   │   │   │   ├── values-zh-rSG/     # Singapore Chinese
-│   │   │   │   └── values-zh-rTW/     # Traditional Chinese
-│   │   │   └── AndroidManifest.xml
-│   │   └── androidTest/               # Instrumented tests
-│   └── build.gradle                   # App build config
-├── gradle/                            # Gradle wrapper
-├── build.gradle                       # Project build config
-├── settings.gradle                    # Project settings
-├── variables.gradle                   # Version variables
-└── README.md                          # This file
-```
+*   **Membership Features Removed**: Membership navigation and related UI components have been removed to streamline the application.
+*   **Ad Functionality Added**: The welcome screen now incorporates advertising functionality.
+*   **Language Support Refined**: The application now specifically supports English, Simplified Chinese, Traditional Chinese, Hong Kong, Macau variants.
+*   **UI/Animation Refinements**: Unused language intent code has been removed, and wavy progress indicators have been replaced with standard Material3 linear progress indicators. Animations have been simplified.
+*   **ABI Support**: Added `armeabi-v7a` ABI support.
+*   **Package Renaming**: The application package has been renamed to `com.chronie.homemoneylite`.
+*   **SDK Version Updates**: `minSdkVersion` has been bumped to 24, and the Gradle wrapper URL has been updated.
 
 ## Getting Started
 
 ### Prerequisites
-- Android Studio Hedgehog (2023.1.1) or later
+- Android Studio 
 - JDK 17 or later
-- Android SDK36 (Android 16)
-- Minimum SDK 26 (Android 8.0)
+- Android SDK37 (Android 17)
+- Minimum SDK 24 (Android 7.0)
 
 ### Building the Project
 
@@ -224,11 +117,6 @@ private const val BASE_URL = "http://YOUR_SERVER_IP:3010/"
 ### API Keys
 Configure API keys in the Settings screen:
 - **SiliconFlow API Key**: Required for AI expense recognition feature
-
-### Versioning
-The app uses dynamic versioning based on build date and time:
-- `versionCode`: Timestamp-based unique identifier
-- `versionName`: Format `1.YYYYMMDD.HHMM`
 
 ## Features Guide
 
@@ -339,7 +227,7 @@ The app uses dynamic versioning based on build date and time:
 
 #### Language Settings
 - Go to Settings → Language
-- Choose from English, Simplified Chinese, Traditional Chinese, Hong Kong, Macau, or Singapore variants
+- Choose from English, Simplified Chinese, Traditional Chinese, Hong Kong, Macau variants
 - UI updates immediately without restart
 - Preference is saved and persists across app restarts
 
@@ -552,9 +440,6 @@ CREATE TABLE sync_queue (
 3. Write/update tests
 4. Update documentation
 5. Submit pull request with description
-
-#### Known Issues
-- None currently reported
 
 ## License
 
