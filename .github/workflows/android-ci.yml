@@ -46,10 +46,9 @@ jobs:
             gradle-${{ runner.os }}-
 
       - name: Grant Gradle permissions
-        run: chmod +x android/gradlew
+        run: chmod +x gradlew
 
       - name: Prepare release signing
-        working-directory: android
         run: |
           cat > local.properties <<'EOF'
           sdk.dir=${ANDROID_SDK_ROOT}
