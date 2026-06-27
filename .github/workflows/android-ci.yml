@@ -52,12 +52,12 @@ jobs:
         run: |
           cat > local.properties <<'EOF'
           sdk.dir=${ANDROID_SDK_ROOT}
-          RELEASE_STORE_FILE=app/release.keystore
+          RELEASE_STORE_FILE=../release.keystore
           RELEASE_STORE_PASSWORD=${{ secrets.RELEASE_STORE_PASSWORD }}
           RELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }}
           RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}
           EOF
-          echo "${{ secrets.ANDROID_RELEASE_KEYSTORE_BASE64 }}" | base64 --decode > app/release.keystore
+          echo "${{ secrets.ANDROID_RELEASE_KEYSTORE_BASE64 }}" | base64 --decode > release.keystore
 
       - name: Build signed release APK
         run: ./gradlew clean assembleRelease --no-daemon --console=plain
