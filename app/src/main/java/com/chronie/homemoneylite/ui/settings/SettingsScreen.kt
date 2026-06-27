@@ -25,9 +25,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Storage
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -51,6 +57,34 @@ import com.chronie.homemoneylite.ui.expense.formatDateByLocale
 import com.chronie.homemoneylite.ui.theme.LocalThemeSettings
 import com.chronie.homemoneylite.ui.theme.ThemeSettings
 
+private enum class SettingsCategoryPage {
+    GENERAL,
+    DATA,
+    ACCOUNT,
+    DEVELOPMENT
+}
+
+private fun SettingsCategoryPage.title(context: Context): String = when (this) {
+    SettingsCategoryPage.GENERAL -> context.getString(R.string.settings)
+    SettingsCategoryPage.DATA -> context.getString(R.string.data_import_export)
+    SettingsCategoryPage.ACCOUNT -> context.getString(R.string.account)
+    SettingsCategoryPage.DEVELOPMENT -> context.getString(R.string.developer_options)
+}
+
+private fun SettingsCategoryPage.description(context: Context): String = when (this) {
+    SettingsCategoryPage.GENERAL -> context.getString(R.string.language_settings)
+    SettingsCategoryPage.DATA -> context.getString(R.string.sync_title)
+    SettingsCategoryPage.ACCOUNT -> context.getString(R.string.account)
+    SettingsCategoryPage.DEVELOPMENT -> context.getString(R.string.database_test)
+}
+
+private fun SettingsCategoryPage.icon(): ImageVector = when (this) {
+    SettingsCategoryPage.GENERAL -> Icons.Default.Settings
+    SettingsCategoryPage.DATA -> Icons.Default.Storage
+    SettingsCategoryPage.ACCOUNT -> Icons.Default.AccountCircle
+    SettingsCategoryPage.DEVELOPMENT -> Icons.Default.Build
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
@@ -63,12 +97,11 @@ fun SettingsScreen(
     onRequireLogin: () -> Unit = {}
 ) {
     val currentLanguage by viewModel.currentLanguage.collectAsState()
-    val scrollState = androidx.compose.foundation.rememberScrollState()
+    val scrollState = rememberScrollState()
     var showLanguageBottomSheet by remember { mutableStateOf(false) }
+    var selectedCategory by remember { mutableStateOf<SettingsCategoryPage?>(null) }
 
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.background,
@@ -80,8 +113,14 @@ fun SettingsScreen(
                     .padding(horizontal = 16.dp, vertical = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                if (selectedCategory != null) {
+                    IconButton(onClick = { selectedCategory = null }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
                 Text(
-                    text = context.getString(R.string.settings),
+                    text = selectedCategory?.title(context) ?: context.getString(R.string.settings),
                     style = MaterialTheme.typography.titleLarge
                 )
             }
@@ -95,330 +134,489 @@ fun SettingsScreen(
                 .padding(bottom = 80.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Spacer(modifier = Modifier.height(4.dp))
+            if (selectedCategory == null) {
+                Text(
+                    text = "选择一个设置分类继续管理",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
 
-            SettingsCategorySection(title = context.getString(R.string.language_settings)) {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            showLanguageBottomSheet = true
-                        },
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Row(
+                SettingsCategoryPage.GENERAL.ordinal
+
+                listOf(
+                    SettingsCategoryPage.GENERAL,
+                    SettingsCategoryPage.DATA,
+                    SettingsCategoryPage.ACCOUNT,
+                    SettingsCategoryPage.DEVELOPMENT
+                ).forEach { category ->
+                    Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                            .clickable { selectedCategory = category },
+                        color = MaterialTheme.colorScheme.surfaceContainerLow,
+                        shape = MaterialTheme.shapes.large,
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
+                        )
                     ) {
-                        Column(modifier = Modifier.weight(1f)) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Surface(
+                                shape = CircleShape,
+                                color = MaterialTheme.colorScheme.primaryContainer,
+                                modifier = Modifier.size(44.dp)
+                            ) {
+                                Icon(
+                                    imageVector = category.icon(),
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(10.dp),
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = category.title(context),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(
+                                    text = category.description(context),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+
                             Text(
-                                text = context.getString(R.string.select_language),
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Text(
-                                text = currentLanguage.localName,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                text = ">",
+                                style = MaterialTheme.typography.titleLarge
                             )
                         }
-                        Text(
-                            text = ">",
-                            style = MaterialTheme.typography.titleLarge
-                        )
                     }
                 }
-
-                if (showLanguageBottomSheet) {
-                    LanguageSelectorBottomSheet(
+            } else {
+                when (selectedCategory) {
+                    SettingsCategoryPage.GENERAL -> GeneralSettingsContent(
+                        viewModel = viewModel,
+                        context = context,
                         currentLanguage = currentLanguage,
-                        onLanguageSelected = { viewModel.setLanguage(it) },
-                        onDismiss = { showLanguageBottomSheet = false },
-                        context = context
+                        onShowLanguage = { showLanguageBottomSheet = true },
+                        onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses
                     )
+                    SettingsCategoryPage.DATA -> DataSettingsContent(
+                        viewModel = viewModel,
+                        context = context,
+                        onNavigateToLanSync = onNavigateToLanSync
+                    )
+                    SettingsCategoryPage.ACCOUNT -> AccountSettingsContent(
+                        context = context,
+                        onLogout = onLogout,
+                        onRequireLogin = onRequireLogin
+                    )
+                    SettingsCategoryPage.DEVELOPMENT -> DevelopmentSettingsContent(
+                        viewModel = viewModel,
+                        context = context,
+                        onNavigateToDatabaseTest = onNavigateToDatabaseTest
+                    )
+                    null -> Unit
                 }
             }
 
-            SettingsCategorySection(title = context.getString(R.string.settings_ai_title)) {
-                AISettingsSection(viewModel = viewModel, context = context)
-            }
-
-            SettingsCategorySection(title = context.getString(R.string.budget_settings)) {
-                BudgetSettingsSection(context = context)
-            }
-
-            SettingsCategorySection(title = context.getString(R.string.sync_title)) {
-                SyncSection(
-                    viewModel = viewModel,
-                    context = context,
-                    onNavigateToLanSync = onNavigateToLanSync
+            if (showLanguageBottomSheet) {
+                LanguageSelectorBottomSheet(
+                    currentLanguage = currentLanguage,
+                    onLanguageSelected = { viewModel.setLanguage(it) },
+                    onDismiss = { showLanguageBottomSheet = false },
+                    context = context
                 )
             }
 
-            SettingsCategorySection(title = context.getString(R.string.data_import_export)) {
-                DataImportExportSection(viewModel = viewModel, context = context)
+            if (selectedCategory == null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                AppVersionInfo(context = context)
             }
-
-            SettingsCategorySection(title = context.getString(R.string.theme_settings)) {
-                val useDynamicColor by viewModel.useDynamicColor.collectAsState()
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text(
-                                text = context.getString(R.string.dynamic_color),
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Text(
-                                text = context.getString(R.string.dynamic_color_description),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        val themeSettings = LocalThemeSettings.current
-
-                        ExpressiveSwitch(
-                            checked = useDynamicColor,
-                            onCheckedChange = { enabled ->
-                                themeSettings.value = ThemeSettings(
-                                    useDynamicColor = enabled,
-                                    primaryColor = themeSettings.value.primaryColor,
-                                    paletteStyle = themeSettings.value.paletteStyle
-                                )
-                                viewModel.toggleDynamicColor(enabled)
-                            }
-                        )
-                    }
-                }
-
-                if (!useDynamicColor) {
-                    var showColorPicker by remember { mutableStateOf(false) }
-                    val themeSettings = LocalThemeSettings.current
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Text(
-                        text = context.getString(R.string.manual_color_selection),
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { showColorPicker = true },
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = MaterialTheme.shapes.medium
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Surface(
-                                    shape = CircleShape,
-                                    color = Color(themeSettings.value.primaryColor),
-                                    modifier = Modifier.size(32.dp)
-                                ) {}
-
-                                Spacer(modifier = Modifier.width(12.dp))
-
-                                Text(
-                                    text = context.getString(R.string.current_theme_color),
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                            }
-
-                            Text(
-                                text = ">",
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                        }
-                    }
-
-                    if (showColorPicker) {
-                        ColorPickerBottomSheet(
-                            currentColor = themeSettings.value.primaryColor,
-                            onColorSelected = { color ->
-                                themeSettings.value = ThemeSettings(
-                                    useDynamicColor = false,
-                                    primaryColor = color,
-                                    paletteStyle = themeSettings.value.paletteStyle
-                                )
-                                viewModel.setPrimaryColor(color)
-                            },
-                            onDismiss = { showColorPicker = false },
-                            context = context
-                        )
-                    }
-                }
-            }
-
-            SettingsCategorySection(title = context.getString(R.string.developer_options)) {
-                val isDeveloperMode by viewModel.isDeveloperMode.collectAsState(initial = false)
-
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text(
-                                text = context.getString(R.string.developer_mode),
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Text(
-                                text = context.getString(R.string.developer_mode_description),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        ExpressiveSwitch(
-                            checked = isDeveloperMode,
-                            onCheckedChange = { viewModel.toggleDeveloperMode() }
-                        )
-                    }
-                }
-
-                if (isDeveloperMode) {
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(onClick = onNavigateToDatabaseTest),
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = MaterialTheme.shapes.medium
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = context.getString(R.string.database_test),
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Text(
-                                text = ">",
-                                style = MaterialTheme.typography.titleLarge
-                            )
-                        }
-                    }
-                }
-            }
-
-            SettingsCategorySection(title = context.getString(R.string.feedback_title)) {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            try {
-                                val intent = android.content.Intent(
-                                    android.content.Intent.ACTION_VIEW,
-                                    android.net.Uri.parse("https://wj.qq.com/s2/24109109/3572/")
-                                )
-                                intent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                                context.startActivity(intent)
-                            } catch (e: Exception) {
-                                android.widget.Toast.makeText(
-                                    context,
-                                    "Brower Open Failed: ${e.message}",
-                                    android.widget.Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        },
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text(
-                                text = context.getString(R.string.feedback_title),
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Text(
-                                text = context.getString(R.string.feedback_description),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        Text(
-                            text = ">",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
-            }
-
-            SettingsCategorySection(title = context.getString(R.string.open_source_licenses)) {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onNavigateToOpenSourceLicenses() },
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = MaterialTheme.shapes.medium
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text(
-                                text = context.getString(R.string.open_source_licenses),
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Text(
-                                text = context.getString(R.string.open_source_licenses_description),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        Text(
-                            text = ">",
-                            style = MaterialTheme.typography.titleLarge
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(8.dp))
-            AppVersionInfo(context = context)
         }
     }
+}
+
+@Composable
+private fun GeneralSettingsContent(
+    viewModel: SettingsViewModel,
+    context: Context,
+    currentLanguage: Language,
+    onShowLanguage: () -> Unit,
+    onNavigateToOpenSourceLicenses: () -> Unit
+) {
+    val useDynamicColor by viewModel.useDynamicColor.collectAsState()
+    val themeSettings = LocalThemeSettings.current
+
+    SettingsCategorySection(title = context.getString(R.string.language_settings)) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onShowLanguage() },
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = context.getString(R.string.select_language),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = currentLanguage.localName,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Text(text = ">", style = MaterialTheme.typography.titleLarge)
+            }
+        }
+    }
+
+    SettingsCategorySection(title = context.getString(R.string.theme_settings)) {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = context.getString(R.string.dynamic_color),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = context.getString(R.string.dynamic_color_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                ExpressiveSwitch(
+                    checked = useDynamicColor,
+                    onCheckedChange = { enabled ->
+                        themeSettings.value = ThemeSettings(
+                            useDynamicColor = enabled,
+                            primaryColor = themeSettings.value.primaryColor,
+                            paletteStyle = themeSettings.value.paletteStyle
+                        )
+                        viewModel.toggleDynamicColor(enabled)
+                    }
+                )
+            }
+        }
+
+        if (!useDynamicColor) {
+            var showColorPicker by remember { mutableStateOf(false) }
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = context.getString(R.string.manual_color_selection),
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showColorPicker = true },
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(
+                            shape = CircleShape,
+                            color = Color(themeSettings.value.primaryColor),
+                            modifier = Modifier.size(32.dp)
+                        ) {}
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Text(
+                            text = context.getString(R.string.current_theme_color),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                    Text(text = ">", style = MaterialTheme.typography.titleLarge)
+                }
+            }
+
+            if (showColorPicker) {
+                ColorPickerBottomSheet(
+                    currentColor = themeSettings.value.primaryColor,
+                    onColorSelected = { color ->
+                        themeSettings.value = ThemeSettings(
+                            useDynamicColor = false,
+                            primaryColor = color,
+                            paletteStyle = themeSettings.value.paletteStyle
+                        )
+                        viewModel.setPrimaryColor(color)
+                    },
+                    onDismiss = { showColorPicker = false },
+                    context = context
+                )
+            }
+        }
+    }
+
+    SettingsCategorySection(title = context.getString(R.string.settings_ai_title)) {
+        AISettingsSection(viewModel = viewModel, context = context)
+    }
+
+    SettingsCategorySection(title = context.getString(R.string.feedback_title)) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    try {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wj.qq.com/s2/24109109/3572/"))
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(intent)
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Browser Open Failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                },
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = context.getString(R.string.feedback_title),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = context.getString(R.string.feedback_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Text(text = ">", style = MaterialTheme.typography.titleLarge)
+            }
+        }
+    }
+
+    SettingsCategorySection(title = context.getString(R.string.open_source_licenses)) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onNavigateToOpenSourceLicenses() },
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = context.getString(R.string.open_source_licenses),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = context.getString(R.string.open_source_licenses_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Text(text = ">", style = MaterialTheme.typography.titleLarge)
+            }
+        }
+    }
+}
+
+@Composable
+private fun DataSettingsContent(
+    viewModel: SettingsViewModel,
+    context: Context,
+    onNavigateToLanSync: () -> Unit
+) {
+    SettingsCategorySection(title = context.getString(R.string.budget_settings)) {
+        BudgetSettingsSection(context = context)
+    }
+
+    SettingsCategorySection(title = context.getString(R.string.sync_title)) {
+        SyncSection(
+            viewModel = viewModel,
+            context = context,
+            onNavigateToLanSync = onNavigateToLanSync
+        )
+    }
+
+    SettingsCategorySection(title = context.getString(R.string.data_import_export)) {
+        DataImportExportSection(viewModel = viewModel, context = context)
+    }
+}
+
+@Composable
+private fun AccountSettingsContent(
+    context: Context,
+    onLogout: () -> Unit,
+    onRequireLogin: () -> Unit
+) {
+    SettingsCategorySection(title = context.getString(R.string.account)) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onRequireLogin() },
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = context.getString(R.string.login),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = context.getString(R.string.account),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Text(text = ">", style = MaterialTheme.typography.titleLarge)
+            }
+        }
+
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onLogout() },
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = context.getString(R.string.logout),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = context.getString(R.string.account),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Icon(
+                    imageVector = Icons.Default.Logout,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DevelopmentSettingsContent(
+    viewModel: SettingsViewModel,
+    context: Context,
+    onNavigateToDatabaseTest: () -> Unit
+) {
+    val isDeveloperMode by viewModel.isDeveloperMode.collectAsState(initial = false)
+
+    SettingsCategorySection(title = context.getString(R.string.developer_options)) {
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = context.getString(R.string.developer_mode),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = context.getString(R.string.developer_mode_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                ExpressiveSwitch(
+                    checked = isDeveloperMode,
+                    onCheckedChange = { viewModel.toggleDeveloperMode() }
+                )
+            }
+        }
+
+        if (isDeveloperMode) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = onNavigateToDatabaseTest),
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = context.getString(R.string.database_test),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(text = ">", style = MaterialTheme.typography.titleLarge)
+                }
+            }
+        }
+    }
+
+    Spacer(modifier = Modifier.height(8.dp))
+    AppVersionInfo(context = context)
 }
 
 @Composable
