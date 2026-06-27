@@ -39,7 +39,6 @@ import com.chronie.homemoneylite.ui.settings.OpenSourceLicensesScreen
 import com.chronie.homemoneylite.ui.sync.LanSyncScreen
 import com.chronie.homemoneylite.ui.test.DatabaseTestScreen
 import com.chronie.homemoneylite.ui.theme.HomeMoneyTheme
-import com.chronie.homemoneylite.ui.welcome.WelcomeScreen
 import com.chronie.homemoneylite.domain.usecase.CheckLoginStatusUseCase
 import com.chronie.homemoneylite.service.HealthCheckService
 import dagger.hilt.android.AndroidEntryPoint
@@ -117,8 +116,7 @@ class MainActivity : ComponentActivity() {
                         color = MaterialTheme.colorScheme.background
                     ) {
                         HomeMoneyApp(
-                            context = localizedContext,
-                            checkLoginStatusUseCase = checkLoginStatusUseCase
+                            context = localizedContext
                         )
                     }
                 }
@@ -146,18 +144,14 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun HomeMoneyApp(
-    context: Context,
-    checkLoginStatusUseCase: CheckLoginStatusUseCase
+    context: Context
 ) {
     val navController = rememberNavController()
     var shouldRefreshExpenses by remember { mutableStateOf(false) }
     var selectedTab by remember { mutableStateOf(0) }
 
-    // 确定初始路由
-    val startDestination = remember {
-        val isLoggedIn = checkLoginStatusUseCase()
-        if (isLoggedIn) "main" else "welcome"
-    }
+    // 直接进入主页面，移除开屏欢迎页
+    val startDestination = remember { "main" }
 
     NavHost(
         navController = navController,
@@ -175,16 +169,6 @@ fun HomeMoneyApp(
             fadeOut(animationSpec = tween(200))
         }
     ) {
-        composable("welcome") {
-            WelcomeScreen(
-                onGetStartedClick = {
-                    navController.navigate("main") {
-                        popUpTo(0) { inclusive = true }
-                    }
-                }
-            )
-        }
-
         composable("settings") {
             SettingsScreen(
                 context = context,
@@ -198,13 +182,13 @@ fun HomeMoneyApp(
                     navController.navigate("open_source_licenses")
                 },
                 onLogout = {
-                    // 退出登录后，清空整个导航栈并返回欢迎页
-                    navController.navigate("welcome") {
+                    // 退出登录后，清空整个导航栈并返回主页面
+                    navController.navigate("main") {
                         popUpTo(0) { inclusive = true }
                     }
                 },
                 onRequireLogin = {
-                    navController.navigate("welcome") {
+                    navController.navigate("main") {
                         popUpTo(0) { inclusive = true }
                     }
                 }
@@ -260,8 +244,8 @@ fun HomeMoneyApp(
                     navController.navigate("open_source_licenses")
                 },
                 onRequireLogin = {
-                    // 未登录时，清空导航栈并返回欢迎页
-                    navController.navigate("welcome") {
+                    // 未登录时，清空导航栈并返回主页面
+                    navController.navigate("main") {
                         popUpTo(0) { inclusive = true }
                     }
                 }
@@ -290,7 +274,7 @@ fun HomeMoneyApp(
                     navController.navigate("ai_expense")
                 },
                 onRequireLogin = {
-                    navController.navigate("welcome") {
+                    navController.navigate("main") {
                         popUpTo(0) { inclusive = true }
                     }
                 }
