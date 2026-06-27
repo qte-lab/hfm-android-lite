@@ -136,7 +136,7 @@ fun SettingsScreen(
         ) {
             if (selectedCategory == null) {
                 Text(
-                    text = "选择一个设置分类继续管理",
+                    text = context.getString(R.string.settings_choose_category),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
