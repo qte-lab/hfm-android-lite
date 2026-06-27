@@ -92,9 +92,10 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
                 .padding(16.dp)
-                .padding(bottom = 80.dp)
+                .padding(bottom = 80.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             SettingsCategorySection(title = context.getString(R.string.language_settings)) {
                 Surface(
@@ -423,22 +424,45 @@ fun SettingsScreen(
 @Composable
 private fun SettingsCategorySection(
     title: String,
+    description: String? = null,
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.padding(start = 4.dp, bottom = 10.dp)
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
         )
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            content()
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Column(modifier = Modifier.padding(bottom = 12.dp)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                description?.let {
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                content()
+            }
         }
     }
 }
