@@ -12,6 +12,14 @@
     <string name="login">登入</string>
     <string name="logout">登出</string>
     <string name="settings_choose_category">選擇一個設定分類繼續管理</string>
+    <string name="settings_category_theme">主題設定</string>
+    <string name="settings_category_theme_description">語言與介面外觀</string>
+    <string name="settings_category_function">功能設定</string>
+    <string name="settings_category_function_description">預算與 AI</string>
+    <string name="settings_category_data_sync">資料同步</string>
+    <string name="settings_category_data_sync_description">同步與匯入匯出</string>
+    <string name="settings_category_more">更多</string>
+    <string name="settings_category_more_description">意見反饋、授權與本機資料庫</string>
     <string name="update_avatar_failed">更新頭像失敗</string>
     <string name="select_language">選擇語言</string>
     <string name="api_key_set">已設定：%s…</string>

@@ -13,6 +13,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -25,12 +26,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -58,31 +57,31 @@ import com.chronie.homemoneylite.ui.theme.LocalThemeSettings
 import com.chronie.homemoneylite.ui.theme.ThemeSettings
 
 private enum class SettingsCategoryPage {
-    GENERAL,
-    DATA,
-    ACCOUNT,
-    DEVELOPMENT
+    THEME,
+    FUNCTION,
+    DATA_SYNC,
+    MORE
 }
 
 private fun SettingsCategoryPage.title(context: Context): String = when (this) {
-    SettingsCategoryPage.GENERAL -> context.getString(R.string.settings)
-    SettingsCategoryPage.DATA -> context.getString(R.string.data_import_export)
-    SettingsCategoryPage.ACCOUNT -> context.getString(R.string.account)
-    SettingsCategoryPage.DEVELOPMENT -> context.getString(R.string.developer_options)
+    SettingsCategoryPage.THEME -> context.getString(R.string.settings_category_theme)
+    SettingsCategoryPage.FUNCTION -> context.getString(R.string.settings_category_function)
+    SettingsCategoryPage.DATA_SYNC -> context.getString(R.string.settings_category_data_sync)
+    SettingsCategoryPage.MORE -> context.getString(R.string.settings_category_more)
 }
 
 private fun SettingsCategoryPage.description(context: Context): String = when (this) {
-    SettingsCategoryPage.GENERAL -> context.getString(R.string.language_settings)
-    SettingsCategoryPage.DATA -> context.getString(R.string.sync_title)
-    SettingsCategoryPage.ACCOUNT -> context.getString(R.string.account)
-    SettingsCategoryPage.DEVELOPMENT -> context.getString(R.string.database_test)
+    SettingsCategoryPage.THEME -> context.getString(R.string.settings_category_theme_description)
+    SettingsCategoryPage.FUNCTION -> context.getString(R.string.settings_category_function_description)
+    SettingsCategoryPage.DATA_SYNC -> context.getString(R.string.settings_category_data_sync_description)
+    SettingsCategoryPage.MORE -> context.getString(R.string.settings_category_more_description)
 }
 
 private fun SettingsCategoryPage.icon(): ImageVector = when (this) {
-    SettingsCategoryPage.GENERAL -> Icons.Default.Settings
-    SettingsCategoryPage.DATA -> Icons.Default.Storage
-    SettingsCategoryPage.ACCOUNT -> Icons.Default.AccountCircle
-    SettingsCategoryPage.DEVELOPMENT -> Icons.Default.Build
+    SettingsCategoryPage.THEME -> Icons.Default.Settings
+    SettingsCategoryPage.FUNCTION -> Icons.Default.Settings
+    SettingsCategoryPage.DATA_SYNC -> Icons.Default.Storage
+    SettingsCategoryPage.MORE -> Icons.Default.Build
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,6 +99,10 @@ fun SettingsScreen(
     val scrollState = rememberScrollState()
     var showLanguageBottomSheet by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf<SettingsCategoryPage?>(null) }
+
+    BackHandler(enabled = selectedCategory != null) {
+        selectedCategory = null
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Surface(
@@ -141,13 +144,11 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
-                SettingsCategoryPage.GENERAL.ordinal
-
                 listOf(
-                    SettingsCategoryPage.GENERAL,
-                    SettingsCategoryPage.DATA,
-                    SettingsCategoryPage.ACCOUNT,
-                    SettingsCategoryPage.DEVELOPMENT
+                    SettingsCategoryPage.THEME,
+                    SettingsCategoryPage.FUNCTION,
+                    SettingsCategoryPage.DATA_SYNC,
+                    SettingsCategoryPage.MORE
                 ).forEach { category ->
                     Surface(
                         modifier = Modifier
@@ -202,26 +203,25 @@ fun SettingsScreen(
                 }
             } else {
                 when (selectedCategory) {
-                    SettingsCategoryPage.GENERAL -> GeneralSettingsContent(
+                    SettingsCategoryPage.THEME -> ThemeSettingsContent(
                         viewModel = viewModel,
                         context = context,
                         currentLanguage = currentLanguage,
                         onShowLanguage = { showLanguageBottomSheet = true },
                         onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses
                     )
-                    SettingsCategoryPage.DATA -> DataSettingsContent(
+                    SettingsCategoryPage.FUNCTION -> FunctionSettingsContent(
+                        viewModel = viewModel,
+                        context = context
+                    )
+                    SettingsCategoryPage.DATA_SYNC -> DataSyncSettingsContent(
                         viewModel = viewModel,
                         context = context,
                         onNavigateToLanSync = onNavigateToLanSync
                     )
-                    SettingsCategoryPage.ACCOUNT -> AccountSettingsContent(
+                    SettingsCategoryPage.MORE -> MoreSettingsContent(
                         context = context,
-                        onLogout = onLogout,
-                        onRequireLogin = onRequireLogin
-                    )
-                    SettingsCategoryPage.DEVELOPMENT -> DevelopmentSettingsContent(
-                        viewModel = viewModel,
-                        context = context,
+                        onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses,
                         onNavigateToDatabaseTest = onNavigateToDatabaseTest
                     )
                     null -> Unit
@@ -246,7 +246,7 @@ fun SettingsScreen(
 }
 
 @Composable
-private fun GeneralSettingsContent(
+private fun ThemeSettingsContent(
     viewModel: SettingsViewModel,
     context: Context,
     currentLanguage: Language,
@@ -457,15 +457,25 @@ private fun GeneralSettingsContent(
 }
 
 @Composable
-private fun DataSettingsContent(
+private fun FunctionSettingsContent(
     viewModel: SettingsViewModel,
-    context: Context,
-    onNavigateToLanSync: () -> Unit
+    context: Context
 ) {
     SettingsCategorySection(title = context.getString(R.string.budget_settings)) {
         BudgetSettingsSection(context = context)
     }
 
+    SettingsCategorySection(title = context.getString(R.string.settings_ai_title)) {
+        AISettingsSection(viewModel = viewModel, context = context)
+    }
+}
+
+@Composable
+private fun DataSyncSettingsContent(
+    viewModel: SettingsViewModel,
+    context: Context,
+    onNavigateToLanSync: () -> Unit
+) {
     SettingsCategorySection(title = context.getString(R.string.sync_title)) {
         SyncSection(
             viewModel = viewModel,
@@ -480,87 +490,24 @@ private fun DataSettingsContent(
 }
 
 @Composable
-private fun AccountSettingsContent(
+private fun MoreSettingsContent(
     context: Context,
-    onLogout: () -> Unit,
-    onRequireLogin: () -> Unit
-) {
-    SettingsCategorySection(title = context.getString(R.string.account)) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onRequireLogin() },
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = context.getString(R.string.login),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = context.getString(R.string.account),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Text(text = ">", style = MaterialTheme.typography.titleLarge)
-            }
-        }
-
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onLogout() },
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = context.getString(R.string.logout),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = context.getString(R.string.account),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Icon(
-                    imageVector = Icons.Default.Logout,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun DevelopmentSettingsContent(
-    viewModel: SettingsViewModel,
-    context: Context,
+    onNavigateToOpenSourceLicenses: () -> Unit,
     onNavigateToDatabaseTest: () -> Unit
 ) {
-    val isDeveloperMode by viewModel.isDeveloperMode.collectAsState(initial = false)
-
-    SettingsCategorySection(title = context.getString(R.string.developer_options)) {
+    SettingsCategorySection(title = context.getString(R.string.feedback_title)) {
         Surface(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    try {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wj.qq.com/s2/24109109/3572/"))
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(intent)
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Browser Open Failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                },
             color = MaterialTheme.colorScheme.surfaceVariant,
             shape = MaterialTheme.shapes.medium
         ) {
@@ -573,44 +520,78 @@ private fun DevelopmentSettingsContent(
             ) {
                 Column {
                     Text(
-                        text = context.getString(R.string.developer_mode),
+                        text = context.getString(R.string.feedback_title),
                         style = MaterialTheme.typography.bodyLarge
                     )
                     Text(
-                        text = context.getString(R.string.developer_mode_description),
+                        text = context.getString(R.string.feedback_description),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                ExpressiveSwitch(
-                    checked = isDeveloperMode,
-                    onCheckedChange = { viewModel.toggleDeveloperMode() }
-                )
+                Text(text = ">", style = MaterialTheme.typography.titleLarge)
             }
         }
+    }
 
-        if (isDeveloperMode) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Surface(
+    SettingsCategorySection(title = context.getString(R.string.open_source_licenses)) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onNavigateToOpenSourceLicenses() },
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(onClick = onNavigateToDatabaseTest),
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = MaterialTheme.shapes.medium
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Column {
+                    Text(
+                        text = context.getString(R.string.open_source_licenses),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Text(
+                        text = context.getString(R.string.open_source_licenses_description),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Text(text = ">", style = MaterialTheme.typography.titleLarge)
+            }
+        }
+    }
+
+    SettingsCategorySection(title = context.getString(R.string.database_test)) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onNavigateToDatabaseTest),
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
                     Text(
                         text = context.getString(R.string.database_test),
                         style = MaterialTheme.typography.bodyLarge
                     )
-                    Text(text = ">", style = MaterialTheme.typography.titleLarge)
+                    Text(
+                        text = context.getString(R.string.database_test),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
                 }
+                Text(text = ">", style = MaterialTheme.typography.titleLarge)
             }
         }
     }

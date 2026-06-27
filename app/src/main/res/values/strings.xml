@@ -12,6 +12,14 @@
     <string name="login">Log in</string>
     <string name="logout">Log out</string>
     <string name="settings_choose_category">Choose a settings category to continue</string>
+    <string name="settings_category_theme">Theme Settings</string>
+    <string name="settings_category_theme_description">Language and appearance</string>
+    <string name="settings_category_function">Feature Settings</string>
+    <string name="settings_category_function_description">Budget and AI</string>
+    <string name="settings_category_data_sync">Data Sync</string>
+    <string name="settings_category_data_sync_description">Sync and import/export</string>
+    <string name="settings_category_more">More</string>
+    <string name="settings_category_more_description">Feedback, licenses, local database</string>
     <string name="update_avatar_failed">Failed to update avatar</string>
     <string name="select_language">Select Language</string>
     <string name="api_key_set">Set: %s...</string>
