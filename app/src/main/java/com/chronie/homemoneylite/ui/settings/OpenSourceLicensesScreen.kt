@@ -3,17 +3,18 @@ package com.chronie.homemoneylite.ui.settings
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.webkit.WebResourceRequest
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.chronie.homemoneylite.ui.components.CircularIconButton
 
 data class LibraryInfo(
@@ -320,15 +321,23 @@ fun OpenSourceLicensesScreen(
     context: Context,
     onNavigateBack: () -> Unit = {}
 ) {
-    val scrollState = androidx.compose.foundation.rememberScrollState()
+    val htmlContent = remember(libraries) {
+        buildLicenseHtml(libraries)
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(context.getString(com.chronie.homemoneylite.R.string.open_source_licenses)) },
                 navigationIcon = {
-                    CircularIconButton(onClick = onNavigateBack, modifier = Modifier.padding(start = 8.dp, end = 4.dp)) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = context.getString(com.chronie.homemoneylite.R.string.back))
+                    CircularIconButton(
+                        onClick = onNavigateBack,
+                        modifier = Modifier.padding(start = 8.dp, end = 4.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = context.getString(com.chronie.homemoneylite.R.string.back)
+                        )
                     }
                 },
                 actions = {
@@ -340,92 +349,109 @@ fun OpenSourceLicensesScreen(
             )
         }
     ) { paddingValues ->
-        LazyColumn(
+        AndroidView(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(libraries) { library ->
-                LibraryCard(
-                    library = library,
-                    context = context
-                )
+                .padding(paddingValues),
+            factory = { webContext ->
+                WebView(webContext).apply {
+                    settings.javaScriptEnabled = false
+                    webViewClient = object : WebViewClient() {
+                        override fun shouldOverrideUrlLoading(
+                            view: WebView?,
+                            request: WebResourceRequest?
+                        ): Boolean {
+                            val url = request?.url?.toString() ?: return false
+                            try {
+                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                view?.context?.startActivity(intent)
+                            } catch (_: Exception) {
+                            }
+                            return true
+                        }
+                    }
+                    loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null)
+                }
+            },
+            update = { webView ->
+                webView.loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null)
             }
-        }
+        )
     }
 }
 
-@Composable
-fun LibraryCard(
-    library: LibraryInfo,
-    context: Context
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(
-                text = library.name,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = "Version: ${library.version}",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "License: ${library.license}",
-                style = MaterialTheme.typography.bodyMedium
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                OutlinedButton(
-                    onClick = {
-                        try {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(library.licenseUrl))
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            context.startActivity(intent)
-                        } catch (e: Exception) {
-                            android.widget.Toast.makeText(
-                                context,
-                                "Failed to open license: ${e.message}",
-                                android.widget.Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("License")
+private fun buildLicenseHtml(libraries: List<LibraryInfo>): String {
+    val items = libraries.joinToString("") { library ->
+        """
+            <div class="card">
+                <h3>${escapeHtml(library.name)}</h3>
+                <p><strong>Version:</strong> ${escapeHtml(library.version)}</p>
+                <p><strong>License:</strong> ${escapeHtml(library.license)}</p>
+                <div class="actions">
+                    <a href="${escapeHtml(library.licenseUrl)}" target="_blank">License</a>
+                    <a href="${escapeHtml(library.projectUrl)}" target="_blank">Project</a>
+                </div>
+            </div>
+        """.trimIndent()
+    }
+
+    return """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+                    margin: 0;
+                    padding: 16px;
+                    background: #f7f7f7;
+                    color: #1f1f1f;
                 }
-                OutlinedButton(
-                    onClick = {
-                        try {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(library.projectUrl))
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            context.startActivity(intent)
-                        } catch (e: Exception) {
-                            android.widget.Toast.makeText(
-                                context,
-                                "Failed to open project: ${e.message}",
-                                android.widget.Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text("Project")
+                .card {
+                    background: white;
+                    border-radius: 12px;
+                    padding: 16px;
+                    margin-bottom: 12px;
+                    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
                 }
+                h3 { margin: 0 0 8px; font-size: 16px; }
+                p { margin: 4px 0; font-size: 14px; }
+                .actions {
+                    margin-top: 8px;
+                    display: flex;
+                    gap: 8px;
+                }
+                a {
+                    display: inline-block;
+                    padding: 6px 10px;
+                    border: 1px solid #c7c7c7;
+                    border-radius: 999px;
+                    text-decoration: none;
+                    color: #1565c0;
+                    font-size: 13px;
+                }
+            </style>
+        </head>
+        <body>
+            $items
+        </body>
+        </html>
+    """.trimIndent()
+}
+
+private fun escapeHtml(value: String): String {
+    return buildString {
+        value.forEach { char ->
+            when (char) {
+                '&' -> append("&amp;")
+                '<' -> append("&lt;")
+                '>' -> append("&gt;")
+                '"' -> append("&quot;")
+                '\'' -> append("&#39;")
+                else -> append(char)
             }
         }
     }
