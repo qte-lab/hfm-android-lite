@@ -293,7 +293,7 @@ private fun WeekdayRadarChart(
  * 星期数据项
  */
 @Composable
-private fun WeekdayDataItem(
+fun WeekdayDataItem(
     context: Context,
     data: WeekdayChartData,
     currencyFormat: NumberFormat

@@ -699,16 +699,16 @@ private fun buildRadarChartHtml(
         val levelRadius = radius * level / 5
         val levelAmount = maxAmount * level / 5
         val label = escapeHtml(currencyFormat.format(levelAmount))
-        "<circle cx="$centerX" cy="$centerY" r="$levelRadius" fill="none" stroke="${colorToHex(borderColor)}" stroke-width="1" stroke-dasharray=\"4 4\" />" +
-                "<text x="${centerX + levelRadius + 10}" y="${centerY + 4}" fill="${colorToHex(secondaryTextColor)}" font-size=\"12\">$label</text>"
+        """<circle cx="$centerX" cy="$centerY" r="$levelRadius" fill="none" stroke="${colorToHex(borderColor)}" stroke-width="1" stroke-dasharray="4 4" />""" +
+                """<text x="${centerX + levelRadius + 10}" y="${centerY + 4}" fill="${colorToHex(secondaryTextColor)}" font-size="12">$label</text>"""
     }
 
     val pointMarkup = points.mapIndexed { index, (x, y) ->
         val value = weekdayData.getOrNull(index)?.amount ?: 0.0
         val valueLabel = escapeHtml(String.format(Locale.US, "%.0f", value))
-        "<circle cx="$x" cy="$y" r="5" fill="${colorToHex(primaryColor)}" />" +
-                "<circle cx="$x" cy="$y" r="2" fill="${colorToHex(backgroundColor)}" />" +
-                "<text x="$x" y="${y - 12}" fill="${colorToHex(primaryColor)}" text-anchor=\"middle\" font-size=\"11\">$valueLabel</text>"
+        """<circle cx="$x" cy="$y" r="5" fill="${colorToHex(primaryColor)}" />""" +
+                """<circle cx="$x" cy="$y" r="2" fill="${colorToHex(backgroundColor)}" />""" +
+                """<text x="$x" y="${y - 12}" fill="${colorToHex(primaryColor)}" text-anchor="middle" font-size="11">$valueLabel</text>"""
     }.joinToString("")
 
     val bgHex = colorToHex(backgroundColor)
