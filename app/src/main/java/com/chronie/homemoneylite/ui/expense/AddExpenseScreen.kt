@@ -38,8 +38,7 @@ fun AddExpenseScreen(
     expenseId: String? = null,
     viewModel: AddExpenseViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit,
-    onNavigateToAI: () -> Unit = {},
-    onRequireLogin: () -> Unit = {}
+    onNavigateToAI: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }

@@ -176,17 +176,6 @@ fun HomeMoneyApp(
                 },
                 onNavigateToOpenSourceLicenses = {
                     navController.navigate("open_source_licenses")
-                },
-                onLogout = {
-                    // 退出登录后，清空整个导航栈并返回主页面
-                    navController.navigate("main") {
-                        popUpTo(0) { inclusive = true }
-                    }
-                },
-                onRequireLogin = {
-                    navController.navigate("main") {
-                        popUpTo(0) { inclusive = true }
-                    }
                 }
             )
         }
@@ -238,12 +227,6 @@ fun HomeMoneyApp(
                 onNavigateToOpenSourceLicenses = {
                     selectedTab = 2
                     navController.navigate("open_source_licenses")
-                },
-                onRequireLogin = {
-                    // 未登录时，清空导航栈并返回主页面
-                    navController.navigate("main") {
-                        popUpTo(0) { inclusive = true }
-                    }
                 }
             )
         }
@@ -268,11 +251,6 @@ fun HomeMoneyApp(
                 },
                 onNavigateToAI = {
                     navController.navigate("ai_expense")
-                },
-                onRequireLogin = {
-                    navController.navigate("main") {
-                        popUpTo(0) { inclusive = true }
-                    }
                 }
             )
         }

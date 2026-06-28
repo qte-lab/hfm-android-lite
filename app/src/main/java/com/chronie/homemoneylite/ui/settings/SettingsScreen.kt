@@ -91,9 +91,7 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
     onNavigateToDatabaseTest: () -> Unit = {},
     onNavigateToLanSync: () -> Unit = {},
-    onNavigateToOpenSourceLicenses: () -> Unit = {},
-    onLogout: () -> Unit = {},
-    onRequireLogin: () -> Unit = {}
+    onNavigateToOpenSourceLicenses: () -> Unit = {}
 ) {
     val currentLanguage by viewModel.currentLanguage.collectAsState()
     val scrollState = rememberScrollState()

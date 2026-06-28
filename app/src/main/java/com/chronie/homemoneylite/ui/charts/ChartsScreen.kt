@@ -40,7 +40,6 @@ import kotlinx.coroutines.launch
 fun ChartsScreen(
     context: Context,
     viewModel: ChartsViewModel = hiltViewModel(),
-    onRequireLogin: () -> Unit = {},
     onNavigateToWeekdayDetail: (dayOfWeek: Int, amount: Double, count: Int, percentage: Float, startDate: String, endDate: String) -> Unit = { _, _, _, _, _, _ -> }
 ) {
     val uiState by viewModel.uiState.collectAsState()

@@ -67,7 +67,6 @@ fun MainScreen(
                     // 图表界面
                     com.chronie.homemoneylite.ui.charts.ChartsScreen(
                         context = context,
-                        onRequireLogin = onRequireLogin,
                         onNavigateToWeekdayDetail = onNavigateToWeekdayDetail
                     )
                 }
@@ -77,12 +76,7 @@ fun MainScreen(
                         context = context,
                         onNavigateToDatabaseTest = onNavigateToDatabaseTest,
                         onNavigateToLanSync = onNavigateToLanSync,
-                        onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses,
-                        onLogout = {
-                            android.util.Log.d("MainScreen", "收到 onLogout 回调")
-                            onRequireLogin()
-                        },
-                        onRequireLogin = onRequireLogin
+                        onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses
                     )
                 }
             }
