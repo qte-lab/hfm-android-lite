@@ -6,6 +6,7 @@ import android.net.Uri
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -13,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.chronie.homemoneylite.ui.components.CircularIconButton
@@ -321,8 +323,19 @@ fun OpenSourceLicensesScreen(
     context: Context,
     onNavigateBack: () -> Unit = {}
 ) {
-    val htmlContent = remember(libraries) {
-        buildLicenseHtml(libraries)
+    val colorScheme = MaterialTheme.colorScheme
+    val isDarkTheme = isSystemInDarkTheme()
+    val htmlContent = remember(libraries, colorScheme, isDarkTheme) {
+        buildLicenseHtml(
+            libraries = libraries,
+            backgroundColor = colorScheme.background,
+            surfaceColor = colorScheme.surface,
+            textColor = colorScheme.onSurface,
+            secondaryTextColor = colorScheme.onSurfaceVariant,
+            primaryColor = colorScheme.primary,
+            borderColor = colorScheme.outlineVariant,
+            isDarkTheme = isDarkTheme
+        )
     }
 
     Scaffold(
@@ -355,6 +368,7 @@ fun OpenSourceLicensesScreen(
                 .padding(paddingValues),
             factory = { webContext ->
                 WebView(webContext).apply {
+                    setBackgroundColor(colorScheme.background.toArgb())
                     settings.javaScriptEnabled = false
                     webViewClient = object : WebViewClient() {
                         override fun shouldOverrideUrlLoading(
@@ -381,7 +395,16 @@ fun OpenSourceLicensesScreen(
     }
 }
 
-private fun buildLicenseHtml(libraries: List<LibraryInfo>): String {
+private fun buildLicenseHtml(
+    libraries: List<LibraryInfo>,
+    backgroundColor: androidx.compose.ui.graphics.Color,
+    surfaceColor: androidx.compose.ui.graphics.Color,
+    textColor: androidx.compose.ui.graphics.Color,
+    secondaryTextColor: androidx.compose.ui.graphics.Color,
+    primaryColor: androidx.compose.ui.graphics.Color,
+    borderColor: androidx.compose.ui.graphics.Color,
+    isDarkTheme: Boolean
+): String {
     val items = libraries.joinToString("") { library ->
         """
             <div class="card">
@@ -396,6 +419,14 @@ private fun buildLicenseHtml(libraries: List<LibraryInfo>): String {
         """.trimIndent()
     }
 
+    val bgHex = colorToHex(backgroundColor)
+    val surfaceHex = colorToHex(surfaceColor)
+    val textHex = colorToHex(textColor)
+    val secondaryTextHex = colorToHex(secondaryTextColor)
+    val primaryHex = colorToHex(primaryColor)
+    val borderHex = colorToHex(borderColor)
+    val shadow = if (isDarkTheme) "rgba(255,255,255,0.06)" else "rgba(0,0,0,0.12)"
+
     return """
         <!DOCTYPE html>
         <html>
@@ -407,18 +438,19 @@ private fun buildLicenseHtml(libraries: List<LibraryInfo>): String {
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
                     margin: 0;
                     padding: 16px;
-                    background: #f7f7f7;
-                    color: #1f1f1f;
+                    background: $bgHex;
+                    color: $textHex;
                 }
                 .card {
-                    background: white;
+                    background: $surfaceHex;
                     border-radius: 12px;
                     padding: 16px;
                     margin-bottom: 12px;
-                    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+                    box-shadow: 0 1px 3px $shadow;
+                    border: 1px solid $borderHex;
                 }
-                h3 { margin: 0 0 8px; font-size: 16px; }
-                p { margin: 4px 0; font-size: 14px; }
+                h3 { margin: 0 0 8px; font-size: 16px; color: $primaryHex; }
+                p { margin: 4px 0; font-size: 14px; color: $secondaryTextHex; }
                 .actions {
                     margin-top: 8px;
                     display: flex;
@@ -427,10 +459,10 @@ private fun buildLicenseHtml(libraries: List<LibraryInfo>): String {
                 a {
                     display: inline-block;
                     padding: 6px 10px;
-                    border: 1px solid #c7c7c7;
+                    border: 1px solid $borderHex;
                     border-radius: 999px;
                     text-decoration: none;
-                    color: #1565c0;
+                    color: $primaryHex;
                     font-size: 13px;
                 }
             </style>
@@ -440,6 +472,10 @@ private fun buildLicenseHtml(libraries: List<LibraryInfo>): String {
         </body>
         </html>
     """.trimIndent()
+}
+
+private fun colorToHex(color: androidx.compose.ui.graphics.Color): String {
+    return String.format("#%06X", (color.toArgb() and 0x00FFFFFF))
 }
 
 private fun escapeHtml(value: String): String {
