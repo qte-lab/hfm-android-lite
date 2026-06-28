@@ -39,8 +39,7 @@ fun MainScreen(
     onNavigateToMoreFunctions: () -> Unit = {},
     onNavigateToWeekdayDetail: (dayOfWeek: Int, amount: Double, count: Int, percentage: Float, startDate: String, endDate: String) -> Unit = { _, _, _, _, _, _ -> },
     onNavigateToLanSync: () -> Unit = {},
-    onNavigateToOpenSourceLicenses: () -> Unit = {},
-    viewModel: MainViewModel = hiltViewModel()
+    onNavigateToOpenSourceLicenses: () -> Unit = {}
 ) {
 
     // 原生界面（带底部 Tab 栏）
