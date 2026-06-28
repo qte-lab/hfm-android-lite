@@ -764,6 +764,7 @@ private fun colorToHex(color: androidx.compose.ui.graphics.Color): String {
     return String.format("#%06X", (color.toArgb() and 0x00FFFFFF))
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TimeRangeDialog(
     context: Context,
