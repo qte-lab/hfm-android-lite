@@ -108,7 +108,6 @@ class SettingsViewModel @Inject constructor(
     init {
         loadSyncInfo()
         loadAIApiKey()
-        loadCurrentUser()
         loadDynamicColorSettings()
         loadDeviceName()
 

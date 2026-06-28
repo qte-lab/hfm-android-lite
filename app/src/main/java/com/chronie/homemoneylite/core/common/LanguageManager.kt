@@ -77,9 +77,7 @@ class LanguageManager @Inject constructor(
         val newLanguage = when (oldCode) {
             "en" -> Language.ENGLISH
             "zh-CN" -> Language.SIMPLIFIED_CHINESE
-            "zh-HK" -> Language.TRADITIONAL_CHINESE_HONG_KONG
-            "zh-MO" -> Language.TRADITIONAL_CHINESE_MACAU
-            "zh-TW" -> Language.TRADITIONAL_CHINESE_TAIWAN
+            "zh-TW" -> Language.TRADITIONAL_CHINESE
             else -> return
         }
         
