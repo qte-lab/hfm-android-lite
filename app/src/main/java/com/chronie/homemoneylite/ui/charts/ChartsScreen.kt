@@ -316,7 +316,7 @@ private fun HybridTrendLineChartCard(
                 AndroidView(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(300.dp),
+                        .height(180.dp),
                     factory = { webContext ->
                         WebView(webContext).apply {
                             setBackgroundColor(colorScheme.background.toArgb())
@@ -466,7 +466,7 @@ private fun HybridWeekdayRadarChartCard(
                 AndroidView(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(400.dp),
+                        .height(250.dp),
                     factory = { webContext ->
                         WebView(webContext).apply {
                             setBackgroundColor(colorScheme.background.toArgb())
