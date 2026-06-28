@@ -43,8 +43,6 @@ fun MainScreen(
     onRequireLogin: () -> Unit = {},
     viewModel: MainViewModel = hiltViewModel()
 ) {
-    val isDeveloperMode by viewModel.isDeveloperMode.collectAsState(initial = false)
-    val isLoggedIn by viewModel.isLoggedIn.collectAsState()
 
     // 原生界面（带底部 Tab 栏）
     Box(modifier = Modifier

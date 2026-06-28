@@ -25,7 +25,6 @@ import javax.inject.Inject
 class ChartsViewModel @Inject constructor(
     private val getStatisticsUseCase: GetStatisticsUseCase,
     private val expenseRepository: ExpenseRepository,
-    val checkLoginStatusUseCase: com.chronie.homemoneylite.domain.usecase.CheckLoginStatusUseCase
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow<ChartsUiState>(ChartsUiState.Loading)

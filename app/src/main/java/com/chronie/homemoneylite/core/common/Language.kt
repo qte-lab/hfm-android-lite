@@ -9,10 +9,8 @@ enum class Language(
     val locale: Locale
 ) {
     ENGLISH("en-US", "English", "English", Locale.US),
-    SIMPLIFIED_CHINESE("zh-CN", "Simplified Chinese (Mainland China)", "简体中文（中国大陆）", Locale.SIMPLIFIED_CHINESE),
-    TRADITIONAL_CHINESE_HONG_KONG("zh-HK", "Traditional Chinese (Hong Kong)", "繁體中文（香港）", Locale.Builder().setLanguage("zh").setRegion("HK").build()),
-    TRADITIONAL_CHINESE_MACAU("zh-MO", "Traditional Chinese (Macau)", "繁體中文（澳門）", Locale.Builder().setLanguage("zh").setRegion("MO").build()),
-    TRADITIONAL_CHINESE_TAIWAN("zh-TW", "Traditional Chinese (Taiwan)", "繁體中文（台灣）", Locale.Builder().setLanguage("zh").setRegion("TW").build());
+    SIMPLIFIED_CHINESE("zh-CN", "Simplified Chinese", "简体中文", Locale.SIMPLIFIED_CHINESE),
+    TRADITIONAL_CHINESE("zh-TW", "Traditional Chinese", "繁體中文", Locale.TRADITIONAL_CHINESE),;
     val displayName: String
         get() = "$englishName / $localName"
 
@@ -23,9 +21,9 @@ enum class Language(
 
         fun fromLocale(locale: Locale): Language {
             return when {
-                locale.language == "zh" && locale.country == "TW" -> TRADITIONAL_CHINESE_TAIWAN
-                locale.language == "zh" && locale.country == "HK" -> TRADITIONAL_CHINESE_HONG_KONG
-                locale.language == "zh" && locale.country == "MO" -> TRADITIONAL_CHINESE_MACAU
+                locale.language == "zh" && locale.country == "TW" -> TRADITIONAL_CHINESE
+                locale.language == "zh" && locale.country == "HK" -> TRADITIONAL_CHINESE
+                locale.language == "zh" && locale.country == "MO" -> TRADITIONAL_CHINESE
                 locale.language == "zh" -> SIMPLIFIED_CHINESE
                 else -> ENGLISH
             }

@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chronie.homemoneylite.R
-import com.chronie.homemoneylite.core.common.DeveloperMode
 import com.chronie.homemoneylite.core.common.Language
 import com.chronie.homemoneylite.core.common.LanguageManager
 import com.chronie.homemoneylite.data.sync.SyncScheduler
@@ -26,13 +25,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val languageManager: LanguageManager,
-    private val developerMode: DeveloperMode,
     private val syncManager: SyncManager,
     private val syncScheduler: SyncScheduler,
     private val exportExpensesUseCase: ExportExpensesUseCase,
     private val importExpensesUseCase: ImportExpensesUseCase,
-    val checkLoginStatusUseCase: com.chronie.homemoneylite.domain.usecase.CheckLoginStatusUseCase,
-    private val logoutUseCase: com.chronie.homemoneylite.domain.usecase.LogoutUseCase,
     private val memberRepository: com.chronie.homemoneylite.domain.repository.MemberRepository,
     private val preferencesManager: com.chronie.homemoneylite.data.local.PreferencesManager,
     @param:dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
@@ -51,8 +47,6 @@ class SettingsViewModel @Inject constructor(
     val paletteStyle: StateFlow<PaletteStyle> = _paletteStyle.asStateFlow()
 
     val currentLanguage: StateFlow<Language> = languageManager.currentLanguage
-
-    val isDeveloperMode: Flow<Boolean> = developerMode.isDeveloperModeEnabled
 
     private val _aiApiKey = MutableStateFlow("")
     val aiApiKey: StateFlow<String> = _aiApiKey.asStateFlow()
@@ -78,19 +72,6 @@ class SettingsViewModel @Inject constructor(
 
     private val _importInProgress = MutableStateFlow(false)
     val importInProgress: StateFlow<Boolean> = _importInProgress.asStateFlow()
-
-    private val _currentUsername = MutableStateFlow<String?>(null)
-    val currentUsername: StateFlow<String?> = _currentUsername.asStateFlow()
-
-    private val _logoutEvent = MutableSharedFlow<Unit>()
-    val logoutEvent: SharedFlow<Unit> = _logoutEvent.asSharedFlow()
-
-    // 头像状态
-    private val _avatar = MutableStateFlow<String?>(null)
-    val avatar: StateFlow<String?> = _avatar.asStateFlow()
-
-    private val _avatarLoading = MutableStateFlow(false)
-    val avatarLoading: StateFlow<Boolean> = _avatarLoading.asStateFlow()
 
     // 设备名称
     private val _deviceName = MutableStateFlow("")
@@ -129,7 +110,6 @@ class SettingsViewModel @Inject constructor(
         loadAIApiKey()
         loadCurrentUser()
         loadDynamicColorSettings()
-        loadAvatar()
         loadDeviceName()
 
         // 设置同步请求回调
@@ -164,106 +144,8 @@ class SettingsViewModel @Inject constructor(
         _incomingSyncRequest.value = null
     }
 
-    private fun loadCurrentUser() {
-        viewModelScope.launch {
-            _currentUsername.value = checkLoginStatusUseCase.getUsername()
-        }
-    }
-
-    private fun loadAvatar() {
-        viewModelScope.launch {
-            // 首先从本地加载头像
-            val localAvatar = preferencesManager.getAvatar()
-            _avatar.value = localAvatar
-
-            // 然后尝试从后端获取最新头像
-            fetchAvatarFromBackend()
-        }
-    }
-
-    private suspend fun fetchAvatarFromBackend() {
-        val username = checkLoginStatusUseCase.getUsername()
-        if (username.isNullOrEmpty()) return
-
-        _avatarLoading.value = true
-        try {
-            // 使用memberRepository获取会员信息，包括头像
-            val result = memberRepository.getMemberInfo(username)
-            if (result.isSuccess) {
-                val member = result.getOrNull()
-                if (member != null && member.avatar != null) {
-                    // 日志记录头像数据的前50个字符，以检查格式
-                    android.util.Log.d("SettingsViewModel", "Fetched avatar data: ${member.avatar.take(50)}...")
-                    _avatar.value = member.avatar
-                    preferencesManager.saveAvatar(member.avatar)
-                }
-            } else {
-                android.util.Log.e("SettingsViewModel", "Failed to fetch avatar from backend: ${result.exceptionOrNull()?.message}")
-            }
-        } catch (e: Exception) {
-            // 网络请求失败，使用本地头像
-            android.util.Log.e("SettingsViewModel", "Failed to fetch avatar from backend", e)
-        } finally {
-            _avatarLoading.value = false
-        }
-    }
-
-    fun updateAvatar(avatarData: String) {
-        viewModelScope.launch {
-            _avatarLoading.value = true
-            try {
-                // 更新本地头像
-                _avatar.value = avatarData
-                preferencesManager.saveAvatar(avatarData)
-                android.util.Log.d("SettingsViewModel", "Avatar saved locally")
-
-                // 更新后端头像
-                val username = checkLoginStatusUseCase.getUsername()
-                if (username.isNullOrEmpty()) {
-                    android.util.Log.w("SettingsViewModel", "Username is null or empty, cannot update avatar on backend")
-                } else {
-                    android.util.Log.d("SettingsViewModel", "Updating avatar on backend for user: $username")
-                    val result = memberRepository.updateAvatar(username, avatarData)
-                    if (result.isSuccess) {
-                        android.util.Log.d("SettingsViewModel", "Avatar updated successfully on backend")
-                    } else {
-                        val errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
-                        android.util.Log.e("SettingsViewModel", "Failed to update avatar on backend: $errorMessage")
-                        throw Exception("更新头像失败: $errorMessage")
-                    }
-                }
-            } catch (e: Exception) {
-                android.util.Log.e("SettingsViewModel", "Failed to update avatar", e)
-                // 添加错误处理逻辑，显示错误消息
-                _syncMessage.value = context.getString(R.string.update_avatar_failed) + ": ${e.message}"
-            } finally {
-                _avatarLoading.value = false
-            }
-        }
-    }
-
-    fun logout() {
-        viewModelScope.launch {
-            logoutUseCase()
-            _currentUsername.value = null
-            _avatar.value = null
-            preferencesManager.clearAvatar()
-            _logoutEvent.emit(Unit)
-        }
-    }
-
-    fun clearSkippedLogin() {
-        preferencesManager.setSkippedLogin(false)
-    }
-
     fun setLanguage(language: Language) {
         languageManager.setLanguage(language)
-    }
-
-    fun toggleDeveloperMode() {
-        viewModelScope.launch {
-            developerMode.toggleDeveloperMode()
-        }
     }
 
     fun manualSync() {

@@ -23,7 +23,6 @@
     <string name="update_avatar_failed">Failed to update avatar</string>
     <string name="select_language">Select Language</string>
     <string name="api_key_set">Set: %s...</string>
-    <string name="developer_tools">Developer Tools</string>
     <string name="theme_settings">Theme Settings</string>
     <string name="dynamic_color">Dynamic Color</string>
     <string name="dynamic_color_description">Use colors from your wallpaper (Android 12+)</string>
@@ -52,11 +51,6 @@
     <!-- Welcome -->
     <string name="welcome_message">Welcome to Home Finance</string>
     <string name="getting_started">Get Started</string>
-    
-    <!-- Developer Options -->
-    <string name="developer_options">Developer Options</string>
-    <string name="developer_mode">Developer Mode</string>
-    <string name="developer_mode_description">Enable local database development features</string>
     
     <!-- Database Test -->
     <string name="database_test">Local Database</string>

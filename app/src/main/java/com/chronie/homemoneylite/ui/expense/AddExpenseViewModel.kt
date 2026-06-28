@@ -19,7 +19,6 @@ import javax.inject.Inject
 class AddExpenseViewModel @Inject constructor(
     private val expenseRepository: ExpenseRepository,
     private val syncScheduler: com.chronie.homemoneylite.data.sync.SyncScheduler,
-    val checkLoginStatusUseCase: com.chronie.homemoneylite.domain.usecase.CheckLoginStatusUseCase
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(AddExpenseUiState())

@@ -39,7 +39,6 @@ import com.chronie.homemoneylite.ui.settings.OpenSourceLicensesScreen
 import com.chronie.homemoneylite.ui.sync.LanSyncScreen
 import com.chronie.homemoneylite.ui.test.DatabaseTestScreen
 import com.chronie.homemoneylite.ui.theme.HomeMoneyTheme
-import com.chronie.homemoneylite.domain.usecase.CheckLoginStatusUseCase
 import com.chronie.homemoneylite.service.HealthCheckService
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -58,9 +57,6 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var syncScheduler: com.chronie.homemoneylite.data.sync.SyncScheduler
-
-    @Inject
-    lateinit var checkLoginStatusUseCase: CheckLoginStatusUseCase
 
     @Inject
     lateinit var healthCheckService: HealthCheckService
