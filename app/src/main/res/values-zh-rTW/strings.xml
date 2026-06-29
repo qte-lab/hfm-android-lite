@@ -48,10 +48,6 @@
     <string name="currency_format" formatted="false">%s%.2f</string>
     <string name="currency_format_no_decimal" formatted="false">%s%.0f</string>
     
-    <!-- Welcome -->
-    <string name="welcome_message">歡迎使用家庭記帳本</string>
-    <string name="getting_started">開始使用</string>
-    
     <!-- Database Test -->
     <string name="database_test">本機資料庫</string>
     <string name="add_test_data">新增一筆本機測試資料</string>
@@ -70,16 +66,6 @@
     <string name="sync_status">同步狀態</string>
     <string name="sync_status_idle">閒置</string>
     <string name="sync_status_syncing">同步中…</string>
-    <string name="sync_select_method">選擇同步方式</string>
-    <string name="sync_cloud">從雲端同步</string>
-    <string name="sync_other_devices">從其他裝置同步</string>
-    <string name="sync_lan">區域網路</string>
-    <string name="sync_bluetooth">藍牙</string>
-    <string name="sync_nfc">NFC</string>
-    <string name="device_sync_title">%s 裝置同步</string>
-    <string name="device_sync_searching">正在搜尋 %s 裝置…</string>
-    <string name="device_sync_searching_devices">正在搜尋裝置…</string>
-    <string name="device_sync_found_devices">找到 %d 個裝置：</string>
     <string name="sync_status_success">成功</string>
     <string name="sync_status_failed">失敗</string>
     <string name="sync_status_conflict">衝突</string>
@@ -94,11 +80,6 @@
     <string name="clear_failed">清空失敗：%s</string>
     <string name="load_success">資料載入成功</string>
     <string name="load_failed">載入資料失敗：%s</string>
-    <string name="device_sync_connecting">正在連線到 %s…</string>
-    <string name="device_sync_connect_failed">連線失敗</string>
-    <string name="device_sync_synchronizing">正在同步資料…</string>
-    <string name="device_sync_success">同步完成</string>
-    <string name="device_sync_failed">同步失敗：%s</string>
     
     <!-- Delete Confirmation Dialog -->
     <string name="delete_confirm_title">確認刪除</string>
@@ -491,32 +472,6 @@
     <string name="date_today">今天</string>
     <string name="date_yesterday">昨天</string>
     <string name="date_days_ago">%d 天前</string>
-    
-    <!-- 區域網路同步 -->
-    <string name="lan_sync_title">區域網路同步</string>
-    <string name="sync_options">同步選項</string>
-    <string name="search_nearby_devices">搜尋附近裝置</string>
-    <string name="search_nearby_devices_desc">發現同一WiFi網路下的裝置</string>
-    <string name="wait_for_connection">等待連線</string>
-    <string name="wait_for_connection_desc">其他裝置可以發現此裝置</string>
-    <string name="this_device">本機裝置</string>
-    <string name="lan_sync_ready">準備就緒，可與同一網路下的其他裝置同步</string>
-    <string name="sync_info_title">區域網路同步說明</string>
-    <string name="sync_info_content">1. 將所有裝置連接到同一WiFi網路\n2. 搜尋附近裝置\n3. 選擇要同步的裝置\n4. 資料將在裝置間同步</string>
-    <string name="edit_device_name">編輯裝置名稱</string>
-    <string name="device_name">裝置名稱</string>
-    <string name="searching_devices">正在搜尋裝置</string>
-    <string name="make_sure_same_wifi">請確保所有裝置連接到同一WiFi網路</string>
-    <string name="searching">正在搜尋…</string>
-    <string name="no_devices_found">未找到裝置</string>
-    <string name="device_name_updated">裝置名稱已更新</string>
-    <string name="sync_in_progress">正在同步...</string>
-    <string name="sync_request_title">同步請求</string>
-    <string name="sync_request_message">是否要與該裝置同步資料？</string>
-    <string name="accept">接受</string>
-    <string name="reject">拒絕</string>
-    <string name="incoming_sync_request_title">收到同步請求</string>
-    <string name="incoming_sync_request_message">想要與您的裝置同步資料</string>
     
     <!-- 開源許可證 -->
     <string name="open_source_licenses">開源許可證</string>

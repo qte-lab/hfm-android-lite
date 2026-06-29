@@ -48,10 +48,6 @@
     <string name="currency_format" formatted="false">%s%.2f</string>
     <string name="currency_format_no_decimal" formatted="false">%s%.0f</string>
     
-    <!-- Welcome -->
-    <string name="welcome_message">Welcome to Home Finance</string>
-    <string name="getting_started">Get Started</string>
-    
     <!-- Database Test -->
     <string name="database_test">Local Database</string>
     <string name="add_test_data">Add one Local Test Data</string>
@@ -70,12 +66,6 @@
     <string name="sync_status">Sync Status</string>
     <string name="sync_status_idle">Ready</string>
     <string name="sync_status_syncing">Syncing…</string>
-    <string name="sync_select_method">Select Sync Method</string>
-    <string name="sync_cloud">Cloud Sync</string>
-    <string name="sync_other_devices">Other Devices Sync</string>
-    <string name="sync_lan">LAN Sync</string>
-    <string name="sync_bluetooth">Bluetooth Sync</string>
-    <string name="sync_nfc">NFC Sync</string>
     <string name="sync_status_success">Success</string>
     <string name="sync_status_failed">Failed</string>
     <string name="sync_status_conflict">Conflict</string>
@@ -90,15 +80,6 @@
     <string name="clear_failed">Clear failed: %s</string>
     <string name="load_success">Loaded</string>
     <string name="load_failed">Load failed: %s</string>
-    <string name="device_sync_title">%s Device Sync</string>
-    <string name="device_sync_searching">Searching for %s devices...</string>
-    <string name="device_sync_searching_devices">Searching for devices...</string>
-    <string name="device_sync_found_devices">Found %d devices:</string>
-    <string name="device_sync_connecting">Connecting to %s...</string>
-    <string name="device_sync_connect_failed">Connection failed</string>
-    <string name="device_sync_synchronizing">Synchronizing...</string>
-    <string name="device_sync_success">Synchronization completed successfully</string>
-    <string name="device_sync_failed">Synchronization failed: %s</string>
     
     <!-- Delete Confirmation Dialog -->
     <string name="delete_confirm_title">Delete Confirmation</string>
@@ -492,33 +473,7 @@
     <string name="date_today">Today</string>
     <string name="date_yesterday">Yesterday</string>
     <string name="date_days_ago">%d days ago</string>
-    
-    <!-- LAN Sync -->
-    <string name="lan_sync_title">LAN Sync</string>
-    <string name="sync_options">Sync Options</string>
-    <string name="search_nearby_devices">Search Nearby Devices</string>
-    <string name="search_nearby_devices_desc">Discover devices on the same WiFi network</string>
-    <string name="wait_for_connection">Wait for Connection</string>
-    <string name="wait_for_connection_desc">Other devices can discover this device</string>
-    <string name="this_device">This Device</string>
-    <string name="lan_sync_ready">Ready to sync with other devices on the same network</string>
-    <string name="sync_info_title">How LAN Sync Works</string>
-    <string name="sync_info_content">1. Connect all devices to the same WiFi network\n2. Search for nearby devices\n3. Select a device to sync with\n4. Data will be synchronized between devices</string>
-    <string name="edit_device_name">Edit Device Name</string>
-    <string name="device_name">Device Name</string>
-    <string name="searching_devices">Searching Devices</string>
-    <string name="make_sure_same_wifi">Make sure all devices are connected to the same WiFi network</string>
-    <string name="searching">Searching…</string>
-    <string name="no_devices_found">No devices found</string>
-    <string name="device_name_updated">Device name updated</string>
-    <string name="sync_in_progress">Synchronizing...</string>
-    <string name="sync_request_title">Sync Request</string>
-    <string name="sync_request_message">Do you want to synchronize data with this device?</string>
-    <string name="accept">Accept</string>
-    <string name="reject">Reject</string>
-    <string name="incoming_sync_request_title">Incoming Sync Request</string>
-    <string name="incoming_sync_request_message">wants to synchronize data with your device</string>
-    
+   
     <!-- Open Source Licenses -->
     <string name="open_source_licenses">Open Source Licenses</string>
     <string name="open_source_licenses_description">View licenses of third-party components</string>
