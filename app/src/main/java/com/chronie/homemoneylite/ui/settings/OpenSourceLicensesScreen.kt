@@ -3,20 +3,18 @@ package com.chronie.homemoneylite.ui.settings
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.chronie.homemoneylite.ui.components.CircularIconButton
 
 data class LibraryInfo(
@@ -323,21 +321,6 @@ fun OpenSourceLicensesScreen(
     context: Context,
     onNavigateBack: () -> Unit = {}
 ) {
-    val colorScheme = MaterialTheme.colorScheme
-    val isDarkTheme = isSystemInDarkTheme()
-    val htmlContent = remember(libraries, colorScheme, isDarkTheme) {
-        buildLicenseHtml(
-            libraries = libraries,
-            backgroundColor = colorScheme.background,
-            surfaceColor = colorScheme.surface,
-            textColor = colorScheme.onSurface,
-            secondaryTextColor = colorScheme.onSurfaceVariant,
-            primaryColor = colorScheme.primary,
-            borderColor = colorScheme.outlineVariant,
-            isDarkTheme = isDarkTheme
-        )
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -353,141 +336,92 @@ fun OpenSourceLicensesScreen(
                         )
                     }
                 },
-                actions = {
-                    Box(modifier = Modifier.padding(end = 8.dp))
-                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
                 )
             )
         }
     ) { paddingValues ->
-        AndroidView(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
-            factory = { webContext ->
-                WebView(webContext).apply {
-                    setBackgroundColor(colorScheme.background.toArgb())
-                    settings.javaScriptEnabled = false
-                    webViewClient = object : WebViewClient() {
-                        override fun shouldOverrideUrlLoading(
-                            view: WebView?,
-                            request: WebResourceRequest?
-                        ): Boolean {
-                            val url = request?.url?.toString() ?: return false
-                            try {
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                view?.context?.startActivity(intent)
-                            } catch (_: Exception) {
-                            }
-                            return true
-                        }
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(libraries) { library ->
+                LibraryCard(
+                    library = library,
+                    onUrlClick = { url ->
+                        try {
+                            context.startActivity(
+                                Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            )
+                        } catch (_: Exception) {}
                     }
-                    loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null)
-                }
-            },
-            update = { webView ->
-                webView.loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null)
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun LibraryCard(
+    library: LibraryInfo,
+    onUrlClick: (String) -> Unit
+) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
         )
-    }
-}
-
-private fun buildLicenseHtml(
-    libraries: List<LibraryInfo>,
-    backgroundColor: androidx.compose.ui.graphics.Color,
-    surfaceColor: androidx.compose.ui.graphics.Color,
-    textColor: androidx.compose.ui.graphics.Color,
-    secondaryTextColor: androidx.compose.ui.graphics.Color,
-    primaryColor: androidx.compose.ui.graphics.Color,
-    borderColor: androidx.compose.ui.graphics.Color,
-    isDarkTheme: Boolean
-): String {
-    val items = libraries.joinToString("") { library ->
-        """
-            <div class="card">
-                <h3>${escapeHtml(library.name)}</h3>
-                <p><strong>Version:</strong> ${escapeHtml(library.version)}</p>
-                <p><strong>License:</strong> ${escapeHtml(library.license)}</p>
-                <div class="actions">
-                    <a href="${escapeHtml(library.licenseUrl)}" target="_blank">License</a>
-                    <a href="${escapeHtml(library.projectUrl)}" target="_blank">Project</a>
-                </div>
-            </div>
-        """.trimIndent()
-    }
-
-    val bgHex = colorToHex(backgroundColor)
-    val surfaceHex = colorToHex(surfaceColor)
-    val textHex = colorToHex(textColor)
-    val secondaryTextHex = colorToHex(secondaryTextColor)
-    val primaryHex = colorToHex(primaryColor)
-    val borderHex = colorToHex(borderColor)
-    val shadow = if (isDarkTheme) "rgba(255,255,255,0.06)" else "rgba(0,0,0,0.12)"
-
-    return """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <style>
-                body {
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-                    margin: 0;
-                    padding: 16px;
-                    background: $bgHex;
-                    color: $textHex;
-                }
-                .card {
-                    background: $surfaceHex;
-                    border-radius: 12px;
-                    padding: 16px;
-                    margin-bottom: 12px;
-                    box-shadow: 0 1px 3px $shadow;
-                    border: 1px solid $borderHex;
-                }
-                h3 { margin: 0 0 8px; font-size: 16px; color: $primaryHex; }
-                p { margin: 4px 0; font-size: 14px; color: $secondaryTextHex; }
-                .actions {
-                    margin-top: 8px;
-                    display: flex;
-                    gap: 8px;
-                }
-                a {
-                    display: inline-block;
-                    padding: 6px 10px;
-                    border: 1px solid $borderHex;
-                    border-radius: 999px;
-                    text-decoration: none;
-                    color: $primaryHex;
-                    font-size: 13px;
-                }
-            </style>
-        </head>
-        <body>
-            $items
-        </body>
-        </html>
-    """.trimIndent()
-}
-
-private fun colorToHex(color: androidx.compose.ui.graphics.Color): String {
-    return String.format("#%06X", (color.toArgb() and 0x00FFFFFF))
-}
-
-private fun escapeHtml(value: String): String {
-    return buildString {
-        value.forEach { char ->
-            when (char) {
-                '&' -> append("&amp;")
-                '<' -> append("&lt;")
-                '>' -> append("&gt;")
-                '"' -> append("&quot;")
-                '\'' -> append("&#39;")
-                else -> append(char)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = library.name,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "v${library.version}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = library.license,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                AssistChip(
+                    onClick = { onUrlClick(library.licenseUrl) },
+                    label = { Text(library.license) },
+                    trailingIcon = {
+                        Icon(
+                            Icons.Default.OpenInNew,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                )
+                AssistChip(
+                    onClick = { onUrlClick(library.projectUrl) },
+                    label = { Text("Project") },
+                    trailingIcon = {
+                        Icon(
+                            Icons.Default.OpenInNew,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                )
             }
         }
     }

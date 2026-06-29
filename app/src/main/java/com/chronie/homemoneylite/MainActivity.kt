@@ -8,7 +8,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.EaseOutCubic
+import androidx.compose.animation.core.EaseInCubic
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -152,16 +156,22 @@ fun HomeMoneyApp(
         navController = navController,
         startDestination = startDestination,
         enterTransition = {
-            fadeIn(animationSpec = tween(200))
+            slideInHorizontally(
+                initialOffsetX = { fullWidth -> fullWidth / 4 },
+                animationSpec = tween(durationMillis = 300, easing = EaseOutCubic)
+            ) + fadeIn(animationSpec = tween(durationMillis = 200, easing = EaseOutCubic))
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(200))
+            fadeOut(animationSpec = tween(durationMillis = 150, easing = EaseInCubic))
         },
         popEnterTransition = {
-            fadeIn(animationSpec = tween(200))
+            fadeIn(animationSpec = tween(durationMillis = 200, easing = EaseOutCubic))
         },
         popExitTransition = {
-            fadeOut(animationSpec = tween(200))
+            slideOutHorizontally(
+                targetOffsetX = { fullWidth -> fullWidth / 4 },
+                animationSpec = tween(durationMillis = 300, easing = EaseInCubic)
+            ) + fadeOut(animationSpec = tween(durationMillis = 150, easing = EaseInCubic))
         }
     ) {
         composable("settings") {
