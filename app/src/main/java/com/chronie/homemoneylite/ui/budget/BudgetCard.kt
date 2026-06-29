@@ -195,7 +195,7 @@ fun BudgetUsageCard(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = formatMonthLabelByLocale(usage.currentMonth + "-01", context.resources.configuration.locale.toLanguageTag()),
+                            text = formatMonthLabelByLocale(usage.currentMonth + "-01", context.resources.configuration.locales[0].toLanguageTag()),
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium
                         )
@@ -220,7 +220,7 @@ fun BudgetUsageCard(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = formatMonthLabelByLocale(usage.currentMonth + "-01", context.resources.configuration.locale.toLanguageTag()),
+                            text = formatMonthLabelByLocale(usage.currentMonth + "-01", context.resources.configuration.locales[0].toLanguageTag()),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
                         )

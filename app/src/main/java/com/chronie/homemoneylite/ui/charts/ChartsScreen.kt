@@ -326,6 +326,7 @@ private fun HybridTrendLineChartCard(
                                     return false
                                 }
 
+                                @Deprecated("Deprecated in Java")
                                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                                     return false
                                 }
@@ -778,7 +779,7 @@ private fun TimeRangeDialog(
     
     var showCustomRangeBottomSheet by remember { mutableStateOf(false) }
     
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberStandardBottomSheetState()
     
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -812,7 +813,7 @@ private fun TimeRangeDialog(
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .menuAnchor()
+                        .menuAnchor(ExposedDropdownMenuAnchorType.Primary, true)
                 )
                 
                 ExposedDropdownMenu(
@@ -903,7 +904,7 @@ private fun CustomRangeBottomSheet(
     onDismiss: () -> Unit,
     onConfirm: (LocalDate, LocalDate) -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberStandardBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
     
     var startDate by remember { mutableStateOf(initialStartDate) }

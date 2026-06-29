@@ -80,7 +80,7 @@ fun ExpenseFilterDialog(
                     }
                 }
                 
-                Divider()
+                HorizontalDivider()
                 
                 // 筛选内容
                 Column(
@@ -199,7 +199,7 @@ fun ExpenseFilterDialog(
                     }
                 }
                 
-                Divider()
+                HorizontalDivider()
                 
                 // 底部按钮
                 Row(

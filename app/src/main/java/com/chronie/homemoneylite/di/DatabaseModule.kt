@@ -2,7 +2,9 @@ package com.chronie.homemoneylite.di
 
 import android.content.Context
 import androidx.room.Room
+@Suppress("DEPRECATION")
 import androidx.security.crypto.EncryptedSharedPreferences
+@Suppress("DEPRECATION")
 import androidx.security.crypto.MasterKey
 import com.chronie.homemoneylite.data.local.AppDatabase
 import com.chronie.homemoneylite.data.local.DatabaseMigrations
@@ -39,6 +41,7 @@ object DatabaseModule {
      */
     @Provides
     @Singleton
+    @Suppress("DEPRECATION")
     fun provideDatabasePassphrase(@ApplicationContext context: Context): ByteArray {
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
@@ -91,7 +94,7 @@ object DatabaseModule {
         )
             .openHelperFactory(factory)
             .addMigrations(*DatabaseMigrations.getAllMigrations())
-            .fallbackToDestructiveMigration()
+            .fallbackToDestructiveMigration(true)
             .build()
     }
     

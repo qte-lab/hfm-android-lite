@@ -6,13 +6,13 @@ import com.chronie.homemoneylite.R
 
 data class ColorOption(
     val value: Int,
-    @StringRes val nameResId: Int
+    @param:StringRes val nameResId: Int
 ) {
     val color: Color get() = Color(value.toLong() and 0xFFFFFFFFL)
 }
 
 data class ColorGroup(
-    @StringRes val nameResId: Int,
+    @param:StringRes val nameResId: Int,
     val colors: List<ColorOption>
 )
 

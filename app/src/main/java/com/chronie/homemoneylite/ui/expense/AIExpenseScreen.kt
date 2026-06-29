@@ -16,11 +16,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -299,7 +297,7 @@ fun AIExpenseScreen(
                 title = { Text(context.getString(R.string.ai_expense_title)) },
                 navigationIcon = {
                     CircularIconButton(onClick = onNavigateBack, modifier = Modifier.padding(start = 8.dp, end = 4.dp)) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = context.getString(R.string.back))
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = context.getString(R.string.back))
                     }
                 },
                 actions = {
@@ -426,7 +424,7 @@ private fun ImageSourceSelectionBottomSheet(
     onCameraSelected: () -> Unit,
     onGallerySelected: () -> Unit
 ) {
-    val bottomSheetState = rememberModalBottomSheetState(
+    val bottomSheetState = rememberStandardBottomSheetState(
         skipPartiallyExpanded = true
     )
     

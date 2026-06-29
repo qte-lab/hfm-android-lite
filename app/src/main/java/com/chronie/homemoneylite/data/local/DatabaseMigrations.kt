@@ -6,8 +6,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 object DatabaseMigrations {
     
     val MIGRATION_1_2 = object : Migration(1, 2) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("""
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("""
                 CREATE TABLE IF NOT EXISTS budgets (
                     id INTEGER PRIMARY KEY NOT NULL,
                     monthly_limit REAL NOT NULL,
@@ -20,9 +20,9 @@ object DatabaseMigrations {
     }
     
     val MIGRATION_2_3 = object : Migration(2, 3) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("ALTER TABLE expenses ADD COLUMN date TEXT NOT NULL DEFAULT CURRENT_DATE")
-            database.execSQL("UPDATE expenses SET date = date(time / 1000, 'unixepoch')")
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("ALTER TABLE expenses ADD COLUMN date TEXT NOT NULL DEFAULT CURRENT_DATE")
+            db.execSQL("UPDATE expenses SET date = date(time / 1000, 'unixepoch')")
         }
     }
     

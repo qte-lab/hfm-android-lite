@@ -70,18 +70,16 @@ class LoggingInterceptor : Interceptor {
         
         // 记录响应体
         val responseBody = response.body
-        if (responseBody != null) {
-            val source = responseBody.source()
-            source.request(Long.MAX_VALUE)
-            val buffer = source.buffer
-            
-            val charset: Charset = responseBody.contentType()?.charset(StandardCharsets.UTF_8) 
-                ?: StandardCharsets.UTF_8
-            
-            if (responseBody.contentLength() != 0L) {
-                val content = buffer.clone().readString(charset)
-                logLongString("  Response Body: $content")
-            }
+        val source = responseBody.source()
+        source.request(Long.MAX_VALUE)
+        val buffer = source.buffer
+        
+        val charset: Charset = responseBody.contentType()?.charset(StandardCharsets.UTF_8) 
+            ?: StandardCharsets.UTF_8
+        
+        if (responseBody.contentLength() != 0L) {
+            val content = buffer.clone().readString(charset)
+            logLongString("  Response Body: $content")
         }
         
         return response

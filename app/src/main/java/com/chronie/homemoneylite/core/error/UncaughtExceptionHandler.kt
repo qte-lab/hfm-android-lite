@@ -18,6 +18,7 @@ class UncaughtExceptionHandler(
         
         fun init(context: Context, errorReporter: ErrorReporter) {
             val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+                ?: Thread.UncaughtExceptionHandler { _, _ -> }
             val uncaughtExceptionHandler = UncaughtExceptionHandler(
                 defaultHandler,
                 errorReporter
