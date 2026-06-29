@@ -283,6 +283,7 @@ fun ExpenseTypeDropdown(
             )
             
             ExposedDropdownMenu(
+                modifier = Modifier.heightIn(max = 280.dp),
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
