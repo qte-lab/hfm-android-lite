@@ -36,7 +36,6 @@ import com.chronie.homemoneylite.ui.expense.AIExpenseScreen
 import com.chronie.homemoneylite.ui.main.MainScreen
 import com.chronie.homemoneylite.ui.settings.SettingsScreen
 import com.chronie.homemoneylite.ui.settings.OpenSourceLicensesScreen
-import com.chronie.homemoneylite.ui.sync.LanSyncScreen
 import com.chronie.homemoneylite.ui.test.DatabaseTestScreen
 import com.chronie.homemoneylite.ui.theme.HomeMoneyTheme
 import com.chronie.homemoneylite.service.HealthCheckService
@@ -171,20 +170,8 @@ fun HomeMoneyApp(
                 onNavigateToDatabaseTest = {
                     navController.navigate("database_test")
                 },
-                onNavigateToLanSync = {
-                    navController.navigate("lan_sync")
-                },
                 onNavigateToOpenSourceLicenses = {
                     navController.navigate("open_source_licenses")
-                }
-            )
-        }
-
-        composable("lan_sync") {
-            LanSyncScreen(
-                context = context,
-                onNavigateBack = {
-                    navController.popBackStack()
                 }
             )
         }
@@ -219,10 +206,6 @@ fun HomeMoneyApp(
                     navController.navigate(
                         route = "weekday_detail?dayOfWeek=$dayOfWeek&amount=$amount&count=$count&percentage=$percentage&startDate=$startDate&endDate=$endDate"
                     )
-                },
-                onNavigateToLanSync = {
-                    selectedTab = 2
-                    navController.navigate("lan_sync")
                 },
                 onNavigateToOpenSourceLicenses = {
                     selectedTab = 2
