@@ -1,12 +1,7 @@
 package com.chronie.homemoneylite.ui.charts
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,10 +12,14 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.domain.model.TimeRange
@@ -164,7 +163,7 @@ private fun ChartsContent(
         Spacer(modifier = Modifier.height(16.dp))
         
         // 趋势折线图
-        HybridTrendLineChartCard(context, state.dailyData, currencyFormat)
+        TrendLineChartCard(context, state.dailyData, currencyFormat)
         
         Spacer(modifier = Modifier.height(16.dp))
         
@@ -174,7 +173,7 @@ private fun ChartsContent(
         Spacer(modifier = Modifier.height(16.dp))
         
         // 星期分析雷达图
-        HybridWeekdayRadarChartCard(
+        WeekdayRadarChartCard(
             context = context,
             weekdayData = state.weekdayData,
             currencyFormat = currencyFormat,
@@ -274,27 +273,11 @@ private fun StatisticItem(label: String, value: String) {
 }
 
 @Composable
-private fun HybridTrendLineChartCard(
+private fun TrendLineChartCard(
     context: Context,
     dailyData: List<DailyChartData>,
     currencyFormat: NumberFormat
 ) {
-    val colorScheme = MaterialTheme.colorScheme
-    val isDarkTheme = isSystemInDarkTheme()
-    val htmlContent = remember(dailyData, currencyFormat, colorScheme, isDarkTheme) {
-        buildLineChartHtml(
-            data = dailyData,
-            currencyFormat = currencyFormat,
-            backgroundColor = colorScheme.background,
-            surfaceColor = colorScheme.surface,
-            textColor = colorScheme.onSurface,
-            primaryColor = colorScheme.primary,
-            secondaryTextColor = colorScheme.onSurfaceVariant,
-            borderColor = colorScheme.outlineVariant,
-            isDarkTheme = isDarkTheme
-        )
-    }
-
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(
@@ -302,9 +285,9 @@ private fun HybridTrendLineChartCard(
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
-
+            
             Spacer(modifier = Modifier.height(16.dp))
-
+            
             if (dailyData.isEmpty()) {
                 Text(
                     text = context.getString(R.string.no_data),
@@ -313,29 +296,160 @@ private fun HybridTrendLineChartCard(
                     modifier = Modifier.padding(vertical = 32.dp)
                 )
             } else {
-                AndroidView(
+                HighQualityLineChart(
+                    data = dailyData,
+                    currencyFormat = currencyFormat,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(170.dp),
-                    factory = { webContext ->
-                        WebView(webContext).apply {
-                            setBackgroundColor(colorScheme.background.toArgb())
-                            settings.javaScriptEnabled = false
-                            webViewClient = object : WebViewClient() {
-                                override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                                    return false
-                                }
+                        .height(300.dp)
+                )
+            }
+        }
+    }
+}
 
-                                @Deprecated("Deprecated in Java")
-                                override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                                    return false
-                                }
-                            }
-                            loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null)
-                        }
-                    },
-                    update = { webView ->
-                        webView.loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null)
+@Composable
+private fun HighQualityLineChart(
+    data: List<DailyChartData>,
+    currencyFormat: NumberFormat,
+    modifier: Modifier = Modifier
+) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val textColor = MaterialTheme.colorScheme.onSurface
+    val gridColor = MaterialTheme.colorScheme.outlineVariant
+    
+    Canvas(modifier = modifier) {
+        if (data.isEmpty()) return@Canvas
+        
+        val maxAmount = data.maxOfOrNull { it.amount } ?: 0.0
+        if (maxAmount == 0.0) return@Canvas
+        
+        val width = size.width
+        val height = size.height
+        val paddingLeft = 80f
+        val paddingRight = 40f
+        val paddingTop = 60f
+        val paddingBottom = 80f
+        
+        val chartWidth = width - paddingLeft - paddingRight
+        val chartHeight = height - paddingTop - paddingBottom
+        
+        val paint = android.graphics.Paint().apply {
+            textAlign = android.graphics.Paint.Align.CENTER
+            textSize = 28f
+            color = textColor.toArgb()
+        }
+        
+        // 绘制Y轴网格线和标签
+        val ySteps = 5
+        for (i in 0..ySteps) {
+            val y = paddingTop + (chartHeight / ySteps) * i
+            val amount = maxAmount * (1 - i.toFloat() / ySteps)
+            
+            // 网格线
+            drawLine(
+                color = gridColor,
+                start = Offset(paddingLeft, y),
+                end = Offset(width - paddingRight, y),
+                strokeWidth = 1f
+            )
+            
+            // Y轴标签
+            val label = currencyFormat.format(amount)
+            drawContext.canvas.nativeCanvas.drawText(
+                label,
+                paddingLeft - 10f,
+                y + 10f,
+                paint.apply { textAlign = android.graphics.Paint.Align.RIGHT }
+            )
+        }
+        
+        // 绘制坐标轴
+        drawLine(
+            color = textColor.copy(alpha = 0.5f),
+            start = Offset(paddingLeft, paddingTop),
+            end = Offset(paddingLeft, height - paddingBottom),
+            strokeWidth = 2f
+        )
+        drawLine(
+            color = textColor.copy(alpha = 0.5f),
+            start = Offset(paddingLeft, height - paddingBottom),
+            end = Offset(width - paddingRight, height - paddingBottom),
+            strokeWidth = 2f
+        )
+        
+        // 绘制折线
+        val path = Path()
+        val points = mutableListOf<Pair<Float, Float>>()
+        
+        data.forEachIndexed { index, dailyData ->
+            val x = paddingLeft + (index.toFloat() / (data.size - 1).coerceAtLeast(1)) * chartWidth
+            val y = height - paddingBottom - (dailyData.amount.toFloat() / maxAmount.toFloat()) * chartHeight
+            
+            points.add(Pair(x, y))
+            
+            if (index == 0) {
+                path.moveTo(x, y)
+            } else {
+                path.lineTo(x, y)
+            }
+        }
+        
+        // 绘制折线
+        drawPath(
+            path = path,
+            color = primaryColor,
+            style = Stroke(width = 4f)
+        )
+        
+        // 绘制数据点和标签
+        data.forEachIndexed { index, dailyData ->
+            val (x, y) = points[index]
+            
+            // 数据点
+            drawCircle(
+                color = primaryColor,
+                radius = 6f,
+                center = Offset(x, y)
+            )
+            
+            drawCircle(
+                color = Color.White,
+                radius = 3f,
+                center = Offset(x, y)
+            )
+            
+            // 显示所有非零数值标签
+            if (dailyData.amount > 0) {
+                val valueLabel = String.format("%.0f", dailyData.amount)
+                drawContext.canvas.nativeCanvas.drawText(
+                    valueLabel,
+                    x,
+                    y - 20f,
+                    paint.apply {
+                        color = primaryColor.toArgb()
+                        textAlign = android.graphics.Paint.Align.CENTER
+                        textSize = 22f
+                    }
+                )
+            }
+        }
+        
+        // X轴日期标签
+        val xLabelStep = (data.size / 7).coerceAtLeast(1)
+        data.forEachIndexed { index, dailyData ->
+            if (index % xLabelStep == 0 || index == data.size - 1) {
+                val (x, _) = points[index]
+                val dateLabel = "${dailyData.date.monthValue}/${dailyData.date.dayOfMonth}"
+                
+                drawContext.canvas.nativeCanvas.drawText(
+                    dateLabel,
+                    x,
+                    height - paddingBottom + 40f,
+                    paint.apply {
+                        color = textColor.toArgb()
+                        textAlign = android.graphics.Paint.Align.CENTER
+                        textSize = 26f
                     }
                 )
             }
@@ -420,351 +534,6 @@ private fun CategoryItem(
     }
 }
 
-@Composable
-private fun HybridWeekdayRadarChartCard(
-    context: Context,
-    weekdayData: List<WeekdayChartData>,
-    currencyFormat: NumberFormat,
-    startDate: String,
-    endDate: String,
-    onNavigateToWeekdayDetail: (dayOfWeek: Int, amount: Double, count: Int, percentage: Float, startDate: String, endDate: String) -> Unit = { _, _, _, _, _, _ -> }
-) {
-    val colorScheme = MaterialTheme.colorScheme
-    val isDarkTheme = isSystemInDarkTheme()
-    val htmlContent = remember(weekdayData, currencyFormat, colorScheme, isDarkTheme, startDate, endDate) {
-        buildRadarChartHtml(
-            weekdayData = weekdayData,
-            currencyFormat = currencyFormat,
-            backgroundColor = colorScheme.background,
-            surfaceColor = colorScheme.surface,
-            textColor = colorScheme.onSurface,
-            primaryColor = colorScheme.primary,
-            secondaryTextColor = colorScheme.onSurfaceVariant,
-            borderColor = colorScheme.outlineVariant,
-            isDarkTheme = isDarkTheme,
-            context = context
-        )
-    }
-
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = context.getString(R.string.weekday_analysis),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            if (weekdayData.isEmpty() || weekdayData.all { it.amount == 0.0 }) {
-                Text(
-                    text = context.getString(R.string.no_data),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(vertical = 32.dp)
-                )
-            } else {
-                AndroidView(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(220.dp),
-                    factory = { webContext ->
-                        WebView(webContext).apply {
-                            setBackgroundColor(colorScheme.background.toArgb())
-                            settings.javaScriptEnabled = false
-                            webViewClient = object : WebViewClient() {
-                                override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
-                                    val url = request?.url?.toString() ?: return false
-                                    return handleRadarUrl(
-                                        view = view,
-                                        url = url,
-                                        weekdayData = weekdayData,
-                                        startDate = startDate,
-                                        endDate = endDate,
-                                        onNavigateToWeekdayDetail = onNavigateToWeekdayDetail
-                                    )
-                                }
-                            }
-                            loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null)
-                        }
-                    },
-                    update = { webView ->
-                        webView.loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null)
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                weekdayData.forEach { data ->
-                    if (data.amount > 0) {
-                        WeekdayDataItem(context, data, currencyFormat)
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-private fun handleRadarUrl(
-    view: WebView?,
-    url: String,
-    weekdayData: List<WeekdayChartData>,
-    startDate: String,
-    endDate: String,
-    onNavigateToWeekdayDetail: (dayOfWeek: Int, amount: Double, count: Int, percentage: Float, startDate: String, endDate: String) -> Unit
-): Boolean {
-    if (!url.startsWith("weekday://")) {
-        return false
-    }
-
-    val dayOfWeek = url.removePrefix("weekday://").toIntOrNull() ?: return true
-    val data = weekdayData.getOrNull(dayOfWeek) ?: return true
-    onNavigateToWeekdayDetail(
-        data.dayOfWeek,
-        data.amount,
-        data.count,
-        data.percentage,
-        startDate,
-        endDate
-    )
-    return true
-}
-
-private fun buildLineChartHtml(
-    data: List<DailyChartData>,
-    currencyFormat: NumberFormat,
-    backgroundColor: androidx.compose.ui.graphics.Color,
-    surfaceColor: androidx.compose.ui.graphics.Color,
-    textColor: androidx.compose.ui.graphics.Color,
-    primaryColor: androidx.compose.ui.graphics.Color,
-    secondaryTextColor: androidx.compose.ui.graphics.Color,
-    borderColor: androidx.compose.ui.graphics.Color,
-    isDarkTheme: Boolean
-): String {
-    if (data.isEmpty()) {
-        return """
-            <!DOCTYPE html>
-            <html><body style="margin:0;padding:0;background:${colorToHex(backgroundColor)};color:${colorToHex(textColor)};font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100%">No data</body></html>
-        """.trimIndent()
-    }
-
-    val maxAmount = data.maxOfOrNull { it.amount } ?: 0.0
-    if (maxAmount <= 0.0) {
-        return """
-            <!DOCTYPE html>
-            <html><body style="margin:0;padding:0;background:${colorToHex(backgroundColor)};color:${colorToHex(textColor)};font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100%">No data</body></html>
-        """.trimIndent()
-    }
-
-    val width = 640
-    val height = 320
-    val paddingLeft = 70
-    val paddingRight = 24
-    val paddingTop = 24
-    val paddingBottom = 56
-    val chartWidth = width - paddingLeft - paddingRight
-    val chartHeight = height - paddingTop - paddingBottom
-
-    val points = data.mapIndexed { index, item ->
-        val x = paddingLeft + (index.toFloat() / (data.size - 1).coerceAtLeast(1)) * chartWidth
-        val y = height - paddingBottom - (item.amount / maxAmount).toFloat() * chartHeight
-        Pair(x.toInt(), y.toInt())
-    }
-
-    val linePoints = points.joinToString(" ") { (x, y) -> "$x,$y" }
-    val yTicks = (0..4).joinToString("") { step ->
-        val y = paddingTop + (chartHeight / 4) * step
-        val amount = maxAmount * (1 - step.toFloat() / 4)
-        val label = escapeHtml(currencyFormat.format(amount))
-        """<line x1="$paddingLeft" y1="$y" x2="${width - paddingRight}" y2="$y" stroke="${colorToHex(borderColor)}" stroke-width="1" stroke-dasharray="4 4" />""" +
-                """<text x="${paddingLeft - 10}" y="${y + 4}" fill="${colorToHex(secondaryTextColor)}" text-anchor="end" font-size="12">$label</text>"""
-    }
-
-    val xLabels = data.mapIndexed { index, item ->
-        val shouldShow = index == 0 || index == data.size - 1 || index % ((data.size / 6).coerceAtLeast(1)) == 0
-        if (!shouldShow) return@mapIndexed ""
-        val (x, _) = points[index]
-        val label = "${item.date.monthValue}/${item.date.dayOfMonth}"
-        """<text x="$x" y="${height - paddingBottom + 20}" fill="${colorToHex(secondaryTextColor)}" text-anchor="middle" font-size="12">${escapeHtml(label)}</text>"""
-    }.joinToString("")
-
-    val valueLabels = points.mapIndexed { index, (x, y) ->
-        val item = data[index]
-        if (item.amount <= 0) return@mapIndexed ""
-        val label = escapeHtml(String.format(Locale.US, "%.0f", item.amount))
-        """<circle cx="$x" cy="$y" r="4" fill="${colorToHex(primaryColor)}" />""" +
-                """<text x="$x" y="${y - 10}" fill="${colorToHex(primaryColor)}" text-anchor="middle" font-size="12">$label</text>"""
-    }.joinToString("")
-
-    val bgHex = colorToHex(backgroundColor)
-    val surfaceHex = colorToHex(surfaceColor)
-    val textHex = colorToHex(textColor)
-    val primaryHex = colorToHex(primaryColor)
-    val borderHex = colorToHex(borderColor)
-    val shadow = if (isDarkTheme) "rgba(255,255,255,0.08)" else "rgba(0,0,0,0.12)"
-
-    return """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <style>
-                body { margin: 0; padding: 0; background: $bgHex; color: $textHex; font-family: system-ui, sans-serif; }
-                .wrap { padding: 8px; }
-                svg { width: 100%; height: auto; display: block; }
-            </style>
-        </head>
-        <body>
-            <div class="wrap">
-                <svg viewBox="0 0 $width $height" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0" y="0" width="$width" height="$height" rx="16" fill="$surfaceHex" stroke="$borderHex" />
-                    $yTicks
-                    <line x1="$paddingLeft" y1="$paddingTop" x2="$paddingLeft" y2="${height - paddingBottom}" stroke="$borderHex" stroke-width="1.4" />
-                    <line x1="$paddingLeft" y1="${height - paddingBottom}" x2="${width - paddingRight}" y2="${height - paddingBottom}" stroke="$borderHex" stroke-width="1.4" />
-                    <polyline fill="none" stroke="$primaryHex" stroke-width="3" points="$linePoints" />
-                    $valueLabels
-                    $xLabels
-                </svg>
-            </div>
-        </body>
-        </html>
-    """.trimIndent()
-}
-
-private fun buildRadarChartHtml(
-    weekdayData: List<WeekdayChartData>,
-    currencyFormat: NumberFormat,
-    backgroundColor: androidx.compose.ui.graphics.Color,
-    surfaceColor: androidx.compose.ui.graphics.Color,
-    textColor: androidx.compose.ui.graphics.Color,
-    primaryColor: androidx.compose.ui.graphics.Color,
-    secondaryTextColor: androidx.compose.ui.graphics.Color,
-    borderColor: androidx.compose.ui.graphics.Color,
-    isDarkTheme: Boolean,
-    context: Context
-): String {
-    if (weekdayData.isEmpty()) {
-        return """
-            <!DOCTYPE html>
-            <html><body style="margin:0;padding:0;background:${colorToHex(backgroundColor)};color:${colorToHex(textColor)};font-family:system-ui;display:flex;align-items:center;justify-content:center;height:100%">No data</body></html>
-        """.trimIndent()
-    }
-
-    val width = 640
-    val height = 420
-    val centerX = width / 2
-    val centerY = height / 2
-    val radius = 150
-    val vertices = 7
-    val angleStep = 2 * Math.PI / vertices
-    val startAngle = -Math.PI / 2
-    val maxAmount = weekdayData.maxOfOrNull { it.amount } ?: 0.0
-
-    val labels = listOf(
-        context.getString(R.string.sunday_short),
-        context.getString(R.string.monday_short),
-        context.getString(R.string.tuesday_short),
-        context.getString(R.string.wednesday_short),
-        context.getString(R.string.thursday_short),
-        context.getString(R.string.friday_short),
-        context.getString(R.string.saturday_short)
-    )
-
-    val points = (0 until vertices).map { index ->
-        val data = weekdayData.getOrNull(index)
-        val normalizedValue = if (data != null && maxAmount > 0) (data.amount / maxAmount).toFloat() else 0f
-        val angle = startAngle + angleStep * index
-        val pointRadius = radius * normalizedValue
-        val x = centerX + pointRadius * kotlin.math.cos(angle).toFloat()
-        val y = centerY + pointRadius * kotlin.math.sin(angle).toFloat()
-        Pair(x.toInt(), y.toInt())
-    }
-
-    val polygonPoints = points.joinToString(" ") { (x, y) -> "$x,$y" }
-    val axisMarkup = (0 until vertices).joinToString("") { index ->
-        val angle = startAngle + angleStep * index
-        val endX = centerX + radius * kotlin.math.cos(angle).toFloat()
-        val endY = centerY + radius * kotlin.math.sin(angle).toFloat()
-        val labelRadius = radius + 48
-        val labelX = centerX + labelRadius * kotlin.math.cos(angle).toFloat()
-        val labelY = centerY + labelRadius * kotlin.math.sin(angle).toFloat()
-        val label = escapeHtml(labels[index])
-        """<line x1="$centerX" y1="$centerY" x2="$endX" y2="$endY" stroke="${colorToHex(borderColor)}" stroke-width="1" />""" +
-                """<a href="weekday://$index"><text x="$labelX" y="$labelY" fill="${colorToHex(textColor)}" text-anchor="middle" font-size="14">$label</text></a>"""
-    }
-
-    val gridMarkup = (1..5).joinToString("") { level ->
-        val levelRadius = radius * level / 5
-        val levelAmount = maxAmount * level / 5
-        val label = escapeHtml(currencyFormat.format(levelAmount))
-        """<circle cx="$centerX" cy="$centerY" r="$levelRadius" fill="none" stroke="${colorToHex(borderColor)}" stroke-width="1" stroke-dasharray="4 4" />""" +
-                """<text x="${centerX + levelRadius + 10}" y="${centerY + 4}" fill="${colorToHex(secondaryTextColor)}" font-size="12">$label</text>"""
-    }
-
-    val pointMarkup = points.mapIndexed { index, (x, y) ->
-        val value = weekdayData.getOrNull(index)?.amount ?: 0.0
-        val valueLabel = escapeHtml(String.format(Locale.US, "%.0f", value))
-        """<circle cx="$x" cy="$y" r="5" fill="${colorToHex(primaryColor)}" />""" +
-                """<circle cx="$x" cy="$y" r="2" fill="${colorToHex(backgroundColor)}" />""" +
-                """<text x="$x" y="${y - 12}" fill="${colorToHex(primaryColor)}" text-anchor="middle" font-size="11">$valueLabel</text>"""
-    }.joinToString("")
-
-    val bgHex = colorToHex(backgroundColor)
-    val surfaceHex = colorToHex(surfaceColor)
-    val textHex = colorToHex(textColor)
-    val primaryHex = colorToHex(primaryColor)
-    val borderHex = colorToHex(borderColor)
-
-    return """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <style>
-                body { margin: 0; padding: 0; background: $bgHex; color: $textHex; font-family: system-ui, sans-serif; }
-                .wrap { padding: 8px; }
-                svg { width: 100%; height: auto; display: block; }
-                a { cursor: pointer; }
-            </style>
-        </head>
-        <body>
-            <div class="wrap">
-                <svg viewBox="0 0 $width $height" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="0" y="0" width="$width" height="$height" rx="16" fill="$surfaceHex" stroke="$borderHex" />
-                    $gridMarkup
-                    $axisMarkup
-                    <polygon points="$polygonPoints" fill="$primaryHex" fill-opacity="0.18" stroke="$primaryHex" stroke-width="3" />
-                    $pointMarkup
-                </svg>
-            </div>
-        </body>
-        </html>
-    """.trimIndent()
-}
-
-private fun escapeHtml(value: String): String {
-    return buildString {
-        value.forEach { ch ->
-            when (ch) {
-                '&' -> append("&amp;")
-                '<' -> append("&lt;")
-                '>' -> append("&gt;")
-                '"' -> append("&quot;")
-                '\'' -> append("&#39;")
-                else -> append(ch)
-            }
-        }
-    }
-}
-
-private fun colorToHex(color: androidx.compose.ui.graphics.Color): String {
-    return String.format("#%06X", (color.toArgb() and 0x00FFFFFF))
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun TimeRangeDialog(
@@ -779,7 +548,7 @@ private fun TimeRangeDialog(
     
     var showCustomRangeBottomSheet by remember { mutableStateOf(false) }
     
-    val sheetState = rememberStandardBottomSheetState()
+    val sheetState = rememberModalBottomSheetState()
     
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -904,7 +673,7 @@ private fun CustomRangeBottomSheet(
     onDismiss: () -> Unit,
     onConfirm: (LocalDate, LocalDate) -> Unit
 ) {
-    val sheetState = rememberStandardBottomSheetState()
+    val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
     
     var startDate by remember { mutableStateOf(initialStartDate) }
