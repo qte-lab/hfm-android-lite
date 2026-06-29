@@ -271,7 +271,7 @@ fun ExpenseTypeDropdown(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .menuAnchor(ExposedDropdownMenuAnchorType.Primary, true),
+                    .menuAnchor(),
                 placeholder = { Text(context.getString(R.string.add_expense_type_hint)) },
                 leadingIcon = { 
                     Icon(Icons.Default.Search, contentDescription = null) 

@@ -424,9 +424,7 @@ private fun ImageSourceSelectionBottomSheet(
     onCameraSelected: () -> Unit,
     onGallerySelected: () -> Unit
 ) {
-    val bottomSheetState = rememberStandardBottomSheetState(
-        skipPartiallyExpanded = true
-    )
+    val bottomSheetState = rememberStandardBottomSheetState()
     
     ModalBottomSheet(
         onDismissRequest = onDismiss,

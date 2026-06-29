@@ -1,10 +1,10 @@
+@file:Suppress("DEPRECATION")
+
 package com.chronie.homemoneylite.di
 
 import android.content.Context
 import androidx.room.Room
-@Suppress("DEPRECATION")
 import androidx.security.crypto.EncryptedSharedPreferences
-@Suppress("DEPRECATION")
 import androidx.security.crypto.MasterKey
 import com.chronie.homemoneylite.data.local.AppDatabase
 import com.chronie.homemoneylite.data.local.DatabaseMigrations
