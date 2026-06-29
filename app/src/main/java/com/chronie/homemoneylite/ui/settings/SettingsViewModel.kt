@@ -8,7 +8,6 @@ import com.chronie.homemoneylite.core.common.Language
 import com.chronie.homemoneylite.core.common.LanguageManager
 import com.chronie.homemoneylite.data.sync.SyncScheduler
 import com.chronie.homemoneylite.domain.model.SyncStatus
-import com.chronie.homemoneylite.domain.sync.DeviceInfo
 import com.chronie.homemoneylite.domain.sync.SyncManager
 import com.chronie.homemoneylite.domain.usecase.ExportExpensesUseCase
 import com.chronie.homemoneylite.domain.usecase.ImportExpensesUseCase
@@ -31,7 +30,7 @@ class SettingsViewModel @Inject constructor(
     private val importExpensesUseCase: ImportExpensesUseCase,
     private val preferencesManager: com.chronie.homemoneylite.data.local.PreferencesManager,
     @param:dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
-) : ViewModel(), com.chronie.homemoneylite.domain.sync.SyncRequestCallback {
+) : ViewModel() {
 
     // 动态颜色开关状态
     private val _useDynamicColor = MutableStateFlow(true)
@@ -76,6 +75,30 @@ class SettingsViewModel @Inject constructor(
         loadSyncInfo()
         loadAIApiKey()
         loadDynamicColorSettings()
+    }
+
+    fun setLanguage(language: Language) {
+        languageManager.setLanguage(language)
+    }
+
+    fun clearSyncMessage() {
+        _syncMessage.value = null
+    }
+
+    fun manualSync() {
+        viewModelScope.launch {
+            try {
+                val result = syncScheduler.manualSync()
+                _syncMessage.value = if (result.isSuccess) {
+                    context.getString(R.string.sync_status_success)
+                } else {
+                    context.getString(R.string.sync_status_failed) + ": " + (result.exceptionOrNull()?.message ?: "Unknown error")
+                }
+                loadSyncInfo()
+            } catch (e: Exception) {
+                _syncMessage.value = context.getString(R.string.sync_status_failed) + ": " + e.message
+            }
+        }
     }
 
     fun setAIApiKey(apiKey: String) {
