@@ -50,7 +50,6 @@ import com.chronie.homemoneylite.core.common.Language
 import com.chronie.homemoneylite.ui.components.ExpressiveSwitch
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
 import com.chronie.homemoneylite.ui.components.ColorPickerBottomSheet
-import com.chronie.homemoneylite.ui.components.LanguageSelectorBottomSheet
 import com.chronie.homemoneylite.ui.components.getColorGroups
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
 import com.chronie.homemoneylite.ui.theme.LocalThemeSettings
@@ -95,7 +94,6 @@ fun SettingsScreen(
 ) {
     val currentLanguage by viewModel.currentLanguage.collectAsState()
     val scrollState = rememberScrollState()
-    var showLanguageBottomSheet by remember { mutableStateOf(false) }
     var selectedCategory by remember { mutableStateOf<SettingsCategoryPage?>(null) }
 
     BackHandler(enabled = selectedCategory != null) {
@@ -205,7 +203,6 @@ fun SettingsScreen(
                         viewModel = viewModel,
                         context = context,
                         currentLanguage = currentLanguage,
-                        onShowLanguage = { showLanguageBottomSheet = true },
                         onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses
                     )
                     SettingsCategoryPage.FUNCTION -> FunctionSettingsContent(
@@ -226,15 +223,6 @@ fun SettingsScreen(
                 }
             }
 
-            if (showLanguageBottomSheet) {
-                LanguageSelectorBottomSheet(
-                    currentLanguage = currentLanguage,
-                    onLanguageSelected = { viewModel.setLanguage(it) },
-                    onDismiss = { showLanguageBottomSheet = false },
-                    context = context
-                )
-            }
-
             if (selectedCategory == null) {
                 Spacer(modifier = Modifier.height(8.dp))
                 AppVersionInfo(context = context)
@@ -248,41 +236,17 @@ private fun ThemeSettingsContent(
     viewModel: SettingsViewModel,
     context: Context,
     currentLanguage: Language,
-    onShowLanguage: () -> Unit,
     onNavigateToOpenSourceLicenses: () -> Unit
 ) {
     val useDynamicColor by viewModel.useDynamicColor.collectAsState()
     val themeSettings = LocalThemeSettings.current
 
     SettingsCategorySection(title = context.getString(R.string.language_settings)) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onShowLanguage() },
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = context.getString(R.string.select_language),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = currentLanguage.localName,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Text(text = ">", style = MaterialTheme.typography.titleLarge)
-            }
-        }
+        LanguageDropdownSelector(
+            currentLanguage = currentLanguage,
+            onLanguageSelected = { viewModel.setLanguage(it) },
+            context = context
+        )
     }
 
     SettingsCategorySection(title = context.getString(R.string.theme_settings)) {
