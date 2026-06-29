@@ -288,9 +288,6 @@ fun AIExpenseScreen(
         }
     }
 
-    // 控制图片来源选择对话框的显示
-    var showImageSourceDialog by remember { mutableStateOf(false) }
-    
     Scaffold(
         topBar = {
             TopAppBar(
@@ -319,7 +316,24 @@ fun AIExpenseScreen(
             ImageSelectionSection(
                 context = context,
                 selectedImages = uiState.selectedImages,
-                onAddImages = { showImageSourceDialog = true },
+                onCameraSelected = {
+                    val hasCameraPermission = ContextCompat.checkSelfPermission(
+                        context,
+                        android.Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED
+                    
+                    if (hasCameraPermission) {
+                        cameraImageUri = createImageFile(context)
+                        cameraImageUri?.let {
+                            cameraLauncher.launch(it)
+                        }
+                    } else {
+                        permissionLauncher.launch(android.Manifest.permission.CAMERA)
+                    }
+                },
+                onGallerySelected = {
+                    imagePickerLauncher.launch("image/*")
+                },
                 onRemoveImage = viewModel::removeImage,
                 onCropImage = ::handleCropExistingImage
             )
@@ -379,113 +393,6 @@ fun AIExpenseScreen(
             }
         }
     }
-
-    // 图片来源选择BottomSheet
-    if (showImageSourceDialog) {
-        ImageSourceSelectionBottomSheet(
-            context = context,
-            onDismiss = { showImageSourceDialog = false },
-            onCameraSelected = {
-                // 检查相机权限
-                val hasCameraPermission = ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_GRANTED
-                
-                if (hasCameraPermission) {
-                    // 已有权限，直接启动相机
-                    cameraImageUri = createImageFile(context)
-                    cameraImageUri?.let {
-                        cameraLauncher.launch(it)
-                    }
-                } else {
-                    // 请求相机权限
-                    permissionLauncher.launch(android.Manifest.permission.CAMERA)
-                }
-                showImageSourceDialog = false
-            },
-            onGallerySelected = {
-                // 启动相册选择器
-                imagePickerLauncher.launch("image/*")
-                showImageSourceDialog = false
-            }
-        )
-    }
-}
-
-/**
- * 图片来源选择BottomSheet
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun ImageSourceSelectionBottomSheet(
-    context: Context,
-    onDismiss: () -> Unit,
-    onCameraSelected: () -> Unit,
-    onGallerySelected: () -> Unit
-) {
-    val bottomSheetState = rememberStandardBottomSheetState()
-    
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = bottomSheetState,
-        dragHandle = { BottomSheetDefaults.DragHandle() }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            Text(
-                text = context.getString(R.string.ai_expense_select_image_source),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-            
-            // 相机选项
-            OutlinedButton(
-                onClick = onCameraSelected,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Default.CameraAlt,
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = context.getString(R.string.ai_expense_take_photo))
-                }
-            }
-
-            // 相册选项
-            OutlinedButton(
-                onClick = onGallerySelected,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        Icons.Default.PhotoLibrary,
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(text = context.getString(R.string.ai_expense_choose_from_gallery))
-                }
-            }
-        }
-    }
 }
 
 /**
@@ -496,10 +403,13 @@ private fun ImageSourceSelectionBottomSheet(
 private fun ImageSelectionSection(
     context: android.content.Context,
     selectedImages: List<Uri>,
-    onAddImages: () -> Unit,
+    onCameraSelected: () -> Unit,
+    onGallerySelected: () -> Unit,
     onRemoveImage: (Uri) -> Unit,
     onCropImage: (Uri) -> Unit
 ) {
+    var showDropdown by remember { mutableStateOf(false) }
+    
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -510,10 +420,53 @@ private fun ImageSelectionSection(
                 text = context.getString(R.string.ai_expense_select_images),
                 style = MaterialTheme.typography.titleMedium
             )
-            TextButton(onClick = onAddImages) {
-                Icon(Icons.Default.Add, contentDescription = null)
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(context.getString(R.string.ai_expense_add_images))
+            Box {
+                TextButton(onClick = { showDropdown = true }) {
+                    Icon(Icons.Default.Add, contentDescription = null)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(context.getString(R.string.ai_expense_add_images))
+                }
+                DropdownMenu(
+                    expanded = showDropdown,
+                    onDismissRequest = { showDropdown = false }
+                ) {
+                    DropdownMenuItem(
+                        text = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    Icons.Default.CameraAlt,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(context.getString(R.string.ai_expense_take_photo))
+                            }
+                        },
+                        onClick = {
+                            showDropdown = false
+                            onCameraSelected()
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    Icons.Default.PhotoLibrary,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(context.getString(R.string.ai_expense_choose_from_gallery))
+                            }
+                        },
+                        onClick = {
+                            showDropdown = false
+                            onGallerySelected()
+                        }
+                    )
+                }
             }
         }
         
@@ -532,7 +485,7 @@ private fun ImageSelectionSection(
             }
         } else {
             Card(
-                onClick = onAddImages,
+                onClick = { showDropdown = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),
