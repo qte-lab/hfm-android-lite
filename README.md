@@ -13,24 +13,21 @@ This is the native Android implementation of the Home Money financial tracking l
 *   **Budget Management**: Set monthly spending limits with customizable warning thresholds and monitor real-time usage to stay within financial goals.
 *   **Data Synchronization**: Enjoy seamless financial management with automatic background synchronization with a server and robust offline support through local caching.
 *   **Search & Filtering**: Advanced search capabilities allow users to filter expenses by date range, expense type, amount range, and keywords.
-*   **Multi-language Support**: The application offers full internationalization, supporting English, Simplified Chinese (zh-cn), Traditional Chinese (zh-tw), Hong Kong (zh-hk), Macau (zh-mo) variants.
+*   **Multi-language Support**: The application offers full internationalization, supporting English, Simplified Chinese, Traditional Chinese.
 
 ### Enhanced Features
 
-*   **LAN Device Sync**: Facilitates peer-to-peer data synchronization between devices over a local network using Bluetooth, enhancing data accessibility and backup options.
 *   **Data Visualization**: Provides interactive charts and radar charts for insightful weekday spending analysis, helping users understand their financial habits.
 *   **Excel Import/Export**: Allows for easy import of expense data from Excel files and export of data for backup or further analysis.
 *   **Image Cropping**: Includes a built-in image cropping tool specifically designed to optimize images for AI expense recognition.
 *   **Error Reporting**: Features automatic crash reporting and error logging to aid in debugging and improving application stability.
 *   **Health Check Service**: Monitors server health to ensure continuous and reliable operation.
-*   **Welcome Screen with Ad Functionality**: The welcome screen now includes integrated advertising functionality.
 
 ### Technical Highlights
 
 *   **Encrypted Database**: Sensitive financial data is secured using **SQLCipher-encrypted local storage**.
 *   **Material Design 3 Expressive UI**: The user interface follows Google's latest Material Design 3 guidelines, offering a modern and expressive user experience.
 *   **Edge-to-Edge Display**: Provides an immersive full-screen experience by utilizing the entire display area.
-*   **Developer Mode**: A built-in developer mode offers tools for database testing and debugging.
 *   **Customizable Theme**: Users can personalize the app's appearance with a color picker for theme customization.
 
 ## Technical Stack
@@ -42,17 +39,7 @@ This is the native Android implementation of the Home Money financial tracking l
 *   **API Integration**: SiliconFlow API (for AI recognition)
 *   **Minimum SDK Version**: 24
 *   **Compile SDK Version**: 37
-*   **Target SDK Version**: 32
-
-## Recent Changes
-
-*   **Membership Features Removed**: Membership navigation and related UI components have been removed to streamline the application.
-*   **Ad Functionality Added**: The welcome screen now incorporates advertising functionality.
-*   **Language Support Refined**: The application now specifically supports English, Simplified Chinese, Traditional Chinese, Hong Kong, Macau variants.
-*   **UI/Animation Refinements**: Unused language intent code has been removed, and wavy progress indicators have been replaced with standard Material3 linear progress indicators. Animations have been simplified.
-*   **ABI Support**: Added `armeabi-v7a` ABI support.
-*   **Package Renaming**: The application package has been renamed to `com.chronie.homemoneylite`.
-*   **SDK Version Updates**: `minSdkVersion` has been bumped to 24, and the Gradle wrapper URL has been updated.
+*   **Target SDK Version**: 37
 
 ## Getting Started
 
@@ -178,13 +165,6 @@ Configure API keys in the Settings screen:
 - Uploads local changes to server
 - Downloads server updates
 
-#### LAN Device Sync
-- Go to Settings → LAN Sync
-- Enable Bluetooth and location permissions
-- Discover nearby devices
-- Pair and sync data directly without server
-- Conflict resolution based on timestamps
-
 #### Manual Sync
 - Go to Settings → Data Sync
 - Tap "Sync Now" button
@@ -211,19 +191,7 @@ Configure API keys in the Settings screen:
 - Review and confirm imported data
 - Save to database
 
-### 6. Membership Management
-
-#### User Profile
-- View and edit user profile
-- Upload avatar image
-- Update personal information
-
-#### Login/Logout
-- Secure login with server
-- Automatic token refresh
-- Persistent login state
-
-### 7. Language & Theme
+### 6. Language & Theme
 
 #### Language Settings
 - Go to Settings → Language
@@ -236,13 +204,6 @@ Configure API keys in the Settings screen:
 - Use color picker to select custom accent colors
 - Preview theme changes in real-time
 - Save custom theme preferences
-
-### 8. Developer Mode
-- Go to Settings → Developer Options
-- Enable Developer Mode
-- Access database testing screen from main menu
-- Add test data, view records, and clear database
-- View error logs and crash reports
 
 ## Database Schema
 
@@ -269,20 +230,6 @@ CREATE TABLE budgets (
     warning_threshold REAL NOT NULL DEFAULT 0.8,
     is_enabled INTEGER NOT NULL DEFAULT 0,
     updated_at INTEGER NOT NULL
-)
-```
-
-### Members Table
-```sql
-CREATE TABLE members (
-    id INTEGER PRIMARY KEY,
-    name TEXT,
-    email TEXT,
-    avatar TEXT,
-    created_at INTEGER NOT NULL,
-    updated_at INTEGER NOT NULL,
-    is_synced INTEGER NOT NULL DEFAULT 0,
-    server_id TEXT
 )
 ```
 
@@ -315,12 +262,6 @@ CREATE TABLE sync_queue (
 - Uses SiliconFlow API with Qwen models
 - Supports multiple images in a single request
 
-### Member API
-- `GET /api/members/current` - Get current user info
-- `POST /api/members` - Create or update member
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-
 ### Health Check API
 - `GET /api/health` - Check server health status
 
@@ -339,15 +280,6 @@ CREATE TABLE sync_queue (
 ```bash
 ./gradlew connectedAndroidTest
 ```
-
-### Manual Testing
-1. Enable Developer Mode in Settings
-2. Access Database Test screen
-3. Add test data and verify operations
-4. Check sync functionality (server and LAN)
-5. Test offline mode by disabling network
-6. Test Excel import/export
-7. Test LAN device sync between multiple devices
 
 ## Troubleshooting
 
@@ -377,7 +309,6 @@ CREATE TABLE sync_queue (
 - Verify server is running and accessible
 - Check API key configuration
 - Review sync logs in Settings
-- For LAN sync: Ensure Bluetooth is enabled and devices are paired
 
 #### Language Not Changing
 - Ensure language is saved in Settings

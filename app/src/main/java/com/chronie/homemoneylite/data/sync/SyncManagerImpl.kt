@@ -9,7 +9,6 @@ import com.chronie.homemoneylite.data.mapper.ExpenseMapper
 import com.chronie.homemoneylite.data.remote.api.ExpenseApi
 import com.chronie.homemoneylite.data.remote.dto.SyncRequestDto
 import com.chronie.homemoneylite.domain.model.*
-import com.chronie.homemoneylite.domain.sync.DeviceSyncManager
 import com.chronie.homemoneylite.domain.sync.SyncManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -23,8 +22,7 @@ class SyncManagerImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val expenseDao: ExpenseDao,
     private val syncQueueDao: SyncQueueDao,
-    private val expenseApi: ExpenseApi,
-    private val deviceSyncManagerFactory: DeviceSyncManagerFactory
+    private val expenseApi: ExpenseApi
 ) : SyncManager {
     
     private val prefs: SharedPreferences = context.getSharedPreferences(
@@ -176,8 +174,4 @@ class SyncManagerImpl @Inject constructor(
     }
     
     override fun observeSyncStatus(): Flow<SyncStatus> = _syncStatus.asStateFlow()
-    
-    override fun getDeviceSyncManager(): DeviceSyncManager {
-        return deviceSyncManagerFactory.createDeviceSyncManager()
-    }
 }
