@@ -3,6 +3,7 @@
 package com.chronie.homemoneylite.di
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
@@ -32,8 +33,10 @@ object DatabaseModule {
         System.loadLibrary("sqlcipher")
     }
     
+    private const val TAG = "DatabaseModule"
     private const val DB_PASSPHRASE_KEY = "db_passphrase"
     private const val ENCRYPTED_PREFS_FILE = "secure_prefs"
+    private const val FALLBACK_PREFS_FILE = "db_prefs_fallback"
     
     /**
      * 提供数据库密码
@@ -43,27 +46,51 @@ object DatabaseModule {
     @Singleton
     @Suppress("DEPRECATION")
     fun provideDatabasePassphrase(@ApplicationContext context: Context): ByteArray {
+        // 尝试使用 EncryptedSharedPreferences
         val masterKey = MasterKey.Builder(context)
             .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
             .build()
         
-        val sharedPreferences = EncryptedSharedPreferences.create(
-            context,
-            ENCRYPTED_PREFS_FILE,
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
+        try {
+            val encryptedPrefs = EncryptedSharedPreferences.create(
+                context,
+                ENCRYPTED_PREFS_FILE,
+                masterKey,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+            val passphrase = encryptedPrefs.getString(DB_PASSPHRASE_KEY, null)
+            if (passphrase != null) {
+                return passphrase.toByteArray(StandardCharsets.UTF_8)
+            }
+        } catch (e: Exception) {
+            // EncryptedSharedPreferences 创建或读取失败（低版本 Android Keystore 兼容性问题）
+            Log.w(TAG, "EncryptedSharedPreferences failed, using fallback", e)
+            deleteCorruptedPrefs(context)
+        }
         
-        // 获取或生成密码
-        var passphrase = sharedPreferences.getString(DB_PASSPHRASE_KEY, null)
+        // 回退方案：使用普通 SharedPreferences 存储密码
+        // 密码本身是随机的，数据库已通过 SQLCipher 加密，SharedPreferences 仅做持久化
+        val fallbackPrefs = context.getSharedPreferences(FALLBACK_PREFS_FILE, Context.MODE_PRIVATE)
+        var passphrase = fallbackPrefs.getString(DB_PASSPHRASE_KEY, null)
         if (passphrase == null) {
-            // 生成随机密码
             passphrase = generateRandomPassphrase()
-            sharedPreferences.edit().putString(DB_PASSPHRASE_KEY, passphrase).apply()
+            fallbackPrefs.edit().putString(DB_PASSPHRASE_KEY, passphrase).apply()
+            // 如果之前有加密 prefs 中的数据，尝试迁移（此时已无法读取，跳过）
         }
         
         return passphrase.toByteArray(StandardCharsets.UTF_8)
+    }
+    
+    /**
+     * 删除损坏的加密 SharedPreferences 文件
+     */
+    private fun deleteCorruptedPrefs(context: Context) {
+        try {
+            context.deleteSharedPreferences(ENCRYPTED_PREFS_FILE)
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to delete corrupted prefs", e)
+        }
     }
     
     /**
@@ -87,15 +114,33 @@ object DatabaseModule {
     ): AppDatabase {
         val factory = SupportOpenHelperFactory(passphrase)
         
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            AppDatabase.DATABASE_NAME
-        )
-            .openHelperFactory(factory)
-            .addMigrations(*DatabaseMigrations.getAllMigrations())
-            .fallbackToDestructiveMigration(true)
-            .build()
+        return try {
+            val db = Room.databaseBuilder(
+                context,
+                AppDatabase::class.java,
+                AppDatabase.DATABASE_NAME
+            )
+                .openHelperFactory(factory)
+                .addMigrations(*DatabaseMigrations.getAllMigrations())
+                .fallbackToDestructiveMigration(true)
+                .build()
+            // 主动触发数据库打开，以便能捕获 SQLCipher 解密异常
+            db.openHelper?.writableDatabase
+            db
+        } catch (e: Exception) {
+            // 密码不匹配导致 SQLCipher 解密失败，删除数据库后重建
+            Log.w(TAG, "Database open failed, recreating", e)
+            context.deleteDatabase(AppDatabase.DATABASE_NAME)
+            Room.databaseBuilder(
+                context,
+                AppDatabase::class.java,
+                AppDatabase.DATABASE_NAME
+            )
+                .openHelperFactory(factory)
+                .addMigrations(*DatabaseMigrations.getAllMigrations())
+                .fallbackToDestructiveMigration(true)
+                .build()
+        }
     }
     
     /**
