@@ -6,8 +6,11 @@ import com.chronie.homemoneylite.data.remote.api.ExpenseApi
 import com.chronie.homemoneylite.data.remote.api.MemberApi
 import com.chronie.homemoneylite.data.repository.BudgetRepositoryImpl
 import com.chronie.homemoneylite.data.repository.ExpenseRepositoryImpl
+import com.chronie.homemoneylite.data.sync.SyncManagerImpl
 import com.chronie.homemoneylite.domain.repository.BudgetRepository
 import com.chronie.homemoneylite.domain.repository.ExpenseRepository
+import com.chronie.homemoneylite.domain.sync.SyncManager
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,4 +38,13 @@ object RepositoryModule {
     ): BudgetRepository {
         return BudgetRepositoryImpl(budgetDao, expenseDao)
     }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class SyncManagerModule {
+    
+    @Binds
+    @Singleton
+    abstract fun bindSyncManager(syncManagerImpl: SyncManagerImpl): SyncManager
 }
