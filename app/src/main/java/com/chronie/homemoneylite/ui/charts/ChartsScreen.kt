@@ -813,7 +813,7 @@ private fun TimeRangeDialog(
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .menuAnchor(MenuAnchorType.Primary, true)
+                        .menuAnchor()
                 )
                 
                 ExposedDropdownMenu(
