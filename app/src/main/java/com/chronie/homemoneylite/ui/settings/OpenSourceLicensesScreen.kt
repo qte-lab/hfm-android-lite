@@ -355,7 +355,9 @@ fun OpenSourceLicensesScreen(
                     onUrlClick = { url ->
                         try {
                             context.startActivity(
-                                Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
                             )
                         } catch (_: Exception) {}
                     }
