@@ -1,6 +1,5 @@
 package com.chronie.homemoneylite.ui.expense
 
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,9 +15,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.*
@@ -26,10 +23,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chronie.homemoneylite.R
@@ -45,7 +39,7 @@ import kotlinx.coroutines.launch
 /**
  * 支出列表界面
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseListScreen(
     context: android.content.Context,
@@ -63,20 +57,6 @@ fun ExpenseListScreen(
     var budgetRefreshTrigger by remember { mutableStateOf(0) }
     
     val pullRefreshState = rememberPullToRefreshState()
-    
-    // Get window size class for responsive layout
-    // Use LocalContext to get the original context (not the localized one passed in)
-    val localContext = LocalContext.current
-    val activity = localContext as? android.app.Activity
-        ?: localContext.findActivity()
-    val windowSizeClass = if (activity != null) {
-        calculateWindowSizeClass(activity)
-    } else {
-        null
-    }
-    // Use table layout only on Medium (600dp+) or Expanded screens
-    val useTableLayout = windowSizeClass?.widthSizeClass == WindowWidthSizeClass.Medium ||
-                         windowSizeClass?.widthSizeClass == WindowWidthSizeClass.Expanded
     
     // 处理刷新请求
     LaunchedEffect(shouldRefresh) {
@@ -272,51 +252,28 @@ fun ExpenseListScreen(
                         groupedExpenses.forEach { (date, expenses) ->
                             // 日期标题
                             item(key = "header_$date") {
-                                if (useTableLayout) {
-                                    ExpenseTableDateHeader(
-                                        date = date,
-                                        count = expenses.size,
-                                        totalAmount = expenses.sumOf { it.amount },
-                                        context = context,
-                                        locale = context.resources.configuration.locale.toLanguageTag(),
+                                ExpenseDateHeader(
+                                    date = date,
+                                    count = expenses.size,
+                                    totalAmount = expenses.sumOf { it.amount },
+                                    context = context,
+                                    locale = context.resources.configuration.locale.toLanguageTag(),
                                         modifier = Modifier.padding(horizontal = 16.dp)
-                                    )
-                                } else {
-                                    ExpenseDateHeader(
-                                        date = date,
-                                        count = expenses.size,
-                                        totalAmount = expenses.sumOf { it.amount },
-                                        context = context,
-                                        locale = context.resources.configuration.locale.toLanguageTag(),
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                    )
-                                }
+                                )
                             }
                             
                             // 该日期下的支出项
-                            if (useTableLayout) {
-                                item(key = "table_$date") {
-                                    ExpenseTableItems(
-                                        expenses = expenses,
-                                        context = context,
-                                        onEdit = { expense -> onNavigateToEditExpense(expense.id) },
-                                        onDelete = { expense -> viewModel.deleteExpense(expense) },
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                    )
-                                }
-                            } else {
-                                items(
-                                    items = expenses,
-                                    key = { expense -> "expense_${expense.id}" }
-                                ) { expense ->
-                                    LongPressExpenseItem(
-                                        expense = expense,
-                                        context = context,
-                                        onEdit = { onNavigateToEditExpense(expense.id) },
-                                        onDelete = { viewModel.deleteExpense(expense) },
-                                        modifier = Modifier.padding(horizontal = 16.dp)
-                                    )
-                                }
+                            items(
+                                items = expenses,
+                                key = { expense -> "expense_${expense.id}" }
+                            ) { expense ->
+                                LongPressExpenseItem(
+                                    expense = expense,
+                                    context = context,
+                                    onEdit = { onNavigateToEditExpense(expense.id) },
+                                    onDelete = { viewModel.deleteExpense(expense) },
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
                             }
                         }
                         
@@ -753,199 +710,3 @@ fun ExpenseListItem(
     }
 }
 
-/**
- * Table date header for wide screens
- */
-@Composable
-fun ExpenseTableDateHeader(
-    date: String,
-    count: Int,
-    totalAmount: Double,
-    context: android.content.Context,
-    locale: String? = null,
-    modifier: Modifier = Modifier
-) {
-    val displayDate = formatRelativeDate(date, context, locale)
-    
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        shape = MaterialTheme.shapes.small
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = displayDate,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "${context.getString(R.string.expense_stats_count)}: $count",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = "-" + context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), totalAmount),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-        }
-    }
-}
-
-/**
- * Table layout for expense items on wide screens
- */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ExpenseTableItems(
-    expenses: List<Expense>,
-    context: android.content.Context,
-    onEdit: (Expense) -> Unit,
-    onDelete: (Expense) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-    ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            // Table header
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.surfaceContainerHighest
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = context.getString(R.string.expense_type),
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.weight(1f),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = context.getString(R.string.expense_remark),
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.weight(1.5f),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = context.getString(R.string.expense_amount),
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.width(120.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.End,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = context.getString(R.string.common_actions),
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.width(100.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-            
-            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-            
-            // Table rows
-            expenses.forEachIndexed { index, expense ->
-                val typeDisplayName = ExpenseTypeLocalizer.getLocalizedName(context, expense.type)
-                
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = typeDisplayName,
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.weight(1f),
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = expense.remark ?: "-",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1.5f),
-                        color = if (expense.remark.isNullOrBlank()) 
-                            MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f) 
-                        else 
-                            MaterialTheme.colorScheme.onSurface,
-                        maxLines = 2,
-                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
-                    )
-                    Text(
-                        text = "-" + context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), expense.amount),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.width(120.dp),
-                        textAlign = androidx.compose.ui.text.style.TextAlign.End,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.error
-                    )
-                    Row(
-                        modifier = Modifier.width(100.dp),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        IconButton(
-                            onClick = { onEdit(expense) },
-                            modifier = Modifier.size(36.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = context.getString(R.string.edit),
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
-                        IconButton(
-                            onClick = { onDelete(expense) },
-                            modifier = Modifier.size(36.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = context.getString(R.string.delete),
-                                tint = MaterialTheme.colorScheme.error,
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
-                    }
-                }
-                
-                if (index < expenses.size - 1) {
-                    HorizontalDivider(
-                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                }
-            }
-        }
-    }
-}
-
-/**
- * Extension function to find Activity from Context
- */
-private tailrec fun android.content.Context.findActivity(): android.app.Activity? {
-    return when (this) {
-        is android.app.Activity -> this
-        is android.content.ContextWrapper -> baseContext.findActivity()
-        else -> null
-    }
-}
