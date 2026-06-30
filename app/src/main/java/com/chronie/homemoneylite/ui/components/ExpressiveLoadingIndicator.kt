@@ -1,16 +1,18 @@
 package com.chronie.homemoneylite.ui.components
 
-import androidx.compose.material3.ContainedLoadingIndicator
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
-import androidx.compose.material3.LoadingIndicator
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ExpressiveLoadingIndicator(
     modifier: Modifier = Modifier,
@@ -18,17 +20,26 @@ fun ExpressiveLoadingIndicator(
     containerVisible: Boolean = true
 ) {
     val colorScheme = MaterialTheme.colorScheme
-    
+
     if (containerVisible) {
-        ContainedLoadingIndicator(
-            modifier = modifier,
-            containerColor = colorScheme.secondaryContainer,
-            indicatorColor = colorScheme.onPrimaryContainer
-        )
+        Box(
+            modifier = modifier
+                .size(size)
+                .clip(CircleShape)
+                .background(colorScheme.secondaryContainer),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(size * 0.6f),
+                color = colorScheme.onPrimaryContainer,
+                strokeWidth = size * 0.08f
+            )
+        }
     } else {
-        LoadingIndicator(
-            modifier = modifier,
-            color = colorScheme.primary
+        CircularProgressIndicator(
+            modifier = modifier.size(size),
+            color = colorScheme.primary,
+            strokeWidth = size * 0.08f
         )
     }
 }
