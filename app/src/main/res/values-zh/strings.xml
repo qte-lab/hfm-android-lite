@@ -8,9 +8,6 @@
     <!-- 设置 -->
     <string name="settings">设置</string>
     <string name="language_settings">语言设置</string>
-    <string name="account">账号</string>
-    <string name="login">登录</string>
-    <string name="logout">退出登录</string>
     <string name="settings_choose_category">选择一个设置分类继续管理</string>
     <string name="settings_category_theme">主题设置</string>
     <string name="settings_category_theme_description">语言与界面外观</string>
@@ -20,7 +17,6 @@
     <string name="settings_category_data_sync_description">同步与导入导出</string>
     <string name="settings_category_more">更多</string>
     <string name="settings_category_more_description">反馈、许可证和本地数据库</string>
-    <string name="update_avatar_failed">更新头像失败</string>
     <string name="select_language">选择语言</string>
     <string name="api_key_set">已设置：%s</string>
     <string name="theme_settings">主题设置</string>

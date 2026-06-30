@@ -28,7 +28,6 @@ class SettingsViewModel @Inject constructor(
     private val syncScheduler: SyncScheduler,
     private val exportExpensesUseCase: ExportExpensesUseCase,
     private val importExpensesUseCase: ImportExpensesUseCase,
-    private val preferencesManager: com.chronie.homemoneylite.data.local.PreferencesManager,
     @param:dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
 ) : ViewModel() {
 

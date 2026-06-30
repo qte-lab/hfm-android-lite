@@ -13,7 +13,7 @@ This is the native Android implementation of the Home Money financial tracking l
 *   **Budget Management**: Set monthly spending limits with customizable warning thresholds and monitor real-time usage to stay within financial goals.
 *   **Data Synchronization**: Enjoy seamless financial management with automatic background synchronization with a server and robust offline support through local caching.
 *   **Search & Filtering**: Advanced search capabilities allow users to filter expenses by date range, expense type, amount range, and keywords.
-*   **Multi-language Support**: The application offers full internationalization, supporting English, Simplified Chinese, Traditional Chinese.
+*   **Multi-language Support**: The application offers full internationalization, supporting English, Simplified Chinese.
 
 ### Enhanced Features
 
@@ -195,7 +195,7 @@ Configure API keys in the Settings screen:
 
 #### Language Settings
 - Go to Settings → Language
-- Choose from English, Simplified Chinese, Traditional Chinese, Hong Kong, Macau variants
+- Choose from English, Simplified Chinese
 - UI updates immediately without restart
 - Preference is saved and persists across app restarts
 
