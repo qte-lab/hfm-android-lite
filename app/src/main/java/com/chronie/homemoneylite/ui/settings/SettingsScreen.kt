@@ -44,6 +44,7 @@ import androidx.compose.material.icons.filled.Storage
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -103,7 +104,10 @@ fun SettingsScreen(
 ) {
     val currentLanguage by viewModel.currentLanguage.collectAsState()
     val scrollState = rememberScrollState()
-    var selectedCategory by remember { mutableStateOf<SettingsCategoryPage?>(null) }
+    var selectedCategoryName by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedCategory: SettingsCategoryPage?
+        get() = selectedCategoryName?.let { SettingsCategoryPage.valueOf(it) }
+        set(value) { selectedCategoryName = value?.name }
 
     BackHandler(enabled = selectedCategory != null) {
         selectedCategory = null
