@@ -446,7 +446,7 @@ private fun MoreSettingsContent(
                 .fillMaxWidth()
                 .clickable {
                     try {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wj.qq.com/s2/24109109/3572/"))
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wj.qq.com/s2/27178724/6eb3/"))
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         context.startActivity(intent)
                     } catch (e: Exception) {
