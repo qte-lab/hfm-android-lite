@@ -14,6 +14,15 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.EaseOutCubic
+import androidx.compose.animation.core.EaseInCubic
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -101,131 +110,173 @@ fun SettingsScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.background,
-            tonalElevation = 0.dp
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+        AnimatedContent(
+            targetState = selectedCategory,
+            transitionSpec = {
+                fadeIn(animationSpec = tween(durationMillis = 200, easing = EaseOutCubic))
+                    togetherWith
+                    fadeOut(animationSpec = tween(durationMillis = 150, easing = EaseInCubic))
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) { category ->
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                color = MaterialTheme.colorScheme.background,
+                tonalElevation = 0.dp
             ) {
-                if (selectedCategory != null) {
-                    IconButton(onClick = { selectedCategory = null }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (category != null) {
+                        IconButton(onClick = { selectedCategory = null }) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = null)
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = category?.title(context) ?: context.getString(R.string.settings),
+                        style = MaterialTheme.typography.titleLarge
+                    )
                 }
-                Text(
-                    text = selectedCategory?.title(context) ?: context.getString(R.string.settings),
-                    style = MaterialTheme.typography.titleLarge
-                )
             }
         }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(16.dp)
-                .padding(bottom = 80.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            if (selectedCategory == null) {
-                Text(
-                    text = context.getString(R.string.settings_choose_category),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+        AnimatedContent(
+            targetState = selectedCategory,
+            transitionSpec = {
+                if (targetState != null && initialState == null) {
+                    // 进入二级页面：从右侧滑入 + 淡入
+                    slideInHorizontally(
+                        initialOffsetX = { fullWidth -> fullWidth / 4 },
+                        animationSpec = tween(durationMillis = 300, easing = EaseOutCubic)
+                    ) + fadeIn(animationSpec = tween(durationMillis = 200, easing = EaseOutCubic))
+                        togetherWith
+                        fadeOut(animationSpec = tween(durationMillis = 150, easing = EaseInCubic))
+                } else if (targetState == null && initialState != null) {
+                    // 返回主页面：从左侧滑入 + 淡入
+                    slideInHorizontally(
+                        initialOffsetX = { fullWidth -> -fullWidth / 4 },
+                        animationSpec = tween(durationMillis = 300, easing = EaseOutCubic)
+                    ) + fadeIn(animationSpec = tween(durationMillis = 200, easing = EaseOutCubic))
+                        togetherWith
+                        slideOutHorizontally(
+                            targetOffsetX = { fullWidth -> fullWidth / 4 },
+                            animationSpec = tween(durationMillis = 300, easing = EaseInCubic)
+                        ) + fadeOut(animationSpec = tween(durationMillis = 150, easing = EaseInCubic))
+                } else {
+                    // 二级页面之间切换
+                    slideInHorizontally(
+                        initialOffsetX = { fullWidth -> fullWidth / 4 },
+                        animationSpec = tween(durationMillis = 300, easing = EaseOutCubic)
+                    ) + fadeIn(animationSpec = tween(durationMillis = 200, easing = EaseOutCubic))
+                        togetherWith
+                        fadeOut(animationSpec = tween(durationMillis = 150, easing = EaseInCubic))
+                }
+            },
+            modifier = Modifier.fillMaxSize()
+        ) { category ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(16.dp)
+                    .padding(bottom = 80.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                if (category == null) {
+                    Text(
+                        text = context.getString(R.string.settings_choose_category),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
 
-                listOf(
-                    SettingsCategoryPage.THEME,
-                    SettingsCategoryPage.FUNCTION,
-                    SettingsCategoryPage.DATA_SYNC,
-                    SettingsCategoryPage.MORE
-                ).forEach { category ->
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { selectedCategory = category },
-                        color = MaterialTheme.colorScheme.surfaceContainerLow,
-                        shape = MaterialTheme.shapes.large,
-                        border = BorderStroke(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
-                        )
-                    ) {
-                        Row(
+                    listOf(
+                        SettingsCategoryPage.THEME,
+                        SettingsCategoryPage.FUNCTION,
+                        SettingsCategoryPage.DATA_SYNC,
+                        SettingsCategoryPage.MORE
+                    ).forEach { categoryItem ->
+                        Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Surface(
-                                shape = CircleShape,
-                                color = MaterialTheme.colorScheme.primaryContainer,
-                                modifier = Modifier.size(44.dp)
-                            ) {
-                                Icon(
-                                    imageVector = category.icon(),
-                                    contentDescription = null,
-                                    modifier = Modifier.padding(10.dp),
-                                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.width(12.dp))
-
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = category.title(context),
-                                    style = MaterialTheme.typography.titleMedium
-                                )
-                                Text(
-                                    text = category.description(context),
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-
-                            Text(
-                                text = ">",
-                                style = MaterialTheme.typography.titleLarge
+                                .clickable { selectedCategory = categoryItem },
+                            color = MaterialTheme.colorScheme.surfaceContainerLow,
+                            shape = MaterialTheme.shapes.large,
+                            border = BorderStroke(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
                             )
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Surface(
+                                    shape = CircleShape,
+                                    color = MaterialTheme.colorScheme.primaryContainer,
+                                    modifier = Modifier.size(44.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = categoryItem.icon(),
+                                        contentDescription = null,
+                                        modifier = Modifier.padding(10.dp),
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                }
+
+                                Spacer(modifier = Modifier.width(12.dp))
+
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = categoryItem.title(context),
+                                        style = MaterialTheme.typography.titleMedium
+                                    )
+                                    Text(
+                                        text = categoryItem.description(context),
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+
+                                Text(
+                                    text = ">",
+                                    style = MaterialTheme.typography.titleLarge
+                                )
+                            }
                         }
                     }
-                }
-            } else {
-                when (selectedCategory) {
-                    SettingsCategoryPage.THEME -> ThemeSettingsContent(
-                        viewModel = viewModel,
-                        context = context,
-                        currentLanguage = currentLanguage,
-                        onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses
-                    )
-                    SettingsCategoryPage.FUNCTION -> FunctionSettingsContent(
-                        viewModel = viewModel,
-                        context = context
-                    )
-                    SettingsCategoryPage.DATA_SYNC -> DataSyncSettingsContent(
-                        viewModel = viewModel,
-                        context = context,
-                        onNavigateToLanSync = onNavigateToLanSync
-                    )
-                    SettingsCategoryPage.MORE -> MoreSettingsContent(
-                        context = context,
-                        onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses,
-                        onNavigateToDatabaseTest = onNavigateToDatabaseTest
-                    )
-                    null -> Unit
-                }
-            }
 
-            if (selectedCategory == null) {
-                Spacer(modifier = Modifier.height(8.dp))
-                AppVersionInfo(context = context)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    AppVersionInfo(context = context)
+                } else {
+                    when (category) {
+                        SettingsCategoryPage.THEME -> ThemeSettingsContent(
+                            viewModel = viewModel,
+                            context = context,
+                            currentLanguage = currentLanguage,
+                            onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses
+                        )
+                        SettingsCategoryPage.FUNCTION -> FunctionSettingsContent(
+                            viewModel = viewModel,
+                            context = context
+                        )
+                        SettingsCategoryPage.DATA_SYNC -> DataSyncSettingsContent(
+                            viewModel = viewModel,
+                            context = context,
+                            onNavigateToLanSync = onNavigateToLanSync
+                        )
+                        SettingsCategoryPage.MORE -> MoreSettingsContent(
+                            context = context,
+                            onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses,
+                            onNavigateToDatabaseTest = onNavigateToDatabaseTest
+                        )
+                    }
+                }
             }
         }
     }
