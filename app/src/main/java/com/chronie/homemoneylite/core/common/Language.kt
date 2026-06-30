@@ -9,7 +9,7 @@ enum class Language(
     val locale: Locale
 ) {
     ENGLISH("en-US", "English", "English", Locale.US),
-    SIMPLIFIED_CHINESE("zh", "Chinese", "中文", Locale.CHINESE);
+    CHINESE("zh", "Chinese", "中文", Locale.CHINESE);
     val displayName: String
         get() = "$englishName / $localName"
 
