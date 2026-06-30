@@ -10,8 +10,6 @@ plugins {
     id 'com.google.devtools.ksp' version '2.3.9' apply false
 }
 
-ext.kotlin_version = '2.4.0'
-
 apply from: "variables.gradle"
 
 allprojects {
