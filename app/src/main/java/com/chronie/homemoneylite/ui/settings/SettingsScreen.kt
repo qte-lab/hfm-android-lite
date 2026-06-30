@@ -59,7 +59,7 @@ import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.core.common.Language
 import com.chronie.homemoneylite.ui.components.ExpressiveSwitch
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
-import com.chronie.homemoneylite.ui.components.getColorGroups
+import com.chronie.homemoneylite.ui.components.getColorOptions
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
 import com.chronie.homemoneylite.ui.theme.LocalThemeSettings
 import com.chronie.homemoneylite.ui.theme.ThemeSettings
@@ -355,8 +355,7 @@ private fun ThemeSettingsContent(
                 horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val colorGroups = getColorGroups()
-                val allColors = colorGroups.flatMap { it.colors }
+                val allColors = getColorOptions()
                 allColors.forEach { colorOption ->
                     val isSelected = colorOption.value == themeSettings.value.primaryColor
                     Box(
