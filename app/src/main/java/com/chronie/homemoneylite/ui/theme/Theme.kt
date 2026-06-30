@@ -57,7 +57,7 @@ class ThemeSettings(
 fun loadThemeSettings(context: Context): ThemeSettings {
     val prefs: SharedPreferences = context.getSharedPreferences("theme_settings", Context.MODE_PRIVATE)
     val useDynamicColor = prefs.getBoolean("use_dynamic_color", true)
-    val primaryColor = prefs.getInt("primary_color", 0xFF6750A4.toInt()) // 默认紫色
+    val primaryColor = prefs.getInt("primary_color", 0xFF29B6F6.toInt()) // 默认天蓝色
     val paletteStyleValue = prefs.getInt("palette_style", PaletteStyle.Expressive.ordinal)
     val paletteStyle = PaletteStyle.values().getOrElse(paletteStyleValue) { PaletteStyle.Expressive }
     return ThemeSettings(useDynamicColor, primaryColor, paletteStyle)

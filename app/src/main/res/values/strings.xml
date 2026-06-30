@@ -21,7 +21,7 @@
     <string name="api_key_set">Set: %s...</string>
     <string name="theme_settings">Theme Settings</string>
     <string name="dynamic_color">Dynamic Color</string>
-    <string name="dynamic_color_description">Use colors from your wallpaper (Android 12+)</string>
+    <string name="dynamic_color_description">Use wallpaper colors (Android 12+)</string>
     <string name="manual_color_selection">Manual Color Selection</string>
     <string name="primary_color">Primary Color</string>
     <string name="dynamic_color_enabled">Dynamic color enabled</string>

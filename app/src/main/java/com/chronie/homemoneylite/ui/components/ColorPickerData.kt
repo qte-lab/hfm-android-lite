@@ -9,9 +9,8 @@ data class ColorOption(
 }
 
 fun getColorOptions(): List<ColorOption> = listOf(
-    ColorOption(0xFF6750A4.toInt()), // Default
+    ColorOption(0xFF29B6F6.toInt()), // Default - Sky Blue
     ColorOption(0xFFEC407A.toInt()), // Standard Pink
-    ColorOption(0xFF29B6F6.toInt()), // Sky Blue
     ColorOption(0xFF4DD0E1.toInt()), // Pure Cyan
     ColorOption(0xFF66BB6A.toInt())  // Standard Green
 )

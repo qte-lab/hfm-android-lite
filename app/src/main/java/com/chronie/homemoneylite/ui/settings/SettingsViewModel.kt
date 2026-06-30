@@ -36,7 +36,7 @@ class SettingsViewModel @Inject constructor(
     val useDynamicColor: StateFlow<Boolean> = _useDynamicColor.asStateFlow()
 
     // 手动选择的主色调
-    private val _primaryColor = MutableStateFlow(0xFF6750A4.toInt()) // 默认紫色
+    private val _primaryColor = MutableStateFlow(0xFF29B6F6.toInt()) // 默认天蓝色
     val primaryColor: StateFlow<Int> = _primaryColor.asStateFlow()
 
     // 调色板样式
@@ -137,7 +137,7 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             val prefs = context.getSharedPreferences("theme_settings", android.content.Context.MODE_PRIVATE)
             _useDynamicColor.value = prefs.getBoolean("use_dynamic_color", true)
-            _primaryColor.value = prefs.getInt("primary_color", 0xFF6750A4.toInt())
+            _primaryColor.value = prefs.getInt("primary_color", 0xFF29B6F6.toInt())
             val paletteStyleValue = prefs.getInt("palette_style", PaletteStyle.Expressive.ordinal)
             val paletteStyle = PaletteStyle.values().getOrElse(paletteStyleValue) { PaletteStyle.Expressive }
             _paletteStyle.value = paletteStyle
