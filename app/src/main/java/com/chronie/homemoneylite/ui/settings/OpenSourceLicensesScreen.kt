@@ -27,13 +27,6 @@ data class LibraryInfo(
 
 val libraries = listOf(
     LibraryInfo(
-        name = "Kotlin Stdlib",
-        version = "2.4.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://kotlinlang.org/"
-    ),
-    LibraryInfo(
         name = "Kotlin Coroutines Android",
         version = "1.11.0",
         license = "Apache License 2.0",
@@ -111,22 +104,8 @@ val libraries = listOf(
         projectUrl = "https://github.com/Kyant0/M3Color"
     ),
     LibraryInfo(
-        name = "Google Material Components",
-        version = "1.14.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://github.com/material-components/material-components-android"
-    ),
-    LibraryInfo(
         name = "AndroidX Material3",
-        version = "1.5.0-alpha22",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/compose-material3"
-    ),
-    LibraryInfo(
-        name = "AndroidX Material3 Window Size Class",
-        version = "1.5.0-alpha22",
+        version = "1.4.0",
         license = "Apache License 2.0",
         licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
         projectUrl = "https://developer.android.com/jetpack/androidx/releases/compose-material3"
@@ -165,13 +144,6 @@ val libraries = listOf(
         license = "Apache License 2.0",
         licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
         projectUrl = "https://developer.android.com/jetpack/androidx/releases/hilt"
-    ),
-    LibraryInfo(
-        name = "AndroidX Datastore Preferences",
-        version = "1.2.1",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/datastore"
     ),
     LibraryInfo(
         name = "AndroidX Room Runtime",
