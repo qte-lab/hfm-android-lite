@@ -105,12 +105,10 @@ fun SettingsScreen(
     val currentLanguage by viewModel.currentLanguage.collectAsState()
     val scrollState = rememberScrollState()
     var selectedCategoryName by rememberSaveable { mutableStateOf<String?>(null) }
-    var selectedCategory: SettingsCategoryPage?
-        get() = selectedCategoryName?.let { SettingsCategoryPage.valueOf(it) }
-        set(value) { selectedCategoryName = value?.name }
+    val selectedCategory: SettingsCategoryPage? = selectedCategoryName?.let { SettingsCategoryPage.valueOf(it) }
 
     BackHandler(enabled = selectedCategory != null) {
-        selectedCategory = null
+        selectedCategoryName = null
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -136,7 +134,7 @@ fun SettingsScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (category != null) {
-                        IconButton(onClick = { selectedCategory = null }) {
+                        IconButton(onClick = { selectedCategoryName = null }) {
                             Icon(Icons.Default.ArrowBack, contentDescription = null)
                         }
                         Spacer(modifier = Modifier.width(8.dp))
@@ -210,7 +208,7 @@ fun SettingsScreen(
                         Surface(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { selectedCategory = categoryItem },
+                                .clickable { selectedCategoryName = categoryItem.name },
                             color = MaterialTheme.colorScheme.surfaceContainerLow,
                             shape = MaterialTheme.shapes.large,
                             border = BorderStroke(
