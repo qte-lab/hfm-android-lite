@@ -59,7 +59,6 @@ import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.core.common.Language
 import com.chronie.homemoneylite.ui.components.ExpressiveSwitch
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
-import com.chronie.homemoneylite.ui.components.ColorPickerBottomSheet
 import com.chronie.homemoneylite.ui.components.getColorGroups
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
 import com.chronie.homemoneylite.ui.theme.LocalThemeSettings
@@ -345,57 +344,56 @@ private fun ThemeSettingsContent(
         }
 
         if (!useDynamicColor) {
-            var showColorPicker by remember { mutableStateOf(false) }
             Spacer(modifier = Modifier.height(12.dp))
             Text(
                 text = context.getString(R.string.manual_color_selection),
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 8.dp)
             )
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { showColorPicker = true },
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = MaterialTheme.shapes.medium
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                val colorGroups = getColorGroups()
+                val allColors = colorGroups.flatMap { it.colors }
+                allColors.forEach { colorOption ->
+                    val isSelected = colorOption.value == themeSettings.value.primaryColor
+                    Box(
+                        modifier = Modifier
+                            .size(if (isSelected) 52.dp else 44.dp)
+                            .clickable {
+                                themeSettings.value = ThemeSettings(
+                                    useDynamicColor = false,
+                                    primaryColor = colorOption.value,
+                                    paletteStyle = themeSettings.value.paletteStyle
+                                )
+                                viewModel.setPrimaryColor(colorOption.value)
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (isSelected) {
+                            Surface(
+                                shape = CircleShape,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier.size(52.dp)
+                            ) {}
+                        }
                         Surface(
                             shape = CircleShape,
-                            color = Color(themeSettings.value.primaryColor),
-                            modifier = Modifier.size(32.dp)
+                            color = Color(colorOption.value),
+                            modifier = Modifier.size(44.dp)
                         ) {}
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Text(
-                            text = context.getString(R.string.current_theme_color),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
+                        if (isSelected) {
+                            Icon(
+                                imageVector = Icons.Filled.Check,
+                                contentDescription = context.getString(R.string.confirm),
+                                tint = MaterialTheme.colorScheme.onBackground,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                     }
-                    Text(text = ">", style = MaterialTheme.typography.titleLarge)
                 }
-            }
-
-            if (showColorPicker) {
-                ColorPickerBottomSheet(
-                    currentColor = themeSettings.value.primaryColor,
-                    onColorSelected = { color ->
-                        themeSettings.value = ThemeSettings(
-                            useDynamicColor = false,
-                            primaryColor = color,
-                            paletteStyle = themeSettings.value.paletteStyle
-                        )
-                        viewModel.setPrimaryColor(color)
-                    },
-                    onDismiss = { showColorPicker = false },
-                    context = context
-                )
             }
         }
     }
