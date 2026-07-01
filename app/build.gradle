@@ -140,7 +140,6 @@ dependencies {
     implementation 'io.coil-kt:coil-compose:2.7.0'
     
     // Security
-    implementation 'androidx.security:security-crypto:1.1.0'
     implementation 'net.zetetic:sqlcipher-android:4.16.0@aar'
     implementation 'androidx.sqlite:sqlite:2.6.2'
     
