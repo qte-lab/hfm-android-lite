@@ -437,45 +437,6 @@ private fun MoreSettingsContent(
     onNavigateToOpenSourceLicenses: () -> Unit,
     onNavigateToDatabaseTest: () -> Unit
 ) {
-    SettingsCategorySection(title = context.getString(R.string.feedback_title)) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    try {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wj.qq.com/s2/27178724/6eb3/"))
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        context.startActivity(intent)
-                    } catch (e: Exception) {
-                        Toast.makeText(context, "Browser Open Failed: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
-                },
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = context.getString(R.string.feedback_title),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = context.getString(R.string.feedback_description),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Text(text = ">", style = MaterialTheme.typography.titleLarge)
-            }
-        }
-    }
-
     SettingsCategorySection(title = context.getString(R.string.open_source_licenses)) {
         Surface(
             modifier = Modifier

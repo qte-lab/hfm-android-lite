@@ -16,7 +16,7 @@
     <string name="settings_category_data_sync">Data Sync</string>
     <string name="settings_category_data_sync_description">Sync and import/export</string>
     <string name="settings_category_more">More</string>
-    <string name="settings_category_more_description">Feedback, licenses, local database</string>
+    <string name="settings_category_more_description">Licenses, local database</string>
     <string name="select_language">Select Language</string>
     <string name="api_key_set">Set: %s...</string>
     <string name="theme_settings">Theme Settings</string>
@@ -315,10 +315,6 @@
     <string name="excel_header_remark">Notes</string>
     <string name="permission_storage_required">Storage access required</string>
     <string name="no_records_to_export">No records to export</string>
-
-    <!-- Feedback -->
-    <string name="feedback_title">Feedback</string>
-    <string name="feedback_description">Help us improve with your suggestions</string>
 
     <!-- Health Check -->
     <string name="health_check_channel_name">Server Connection Monitor</string>
