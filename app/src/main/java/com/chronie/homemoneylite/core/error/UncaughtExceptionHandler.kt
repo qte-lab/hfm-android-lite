@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
 
 /**
  * 自定义未捕获异常处理器
- * 捕获应用中所有未被捕获的异常，记录到日志文件并上报
+ * 捕获应用中所有未被捕获的异常，记录到本地日志文件
  */
 class UncaughtExceptionHandler(
     private val defaultHandler: Thread.UncaughtExceptionHandler,
@@ -15,7 +15,7 @@ class UncaughtExceptionHandler(
 
     companion object {
         private const val TAG = "UncaughtExceptionHandler"
-        
+
         fun init(context: Context, errorReporter: ErrorReporter) {
             val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
                 ?: Thread.UncaughtExceptionHandler { _, _ -> }
@@ -30,11 +30,9 @@ class UncaughtExceptionHandler(
     override fun uncaughtException(thread: Thread, throwable: Throwable) {
         try {
             val errorInfo = createErrorInfo(thread, throwable)
-            
+
             saveErrorToLocal(errorInfo)
-            
-            reportErrorToServer(errorInfo)
-            
+
         } catch (e: Exception) {
             Log.e(TAG, "Failed to handle uncaught exception", e)
         } finally {
@@ -65,16 +63,6 @@ class UncaughtExceptionHandler(
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to save error to local file", e)
-        }
-    }
-
-    private fun reportErrorToServer(errorInfo: ErrorInfo) {
-        try {
-            runBlocking {
-                errorReporter.reportErrorToServer(errorInfo)
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to report error to server", e)
         }
     }
 }

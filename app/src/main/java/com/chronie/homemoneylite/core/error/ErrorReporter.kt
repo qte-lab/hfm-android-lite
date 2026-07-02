@@ -1,8 +1,6 @@
 package com.chronie.homemoneylite.core.error
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.annotation.WorkerThread
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -15,22 +13,18 @@ import javax.inject.Singleton
 
 /**
  * 错误报告器类
- * 负责收集应用中的错误信息，保存到本地日志文件，并上报到后端
+ * 负责收集应用中的错误信息并保存到本地日志文件
  */
 @Singleton
 class ErrorReporter @Inject constructor(
     @param:ApplicationContext private val context: Context
 ) {
-    private val errorReportApi = MockErrorReportApi()
     private val logFileManager = LogFileManager(context)
     private val executorService: ExecutorService = Executors.newSingleThreadExecutor()
-    private val handler = Handler(Looper.getMainLooper())
-    private val mainThreadId = ThreadUtils.getMainThreadId()
 
     companion object {
         private const val TAG = "ErrorReporter"
         private const val MAX_QUEUE_SIZE = 10
-        private const val RETRY_COUNT = 3
     }
 
     private val errorQueue = ArrayDeque<ErrorInfo>()
@@ -40,20 +34,12 @@ class ErrorReporter @Inject constructor(
      */
     fun initialize() {
         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
-        
+
         Thread.setDefaultUncaughtExceptionHandler(
             UncaughtExceptionHandler(defaultHandler ?: Thread.UncaughtExceptionHandler { _, _ -> }, this)
         )
 
         Log.d(TAG, "Error reporter initialized")
-    }
-
-    /**
-     * 公开的错误上报方法，供UncaughtExceptionHandler调用
-     */
-    @WorkerThread
-    suspend fun reportErrorToServer(errorInfo: ErrorInfo) {
-        reportErrorToServerInternal(errorInfo)
     }
 
     /**
@@ -72,7 +58,6 @@ class ErrorReporter @Inject constructor(
 
         addToQueue(errorInfo)
         saveErrorToLocalAsync(errorInfo)
-        reportErrorToServerAsync(errorInfo)
     }
 
     /**
@@ -95,7 +80,6 @@ class ErrorReporter @Inject constructor(
 
         addToQueue(errorInfo)
         saveErrorToLocalAsync(errorInfo)
-        reportErrorToServerAsync(errorInfo)
     }
 
     /**
@@ -113,50 +97,6 @@ class ErrorReporter @Inject constructor(
     }
 
     /**
-     * 上报错误到服务器的内部实现方法
-     */
-    @WorkerThread
-    private suspend fun reportErrorToServerInternal(errorInfo: ErrorInfo) {
-        Log.d(TAG, "Preparing to report error: ${errorInfo.message}")
-
-        var retryCount = 0
-        var success = false
-
-        while (retryCount < RETRY_COUNT && !success) {
-            try {
-                val appVersionInfo = DeviceInfoUtils.getAppVersion(context)
-                val result = errorReportApi.reportError(
-                    ErrorReportRequest(
-                        errorType = errorInfo.errorType,
-                        message = errorInfo.message,
-                        stackTrace = errorInfo.stackTrace,
-                        timestamp = errorInfo.timestamp,
-                        deviceInfo = errorInfo.deviceInfo,
-                        appVersion = appVersionInfo.versionName,
-                        appBuild = appVersionInfo.versionCode,
-                        environment = getEnvironment(),
-                        additionalInfo = errorInfo.additionalInfo
-                    )
-                )
-                
-                success = result.isSuccessful
-                if (success) {
-                    Log.d(TAG, "Error reported successfully")
-                } else {
-                    Log.e(TAG, "Failed to report error, response code: ${result.code()}")
-                }
-            } catch (e: Exception) {
-                Log.e(TAG, "Exception when reporting error, retry $retryCount", e)
-            } finally {
-                retryCount++
-                if (!success && retryCount < RETRY_COUNT) {
-                    Thread.sleep(1000L * retryCount)
-                }
-            }
-        }
-    }
-
-    /**
      * 获取堆栈跟踪字符串
      */
     private fun getStackTraceString(throwable: Throwable): String {
@@ -168,25 +108,6 @@ class ErrorReporter @Inject constructor(
      */
     private fun getCurrentStackTrace(): String {
         return Thread.currentThread().stackTrace.joinToString("\n") { it.toString() }
-    }
-
-    /**
-     * 获取环境信息
-     */
-    private fun getEnvironment(): String {
-        return if (isDebugMode()) "development" else "production"
-    }
-
-    /**
-     * 检查是否为调试模式
-     */
-    private fun isDebugMode(): Boolean {
-        return try {
-            val appInfo = context.applicationInfo
-            (appInfo.flags and android.content.pm.ApplicationInfo.FLAG_DEBUGGABLE) != 0
-        } catch (e: Exception) {
-            false
-        }
     }
 
     /**
@@ -208,27 +129,6 @@ class ErrorReporter @Inject constructor(
         executorService.execute {
             kotlinx.coroutines.runBlocking {
                 saveErrorToLocal(errorInfo)
-            }
-        }
-    }
-
-    /**
-     * 异步上报到服务器
-     */
-    private fun reportErrorToServerAsync(errorInfo: ErrorInfo) {
-        if (!ThreadUtils.isMainThread()) {
-            executorService.execute {
-                kotlinx.coroutines.runBlocking {
-                    reportErrorToServerInternal(errorInfo)
-                }
-            }
-        } else {
-            handler.post {
-                executorService.execute {
-                    kotlinx.coroutines.runBlocking {
-                        reportErrorToServerInternal(errorInfo)
-                    }
-                }
             }
         }
     }
