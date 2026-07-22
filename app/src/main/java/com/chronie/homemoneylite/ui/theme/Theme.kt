@@ -7,8 +7,6 @@ import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
@@ -57,7 +55,7 @@ class ThemeSettings(
 fun loadThemeSettings(context: Context): ThemeSettings {
     val prefs: SharedPreferences = context.getSharedPreferences("theme_settings", Context.MODE_PRIVATE)
     val useDynamicColor = prefs.getBoolean("use_dynamic_color", true)
-    val primaryColor = prefs.getInt("primary_color", 0xFF29B6F6.toInt()) // 默认天蓝色
+    val primaryColor = prefs.getInt("primary_color", 0xFF66BB6A.toInt()) // 默认绿色
     val paletteStyleValue = prefs.getInt("palette_style", PaletteStyle.Expressive.ordinal)
     val paletteStyle = PaletteStyle.values().getOrElse(paletteStyleValue) { PaletteStyle.Expressive }
     return ThemeSettings(useDynamicColor, primaryColor, paletteStyle)
@@ -259,7 +257,10 @@ fun derivePrimaryColors(
     }
 }
 
-// 根据主题和颜色设置创建颜色方案
+// 唯一保留的主题主色：绿色
+private const val GREEN_PRIMARY_COLOR: Long = 0xFF66BB6A
+
+// 根据主题创建颜色方案：仅保留绿色主题，移除动态配色与其他配色方案
 fun createColorScheme(
     context: Context,
     darkTheme: Boolean,
@@ -267,23 +268,12 @@ fun createColorScheme(
     primaryColor: Int,
     paletteStyle: PaletteStyle
 ): ColorScheme {
-    val userPrimaryColor = Color(primaryColor)
-    
-    if (dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        // 使用系统生成的完整动态颜色方案
-        return if (darkTheme) {
-            dynamicDarkColorScheme(context)
-        } else {
-            dynamicLightColorScheme(context)
-        }
-    } else {
-        // 使用m3color库生成颜色方案
-        return dynamicColorScheme(
-            keyColor = userPrimaryColor,
-            isDark = darkTheme,
-            style = paletteStyle
-        )
-    }
+    // 始终基于绿色主色生成配色，忽略动态配色与用户自定义颜色
+    return dynamicColorScheme(
+        keyColor = Color(GREEN_PRIMARY_COLOR),
+        isDark = darkTheme,
+        style = PaletteStyle.TonalSpot
+    )
 }
 
 

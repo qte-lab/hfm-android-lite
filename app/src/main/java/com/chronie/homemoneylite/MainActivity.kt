@@ -40,8 +40,6 @@ import com.chronie.homemoneylite.ui.expense.AddExpenseScreen
 import com.chronie.homemoneylite.ui.expense.AIExpenseScreen
 import com.chronie.homemoneylite.ui.main.MainScreen
 import com.chronie.homemoneylite.ui.settings.SettingsScreen
-import com.chronie.homemoneylite.ui.settings.OpenSourceLicensesScreen
-import com.chronie.homemoneylite.ui.test.DatabaseTestScreen
 import com.chronie.homemoneylite.ui.theme.HomeMoneyTheme
 import com.chronie.homemoneylite.service.HealthCheckService
 import dagger.hilt.android.AndroidEntryPoint
@@ -177,13 +175,7 @@ fun HomeMoneyApp(
     ) {
         composable("settings") {
             SettingsScreen(
-                context = context,
-                onNavigateToDatabaseTest = {
-                    navController.navigate("database_test")
-                },
-                onNavigateToOpenSourceLicenses = {
-                    navController.navigate("open_source_licenses")
-                }
+                context = context
             )
         }
 
@@ -197,10 +189,6 @@ fun HomeMoneyApp(
                 onNavigateToSettings = {
                     selectedTab = 2
                     navController.navigate("settings")
-                },
-                onNavigateToDatabaseTest = {
-                    selectedTab = 2
-                    navController.navigate("database_test")
                 },
                 onNavigateToAddExpense = {
                     selectedTab = 0
@@ -217,10 +205,6 @@ fun HomeMoneyApp(
                     navController.navigate(
                         route = "weekday_detail?dayOfWeek=$dayOfWeek&amount=$amount&count=$count&percentage=$percentage&startDate=$startDate&endDate=$endDate"
                     )
-                },
-                onNavigateToOpenSourceLicenses = {
-                    selectedTab = 2
-                    navController.navigate("open_source_licenses")
                 }
             )
         }
@@ -257,24 +241,6 @@ fun HomeMoneyApp(
                 },
                 onRecordsSaved = {
                     shouldRefreshExpenses = true
-                    navController.popBackStack()
-                }
-            )
-        }
-
-        composable("database_test") {
-            DatabaseTestScreen(
-                context = context,
-                onNavigateBack = {
-                    navController.popBackStack()
-                }
-            )
-        }
-
-        composable("open_source_licenses") {
-            OpenSourceLicensesScreen(
-                context = context,
-                onNavigateBack = {
                     navController.popBackStack()
                 }
             )

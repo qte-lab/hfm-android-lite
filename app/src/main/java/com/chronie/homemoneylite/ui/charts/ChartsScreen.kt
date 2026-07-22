@@ -3,6 +3,7 @@ package com.chronie.homemoneylite.ui.charts
 import android.content.Context
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -18,6 +19,8 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -139,6 +142,9 @@ private fun ChartsContent(
 ) {
     val scrollState = rememberScrollState()
     val currencyFormat = remember { NumberFormat.getCurrencyInstance(Locale.getDefault()) }
+
+    // 当前选中的图表（通过下拉菜单切换）
+    var selectedChart by remember { mutableStateOf(ChartType.TREND) }
     
     // 调试日志
     LaunchedEffect(state) {
@@ -162,25 +168,98 @@ private fun ChartsContent(
         
         Spacer(modifier = Modifier.height(16.dp))
         
-        // 趋势折线图
-        TrendLineChartCard(context, state.dailyData, currencyFormat)
-        
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        // 分类占比
-        CategoryBreakdownCard(context, state.categoryData, currencyFormat)
-        
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        // 星期分析雷达图
-        WeekdayRadarChartCard(
+        // 图表类型选择（下拉菜单）
+        ChartSelector(
             context = context,
-            weekdayData = state.weekdayData,
-            currencyFormat = currencyFormat,
-            startDate = state.startDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
-            endDate = state.endDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
-            onNavigateToWeekdayDetail = onNavigateToWeekdayDetail
+            selectedChart = selectedChart,
+            onChartSelected = { selectedChart = it }
         )
+        
+        Spacer(modifier = Modifier.height(16.dp))
+        
+        // 根据下拉选择只展示一张图表
+        when (selectedChart) {
+            ChartType.TREND -> TrendLineChartCard(context, state.dailyData, currencyFormat)
+            ChartType.CATEGORY -> CategoryBreakdownCard(context, state.categoryData, currencyFormat)
+            ChartType.WEEKDAY -> WeekdayRadarChartCard(
+                context = context,
+                weekdayData = state.weekdayData,
+                currencyFormat = currencyFormat,
+                startDate = state.startDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
+                endDate = state.endDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
+                onNavigateToWeekdayDetail = onNavigateToWeekdayDetail
+            )
+        }
+    }
+}
+
+/**
+ * 图表类型枚举
+ */
+private enum class ChartType(val stringRes: Int) {
+    TREND(R.string.trend_chart),
+    CATEGORY(R.string.category_breakdown),
+    WEEKDAY(R.string.weekday_analysis)
+}
+
+/**
+ * 图表选择下拉菜单
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ChartSelector(
+    context: Context,
+    selectedChart: ChartType,
+    onChartSelected: (ChartType) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            ExposedDropdownMenuBox(
+                expanded = expanded,
+                onExpandedChange = { expanded = it },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                OutlinedTextField(
+                    value = context.getString(selectedChart.stringRes),
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text(context.getString(R.string.select_chart)) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .menuAnchor()
+                )
+                
+                ExposedDropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    ChartType.values().forEach { chartType ->
+                        DropdownMenuItem(
+                            text = {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    RadioButton(
+                                        selected = selectedChart == chartType,
+                                        onClick = {
+                                            onChartSelected(chartType)
+                                            expanded = false
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(context.getString(chartType.stringRes))
+                                }
+                            },
+                            onClick = {
+                                onChartSelected(chartType)
+                                expanded = false
+                            }
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -478,9 +557,29 @@ private fun CategoryBreakdownCard(
                     text = context.getString(R.string.no_data),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(vertical = 16.dp)
+                    modifier = Modifier.padding(vertical = 32.dp)
                 )
             } else {
+                // 柱状图
+                val minChartWidth = if (categoryData.size * 64 > 320) (categoryData.size * 64).dp else 320.dp
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState())
+                ) {
+                    CategoryBarChart(
+                        context = context,
+                        categoryData = categoryData,
+                        currencyFormat = currencyFormat,
+                        modifier = Modifier
+                            .width(minChartWidth)
+                            .height(320.dp)
+                    )
+                }
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                // 详细数据列表
                 categoryData.forEach { category ->
                     CategoryItem(context, category, currencyFormat)
                     Spacer(modifier = Modifier.height(12.dp))
@@ -489,6 +588,120 @@ private fun CategoryBreakdownCard(
         }
     }
 }
+
+@Composable
+private fun CategoryBarChart(
+    context: Context,
+    categoryData: List<CategoryChartData>,
+    currencyFormat: NumberFormat,
+    modifier: Modifier = Modifier
+) {
+    val textColor = MaterialTheme.colorScheme.onSurface
+    val gridColor = MaterialTheme.colorScheme.outlineVariant
+
+    Canvas(modifier = modifier) {
+        if (categoryData.isEmpty()) return@Canvas
+        val maxAmount = categoryData.maxOfOrNull { it.amount } ?: 0.0
+        if (maxAmount == 0.0) return@Canvas
+
+        val width = size.width
+        val height = size.height
+        val paddingLeft = 24f
+        val paddingRight = 24f
+        val paddingTop = 50f
+        val paddingBottom = 80f
+        val chartWidth = width - paddingLeft - paddingRight
+        val chartHeight = height - paddingTop - paddingBottom
+
+        // 水平网格线
+        val ySteps = 4
+        for (i in 0..ySteps) {
+            val y = paddingTop + (chartHeight / ySteps) * i
+            drawLine(
+                color = gridColor,
+                start = Offset(paddingLeft, y),
+                end = Offset(width - paddingRight, y),
+                strokeWidth = 1f
+            )
+        }
+
+        val barCount = categoryData.size
+        val slotWidth = chartWidth / barCount
+        val barWidth = (slotWidth * 0.6f).coerceAtMost(90f)
+
+        val labelPaint = android.graphics.Paint().apply {
+            textAlign = android.graphics.Paint.Align.CENTER
+        }
+
+        categoryData.forEachIndexed { index, category ->
+            val slotCenterX = paddingLeft + slotWidth * index + slotWidth / 2
+            val barHeight = (category.amount / maxAmount).toFloat() * chartHeight
+            val topY = paddingTop + (chartHeight - barHeight)
+            val leftX = slotCenterX - barWidth / 2
+            val barColor = barChartPalette[index % barChartPalette.size]
+
+            // 柱子
+            if (barHeight > 0) {
+                drawRoundRect(
+                    color = barColor,
+                    topLeft = Offset(leftX, topY),
+                    size = Size(barWidth, barHeight),
+                    cornerRadius = CornerRadius(8f, 8f)
+                )
+            }
+
+            // 顶部数值标签
+            val valueText = String.format("%.0f", category.amount)
+            drawContext.canvas.nativeCanvas.drawText(
+                valueText,
+                slotCenterX,
+                topY - 14f,
+                labelPaint.apply {
+                    color = barColor.toArgb()
+                    textSize = 24f
+                }
+            )
+
+            // 类别名称（超长截断保护）
+            val name = ExpenseTypeLocalizer.getLocalizedTypeName(context, category.type)
+            val shortName = if (name.length > 6) name.take(6) else name
+            drawContext.canvas.nativeCanvas.drawText(
+                shortName,
+                slotCenterX,
+                height - paddingBottom + 40f,
+                labelPaint.apply {
+                    color = textColor.toArgb()
+                    textSize = 26f
+                }
+            )
+
+            // 占比标签
+            val pctText = String.format("%.0f%%", category.percentage)
+            drawContext.canvas.nativeCanvas.drawText(
+                pctText,
+                slotCenterX,
+                height - paddingBottom + 66f,
+                labelPaint.apply {
+                    color = textColor.copy(alpha = 0.7f).toArgb()
+                    textSize = 22f
+                }
+            )
+        }
+    }
+}
+
+private val barChartPalette = listOf(
+    Color(0xFF4F8DFD),
+    Color(0xFF54C8A8),
+    Color(0xFFF4B400),
+    Color(0xFFE0607E),
+    Color(0xFF9B6DFF),
+    Color(0xFF3FC1D8),
+    Color(0xFFFF8A5B),
+    Color(0xFF7CCF5A),
+    Color(0xFF5C6BC0),
+    Color(0xFFEC6F9C)
+)
 
 @Composable
 private fun CategoryItem(

@@ -38,7 +38,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -48,48 +48,39 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.chronie.homemoneylite.R
-import com.chronie.homemoneylite.core.common.Language
-import com.chronie.homemoneylite.ui.components.ExpressiveSwitch
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
-import com.chronie.homemoneylite.ui.components.getColorOptions
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
-import com.chronie.homemoneylite.ui.theme.LocalThemeSettings
-import com.chronie.homemoneylite.ui.theme.ThemeSettings
 
 private enum class SettingsCategoryPage {
-    THEME,
     FUNCTION,
-    DATA_SYNC,
-    MORE
+    DATA_SYNC
 }
 
 private fun SettingsCategoryPage.title(context: Context): String = when (this) {
-    SettingsCategoryPage.THEME -> context.getString(R.string.settings_category_theme)
     SettingsCategoryPage.FUNCTION -> context.getString(R.string.settings_category_function)
     SettingsCategoryPage.DATA_SYNC -> context.getString(R.string.settings_category_data_sync)
-    SettingsCategoryPage.MORE -> context.getString(R.string.settings_category_more)
 }
 
 private fun SettingsCategoryPage.description(context: Context): String = when (this) {
-    SettingsCategoryPage.THEME -> context.getString(R.string.settings_category_theme_description)
     SettingsCategoryPage.FUNCTION -> context.getString(R.string.settings_category_function_description)
     SettingsCategoryPage.DATA_SYNC -> context.getString(R.string.settings_category_data_sync_description)
-    SettingsCategoryPage.MORE -> context.getString(R.string.settings_category_more_description)
 }
 
 private fun SettingsCategoryPage.icon(): ImageVector = when (this) {
-    SettingsCategoryPage.THEME -> Icons.Default.Settings
     SettingsCategoryPage.FUNCTION -> Icons.Default.Settings
     SettingsCategoryPage.DATA_SYNC -> Icons.Default.Storage
-    SettingsCategoryPage.MORE -> Icons.Default.Build
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,11 +88,8 @@ private fun SettingsCategoryPage.icon(): ImageVector = when (this) {
 fun SettingsScreen(
     context: Context,
     viewModel: SettingsViewModel = hiltViewModel(),
-    onNavigateToDatabaseTest: () -> Unit = {},
-    onNavigateToLanSync: () -> Unit = {},
-    onNavigateToOpenSourceLicenses: () -> Unit = {}
+    onNavigateToLanSync: () -> Unit = {}
 ) {
-    val currentLanguage by viewModel.currentLanguage.collectAsState()
     val scrollState = rememberScrollState()
     var selectedCategoryName by rememberSaveable { mutableStateOf<String?>(null) }
     val selectedCategory: SettingsCategoryPage? = selectedCategoryName?.let { SettingsCategoryPage.valueOf(it) }
@@ -199,10 +187,8 @@ fun SettingsScreen(
                     )
 
                     listOf(
-                        SettingsCategoryPage.THEME,
                         SettingsCategoryPage.FUNCTION,
-                        SettingsCategoryPage.DATA_SYNC,
-                        SettingsCategoryPage.MORE
+                        SettingsCategoryPage.DATA_SYNC
                     ).forEach { categoryItem ->
                         Surface(
                             modifier = Modifier
@@ -257,15 +243,14 @@ fun SettingsScreen(
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
+
+                    // 开源许可（显示在版本信息上方，可点击）
+                    OpenSourceLicensesInline(context = context)
+
+                    Spacer(modifier = Modifier.height(8.dp))
                     AppVersionInfo(context = context)
                 } else {
                     when (category) {
-                        SettingsCategoryPage.THEME -> ThemeSettingsContent(
-                            viewModel = viewModel,
-                            context = context,
-                            currentLanguage = currentLanguage,
-                            onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses
-                        )
                         SettingsCategoryPage.FUNCTION -> FunctionSettingsContent(
                             viewModel = viewModel,
                             context = context
@@ -275,11 +260,6 @@ fun SettingsScreen(
                             context = context,
                             onNavigateToLanSync = onNavigateToLanSync
                         )
-                        SettingsCategoryPage.MORE -> MoreSettingsContent(
-                            context = context,
-                            onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses,
-                            onNavigateToDatabaseTest = onNavigateToDatabaseTest
-                        )
                     }
                 }
             }
@@ -287,116 +267,6 @@ fun SettingsScreen(
     }
 }
 
-@Composable
-private fun ThemeSettingsContent(
-    viewModel: SettingsViewModel,
-    context: Context,
-    currentLanguage: Language,
-    onNavigateToOpenSourceLicenses: () -> Unit
-) {
-    val useDynamicColor by viewModel.useDynamicColor.collectAsState()
-    val themeSettings = LocalThemeSettings.current
-
-    SettingsCategorySection(title = context.getString(R.string.language_settings)) {
-        LanguageDropdownSelector(
-            currentLanguage = currentLanguage,
-            onLanguageSelected = { viewModel.setLanguage(it) },
-            context = context
-        )
-    }
-
-    SettingsCategorySection(title = context.getString(R.string.theme_settings)) {
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = context.getString(R.string.dynamic_color),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = context.getString(R.string.dynamic_color_description),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                ExpressiveSwitch(
-                    checked = useDynamicColor,
-                    onCheckedChange = { enabled ->
-                        themeSettings.value = ThemeSettings(
-                            useDynamicColor = enabled,
-                            primaryColor = themeSettings.value.primaryColor,
-                            paletteStyle = themeSettings.value.paletteStyle
-                        )
-                        viewModel.toggleDynamicColor(enabled)
-                    }
-                )
-            }
-        }
-
-        if (!useDynamicColor) {
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = context.getString(R.string.manual_color_selection),
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                val allColors = getColorOptions()
-                allColors.forEach { colorOption ->
-                    val isSelected = colorOption.value == themeSettings.value.primaryColor
-                    Box(
-                        modifier = Modifier
-                            .size(if (isSelected) 52.dp else 44.dp)
-                            .clickable {
-                                themeSettings.value = ThemeSettings(
-                                    useDynamicColor = false,
-                                    primaryColor = colorOption.value,
-                                    paletteStyle = themeSettings.value.paletteStyle
-                                )
-                                viewModel.setPrimaryColor(colorOption.value)
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (isSelected) {
-                            Surface(
-                                shape = CircleShape,
-                                color = MaterialTheme.colorScheme.onBackground,
-                                modifier = Modifier.size(52.dp)
-                            ) {}
-                        }
-                        Surface(
-                            shape = CircleShape,
-                            color = Color(colorOption.value),
-                            modifier = Modifier.size(44.dp)
-                        ) {}
-                        if (isSelected) {
-                            Icon(
-                                imageVector = Icons.Filled.Check,
-                                contentDescription = context.getString(R.string.confirm),
-                                tint = MaterialTheme.colorScheme.onBackground,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
 
 @Composable
 private fun FunctionSettingsContent(
@@ -429,78 +299,6 @@ private fun DataSyncSettingsContent(
     SettingsCategorySection(title = context.getString(R.string.data_import_export)) {
         DataImportExportSection(viewModel = viewModel, context = context)
     }
-}
-
-@Composable
-private fun MoreSettingsContent(
-    context: Context,
-    onNavigateToOpenSourceLicenses: () -> Unit,
-    onNavigateToDatabaseTest: () -> Unit
-) {
-    SettingsCategorySection(title = context.getString(R.string.open_source_licenses)) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onNavigateToOpenSourceLicenses() },
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = context.getString(R.string.open_source_licenses),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = context.getString(R.string.open_source_licenses_description),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Text(text = ">", style = MaterialTheme.typography.titleLarge)
-            }
-        }
-    }
-
-    SettingsCategorySection(title = context.getString(R.string.database_test)) {
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable(onClick = onNavigateToDatabaseTest),
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Column {
-                    Text(
-                        text = context.getString(R.string.database_test),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Text(
-                        text = context.getString(R.string.database_test),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Text(text = ">", style = MaterialTheme.typography.titleLarge)
-            }
-        }
-    }
-
-    Spacer(modifier = Modifier.height(8.dp))
-    AppVersionInfo(context = context)
 }
 
 @Composable
@@ -569,122 +367,6 @@ fun AppVersionInfo(context: Context) {
             .padding(top = 16.dp, bottom = 8.dp)
             .wrapContentWidth(Alignment.CenterHorizontally)
     )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun LanguageDropdownSelector(
-    currentLanguage: Language,
-    onLanguageSelected: (Language) -> Unit,
-    context: Context
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = it }
-    ) {
-        OutlinedTextField(
-            value = currentLanguage.localName,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text(context.getString(R.string.select_language)) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .menuAnchor()
-        )
-
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            Language.values().forEach { language ->
-                DropdownMenuItem(
-                    text = {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = language.englishName,
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                                Text(
-                                    text = language.localName,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                            if (language == currentLanguage) {
-                                Icon(
-                                    imageVector = Icons.Default.Check,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
-                        }
-                    },
-                    onClick = {
-                        onLanguageSelected(language)
-                        expanded = false
-                    }
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun LanguageItem(
-    language: Language,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(vertical = 8.dp),
-        color = if (isSelected) {
-            MaterialTheme.colorScheme.primaryContainer
-        } else {
-            MaterialTheme.colorScheme.surface
-        },
-        shape = MaterialTheme.shapes.medium
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = language.englishName,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = language.localName,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-            if (isSelected) {
-                Text(
-                    text = "✓",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-        }
-    }
 }
 
 @Composable
@@ -1343,4 +1025,360 @@ fun SyncSection(
 private fun formatTimestamp(timestamp: Long): String {
     val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
     return sdf.format(java.util.Date(timestamp))
+}
+
+/**
+ * 开源库信息（迁移自独立的开源许可页面，现直接在设置主界面展示）。
+ */
+private data class LibraryInfo(
+    val name: String,
+    val version: String,
+    val license: String,
+    val licenseUrl: String,
+    val projectUrl: String
+)
+
+private val libraries = listOf(
+    LibraryInfo(
+        name = "Kotlin Coroutines Android",
+        version = "1.11.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/Kotlin/kotlinx.coroutines"
+    ),
+    LibraryInfo(
+        name = "AndroidX Core KTX",
+        version = "1.19.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/core"
+    ),
+    LibraryInfo(
+        name = "AndroidX AppCompat",
+        version = "1.7.1",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/appcompat"
+    ),
+    LibraryInfo(
+        name = "AndroidX CoordinatorLayout",
+        version = "1.3.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/coordinatorlayout"
+    ),
+    LibraryInfo(
+        name = "AndroidX Core Splashscreen",
+        version = "1.2.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/core"
+    ),
+    LibraryInfo(
+        name = "AndroidX Activity Compose",
+        version = "1.13.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/activity"
+    ),
+    LibraryInfo(
+        name = "JUnit",
+        version = "4.13.2",
+        license = "Eclipse Public License 1.0",
+        licenseUrl = "https://www.eclipse.org/legal/epl-v10.html",
+        projectUrl = "https://junit.org/junit4/"
+    ),
+    LibraryInfo(
+        name = "AndroidX Test JUnit",
+        version = "1.3.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/test"
+    ),
+    LibraryInfo(
+        name = "AndroidX Test Espresso",
+        version = "3.7.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/test"
+    ),
+    LibraryInfo(
+        name = "Jetpack Compose BOM",
+        version = "2026.06.00",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/compose-bom"
+    ),
+    LibraryInfo(
+        name = "M3Color",
+        version = "2026.1",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/Kyant0/M3Color"
+    ),
+    LibraryInfo(
+        name = "AndroidX Material3",
+        version = "1.4.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/compose-material3"
+    ),
+    LibraryInfo(
+        name = "AndroidX Lifecycle Runtime Compose",
+        version = "2.10.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/lifecycle"
+    ),
+    LibraryInfo(
+        name = "AndroidX Lifecycle ViewModel Compose",
+        version = "2.10.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/lifecycle"
+    ),
+    LibraryInfo(
+        name = "AndroidX Navigation Compose",
+        version = "2.9.8",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/navigation"
+    ),
+    LibraryInfo(
+        name = "Dagger Hilt Android",
+        version = "2.60",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://dagger.dev/hilt/"
+    ),
+    LibraryInfo(
+        name = "AndroidX Hilt Navigation Compose",
+        version = "1.3.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/hilt"
+    ),
+    LibraryInfo(
+        name = "AndroidX Room Runtime",
+        version = "2.8.4",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/room"
+    ),
+    LibraryInfo(
+        name = "AndroidX Room KTX",
+        version = "2.8.4",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/room"
+    ),
+    LibraryInfo(
+        name = "Retrofit",
+        version = "3.0.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/square/retrofit"
+    ),
+    LibraryInfo(
+        name = "Retrofit Gson Converter",
+        version = "3.0.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/square/retrofit/tree/master/retrofit-converters/gson"
+    ),
+    LibraryInfo(
+        name = "OkHttp Logging Interceptor",
+        version = "5.4.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/square/okhttp"
+    ),
+    LibraryInfo(
+        name = "AndroidX Paging Runtime KTX",
+        version = "3.5.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/paging"
+    ),
+    LibraryInfo(
+        name = "AndroidX Paging Compose",
+        version = "3.5.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/paging"
+    ),
+    LibraryInfo(
+        name = "Coil Compose",
+        version = "2.7.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/coil-kt/coil"
+    ),
+    LibraryInfo(
+        name = "AndroidX Security Crypto",
+        version = "1.1.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/security"
+    ),
+    LibraryInfo(
+        name = "SQLCipher Android",
+        version = "4.16.0",
+        license = "BSD 3-Clause License",
+        licenseUrl = "https://opensource.org/licenses/BSD-3-Clause",
+        projectUrl = "https://www.zetetic.net/sqlcipher/"
+    ),
+    LibraryInfo(
+        name = "AndroidX SQLite",
+        version = "2.6.2",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/sqlite"
+    ),
+    LibraryInfo(
+        name = "AndroidX Work Runtime KTX",
+        version = "2.11.2",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/work"
+    ),
+    LibraryInfo(
+        name = "AndroidX Hilt Work",
+        version = "1.3.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/hilt"
+    ),
+    LibraryInfo(
+        name = "FastExcel",
+        version = "0.20.2",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/dhatim/fastexcel"
+    ),
+    LibraryInfo(
+        name = "FastExcel Reader",
+        version = "0.20.2",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/dhatim/fastexcel"
+    ),
+    LibraryInfo(
+        name = "Aalto XML",
+        version = "1.4.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/FasterXML/aalto-xml"
+    ),
+    LibraryInfo(
+        name = "XZ",
+        version = "1.12",
+        license = "Public Domain",
+        licenseUrl = "https://tukaani.org/xz/legal.html",
+        projectUrl = "https://tukaani.org/xz/"
+    ),
+    LibraryInfo(
+        name = "UCrop",
+        version = "2.2.11",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/Yalantis/uCrop"
+    ),
+    LibraryInfo(
+        name = "MockK",
+        version = "1.14.9",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://mockk.io/"
+    ),
+    LibraryInfo(
+        name = "Kotlin Coroutines Test",
+        version = "1.11.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/Kotlin/kotlinx.coroutines"
+    )
+)
+
+/**
+ * 在设置主界面（版本信息上方）直接展示所有开源库的许可证，按许可证分组，
+ * 每一组可点击跳转到对应许可证页面。格式示例：
+ * Apache License 2.0: M3Color、AndroidX Material3、...
+ */
+@Composable
+private fun OpenSourceLicensesInline(context: Context) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
+        )
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Text(
+                text = context.getString(R.string.open_source_licenses),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            val grouped = libraries.groupBy { it.license }
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                grouped.forEach { (license, libs) ->
+                    val licenseUrl = libs.first().licenseUrl
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                try {
+                                    context.startActivity(
+                                        Intent(Intent.ACTION_VIEW, Uri.parse(licenseUrl)).apply {
+                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        }
+                                    )
+                                } catch (_: Exception) {
+                                    // 忽略无法打开链接的异常
+                                }
+                            }
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = buildAnnotatedString {
+                                withStyle(
+                                    SpanStyle(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                ) {
+                                    append("$license: ")
+                                }
+                                withStyle(
+                                    SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                ) {
+                                    append(libs.joinToString(separator = "、") { it.name })
+                                }
+                            },
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Icon(
+                            imageVector = Icons.Filled.OpenInNew,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+        }
+    }
 }

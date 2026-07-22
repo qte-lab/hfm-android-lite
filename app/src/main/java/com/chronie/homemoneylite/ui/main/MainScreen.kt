@@ -33,13 +33,11 @@ fun MainScreen(
     selectedTab: Int = 0,
     onTabChange: (Int) -> Unit = {},
     onNavigateToSettings: () -> Unit,
-    onNavigateToDatabaseTest: () -> Unit = {},
     onNavigateToAddExpense: () -> Unit = {},
     onNavigateToEditExpense: (expenseId: String) -> Unit = {},
     onNavigateToMoreFunctions: () -> Unit = {},
     onNavigateToWeekdayDetail: (dayOfWeek: Int, amount: Double, count: Int, percentage: Float, startDate: String, endDate: String) -> Unit = { _, _, _, _, _, _ -> },
-    onNavigateToLanSync: () -> Unit = {},
-    onNavigateToOpenSourceLicenses: () -> Unit = {}
+    onNavigateToLanSync: () -> Unit = {}
 ) {
 
     // 原生界面（带底部 Tab 栏）
@@ -73,9 +71,7 @@ fun MainScreen(
                     // 设置界面
                     SettingsScreen(
                         context = context,
-                        onNavigateToDatabaseTest = onNavigateToDatabaseTest,
-                        onNavigateToLanSync = onNavigateToLanSync,
-                        onNavigateToOpenSourceLicenses = onNavigateToOpenSourceLicenses
+                        onNavigateToLanSync = onNavigateToLanSync
                     )
                 }
             }

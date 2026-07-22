@@ -1,336 +1,336 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Home Finance Lite</string>
-    <string name="title_activity_main">Home Finance Lite</string>
+    <string name="app_name">家庭记账本极速版</string>
+    <string name="title_activity_main">家庭记账本极速版</string>
     <string name="package_name">com.chronie.homemoneylite</string>
     <string name="custom_url_scheme">com.chronie.homemoneylite</string>
     
-    <!-- Settings -->
-    <string name="settings">Settings</string>
-    <string name="language_settings">Language</string>
-    <string name="settings_choose_category">Choose a settings category to continue</string>
-    <string name="settings_category_theme">Theme Settings</string>
-    <string name="settings_category_theme_description">Language and appearance</string>
-    <string name="settings_category_function">Feature Settings</string>
-    <string name="settings_category_function_description">Budget and AI</string>
-    <string name="settings_category_data_sync">Data Sync</string>
-    <string name="settings_category_data_sync_description">Sync and import/export</string>
-    <string name="settings_category_more">More</string>
-    <string name="settings_category_more_description">Licenses, local database</string>
-    <string name="select_language">Select Language</string>
-    <string name="api_key_set">Set: %s...</string>
-    <string name="theme_settings">Theme Settings</string>
-    <string name="dynamic_color">Dynamic Color</string>
-    <string name="dynamic_color_description">Use wallpaper colors (Android 12+)</string>
-    <string name="manual_color_selection">Manual Color Selection</string>
-    <string name="primary_color">Primary Color</string>
-    <string name="dynamic_color_enabled">Dynamic color enabled</string>
-    <string name="dynamic_color_disabled">Dynamic color disabled</string>
-    <string name="primary_color_updated">Primary color updated</string>
+    <!-- 设置 -->
+    <string name="settings">设置</string>
+    <string name="language_settings">语言设置</string>
+    <string name="settings_choose_category">选择一个设置分类继续管理</string>
+    <string name="settings_category_theme">主题设置</string>
+    <string name="settings_category_theme_description">语言与界面外观</string>
+    <string name="settings_category_function">功能设置</string>
+    <string name="settings_category_function_description">预算与 AI</string>
+    <string name="settings_category_data_sync">数据同步</string>
+    <string name="settings_category_data_sync_description">同步与导入导出</string>
+    <string name="settings_category_more">更多</string>
+    <string name="settings_category_more_description">许可证与本地数据库</string>
+    <string name="select_language">选择语言</string>
+    <string name="api_key_set">已设置：%s</string>
+    <string name="theme_settings">主题设置</string>
+    <string name="dynamic_color">动态配色</string>
+    <string name="dynamic_color_description">跟随壁纸颜色变化（Android 12+）</string>
+    <string name="manual_color_selection">手动选择颜色</string>
+    <string name="primary_color">主色调</string>
+    <string name="dynamic_color_enabled">动态配色已开启</string>
+    <string name="dynamic_color_disabled">动态配色已关闭</string>
+    <string name="primary_color_updated">主色调已更新</string>
     
-    <!-- Common -->
-    <string name="back">Back</string>
-    <string name="cancel">Cancel</string>
-    <string name="confirm">OK</string>
-    <string name="save">Save</string>
-    <string name="delete">Delete</string>
-    <string name="edit">Edit</string>
-    <string name="loading">Loading…</string>
-    <string name="error">Error</string>
-    <string name="success">Success</string>
+    <!-- 通用 -->
+    <string name="back">返回</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+    <string name="save">保存</string>
+    <string name="delete">删除</string>
+    <string name="edit">编辑</string>
+    <string name="loading">加载中…</string>
+    <string name="error">错误</string>
+    <string name="success">成功</string>
     
-    <!-- Currency -->
-    <string name="currency_symbol">$</string>
+    <!-- 货币 -->
+    <string name="currency_symbol">¥</string>
     <string name="currency_format" formatted="false">%s%.2f</string>
     <string name="currency_format_no_decimal" formatted="false">%s%.0f</string>
     
-    <!-- Database Test -->
-    <string name="database_test">Local Database</string>
-    <string name="add_test_data">Add one Local Test Data</string>
-    <string name="clear_data">Clear All Local Data</string>
-    <string name="database_statistics">Local Database Stats</string>
-    <string name="record_count">Records: %d</string>
-    <string name="total_amount">Total</string>
-    <string name="total_amount_database">Total: $%.2f</string>
-    <string name="expense_records">Expenses</string>
-    <string name="no_data">No data</string>
-    <string name="synced">Synced</string>
-    <string name="not_synced">Not Synced</string>
+    <!-- 数据库测试 -->
+    <string name="database_test">本地数据库</string>
+    <string name="add_test_data">添加测试数据</string>
+    <string name="clear_data">清空所有数据</string>
+    <string name="database_statistics">数据统计</string>
+    <string name="record_count">记录数：%d</string>
+    <string name="total_amount">总金额</string>
+    <string name="total_amount_database">总金额：¥%.2f</string>
+    <string name="expense_records">支出记录</string>
+    <string name="no_data">暂无数据</string>
+    <string name="synced">已同步</string>
+    <string name="not_synced">未同步</string>
     
-    <!-- Sync -->
-    <string name="sync_title">Sync</string>
-    <string name="sync_status">Sync Status</string>
-    <string name="sync_status_idle">Ready</string>
-    <string name="sync_status_syncing">Syncing…</string>
-    <string name="sync_status_success">Success</string>
-    <string name="sync_status_failed">Failed</string>
-    <string name="sync_status_conflict">Conflict</string>
-    <string name="sync_last_time">Last Sync</string>
-    <string name="sync_never">Never</string>
-    <string name="sync_pending_count">Pending</string>
-    <string name="sync_manual_trigger">Sync Now</string>
-    <string name="sync_syncing">Syncing…</string>
-    <string name="add_success">Added</string>
-    <string name="add_failed">Add failed: %s</string>
-    <string name="clear_success">Cleared</string>
-    <string name="clear_failed">Clear failed: %s</string>
-    <string name="load_success">Loaded</string>
-    <string name="load_failed">Load failed: %s</string>
+    <!-- 同步 -->
+    <string name="sync_title">数据同步</string>
+    <string name="sync_status">同步状态</string>
+    <string name="sync_status_idle">空闲</string>
+    <string name="sync_status_syncing">同步中…</string>
+    <string name="sync_status_success">成功</string>
+    <string name="sync_status_failed">失败</string>
+    <string name="sync_status_conflict">冲突</string>
+    <string name="sync_last_time">最后同步</string>
+    <string name="sync_never">从未同步</string>
+    <string name="sync_pending_count">待同步项</string>
+    <string name="sync_manual_trigger">立即同步</string>
+    <string name="sync_syncing">同步中…</string>
+    <string name="add_success">添加成功</string>
+    <string name="add_failed">添加失败：%s</string>
+    <string name="clear_success">清空成功</string>
+    <string name="clear_failed">清空失败：%s</string>
+    <string name="load_success">数据加载成功</string>
+    <string name="load_failed">加载失败：%s</string>
     
-    <!-- Delete Confirmation Dialog -->
-    <string name="delete_confirm_title">Delete Confirmation</string>
-    <string name="delete_confirm_message">Are you sure you want to delete this expense record?</string>
-    <string name="delete_second_confirm_title">Confirm Deletion</string>
-    <string name="delete_second_confirm_message">This action cannot be undone. Are you sure you want to delete?</string>
+    <!-- 删除确认对话框 -->
+    <string name="delete_confirm_title">删除确认</string>
+    <string name="delete_confirm_message">确定要删除这条支出记录吗？</string>
+    <string name="delete_second_confirm_title">确认删除</string>
+    <string name="delete_second_confirm_message">此操作无法撤销，确定要删除吗？</string>
     
+    <!-- 支出分类 -->
+    <string name="expense_type_daily_goods">日常用品</string>
+    <string name="expense_type_luxury">奢侈品</string>
+    <string name="expense_type_communication">通讯</string>
+    <string name="expense_type_food">食品</string>
+    <string name="expense_type_snacks">零食糖果</string>
+    <string name="expense_type_cold_drinks">冷饮</string>
+    <string name="expense_type_convenience_food">方便食品</string>
+    <string name="expense_type_textiles">纺织品</string>
+    <string name="expense_type_beverages">饮品</string>
+    <string name="expense_type_condiments">调味品</string>
+    <string name="expense_type_transportation">交通出行</string>
+    <string name="expense_type_dining">餐饮</string>
+    <string name="expense_type_medical">医疗</string>
+    <string name="expense_type_fruits">水果</string>
+    <string name="expense_type_other">其他</string>
+    <string name="expense_type_seafood">水产品</string>
+    <string name="expense_type_dairy">乳制品</string>
+    <string name="expense_type_gifts">礼物人情</string>
+    <string name="expense_type_travel">旅行度假</string>
+    <string name="expense_type_government">政务</string>
+    <string name="expense_type_utilities">水电煤气</string>
+    <string name="expense_type_beauty">美容美发</string>
+    <string name="expense_type_bean_products">豆制品</string>
+    <string name="expense_type_cosmetics">个护美妆</string>
+    <string name="expense_type_electronics">电子产品</string>
+    <string name="expense_type_household_appliances">家用电器</string>
+    <string name="expense_type_hardware">五金</string>
+    <string name="expense_type_clothing">服装</string>
     
-    <!-- Expense Types -->
-    <string name="expense_type_daily_goods">Daily Goods</string>
-    <string name="expense_type_luxury">Luxury</string>
-    <string name="expense_type_communication">Communication</string>
-    <string name="expense_type_food">Food</string>
-    <string name="expense_type_snacks">Snacks</string>
-    <string name="expense_type_cold_drinks">Beverages</string>
-    <string name="expense_type_convenience_food">Convenience Food</string>
-    <string name="expense_type_textiles">Clothing</string>
-    <string name="expense_type_beverages">Drinks</string>
-    <string name="expense_type_condiments">Condiments</string>
-    <string name="expense_type_transportation">Transportation</string>
-    <string name="expense_type_dining">Dining Out</string>
-    <string name="expense_type_medical">Healthcare</string>
-    <string name="expense_type_fruits">Fruits</string>
-    <string name="expense_type_other">Other</string>
-    <string name="expense_type_seafood">Seafood</string>
-    <string name="expense_type_dairy">Dairy</string>
-    <string name="expense_type_gifts">Gifts</string>
-    <string name="expense_type_travel">Travel</string>
-    <string name="expense_type_government">Government Fees</string>
-    <string name="expense_type_utilities">Utilities</string>
-    <string name="expense_type_beauty">Beauty Salon</string>
-    <string name="expense_type_bean_products">Bean Products</string>
-    <string name="expense_type_cosmetics">Cosmetics</string>
-    <string name="expense_type_electronics">Electronics</string>
-    <string name="expense_type_household_appliances">Home Appliances</string>
-    <string name="expense_type_hardware">Hardware</string>
-    <string name="expense_type_clothing">Clothing &amp; Accessories</string>
+    <!-- 支出列表 -->
+    <string name="expense_list_title">支出</string>
+    <string name="expense_list_empty">暂无支出记录</string>
+    <string name="expense_list_empty_description">添加记录或调整筛选条件</string>
+    <string name="expense_list_reset_filters">重置筛选</string>
+    <string name="expense_list_search_hint">搜索备注…</string>
+    <string name="expense_list_filter_type">分类</string>
+    <string name="expense_list_filter_month">月份</string>
+    <string name="expense_list_filter_amount_range">金额范围</string>
+    <string name="expense_list_filter_min_amount">最小金额</string>
+    <string name="expense_list_filter_max_amount">最大金额</string>
+    <string name="expense_list_all_types">全部分类</string>
+    <string name="expense_list_all_months">全部月份</string>
+    <string name="expense_list_sort">排序</string>
+    <string name="expense_list_sort_date_desc">日期 从新到旧</string>
+    <string name="expense_list_sort_date_asc">日期 从旧到新</string>
+    <string name="expense_list_sort_amount_desc">金额 从高到低</string>
+    <string name="expense_list_sort_amount_asc">金额 从低到高</string>
+    <string name="expense_list_apply_filters">应用筛选</string>
+    <string name="expense_list_clear_filters">清除筛选</string>
+    <string name="expense_list_filter_title">筛选与搜索</string>
+    <string name="expense_list_filter_date_range">日期范围</string>
+    <string name="expense_list_filter_start_date">开始日期</string>
+    <string name="expense_list_filter_end_date">结束日期</string>
+    <string name="expense_list_filter_all_types">全部分类</string>
+    <string name="expense_list_filter_select_types">选择分类</string>
+    <string name="expense_list_filtered_count">筛选结果：%d 条</string>
+    <string name="common_search">搜索</string>
+    <string name="common_filter">筛选</string>
     
-    <!-- Expense List -->
-    <string name="expense_list_title">Expenses</string>
-    <string name="expense_list_empty">No expenses</string>
-    <string name="expense_list_empty_description">Add expenses or adjust filters</string>
-    <string name="expense_list_reset_filters">Reset</string>
-    <string name="expense_list_search_hint">Search notes…</string>
-    <string name="expense_list_filter_type">Category</string>
-    <string name="expense_list_filter_month">Month</string>
-    <string name="expense_list_filter_amount_range">Amount Range</string>
-    <string name="expense_list_filter_min_amount">Min</string>
-    <string name="expense_list_filter_max_amount">Max</string>
-    <string name="expense_list_all_types">All Categories</string>
-    <string name="expense_list_all_months">All Months</string>
-    <string name="expense_list_sort">Sort By</string>
-    <string name="expense_list_sort_date_desc">Date (Newest)</string>
-    <string name="expense_list_sort_date_asc">Date (Oldest)</string>
-    <string name="expense_list_sort_amount_desc">Amount (High to Low)</string>
-    <string name="expense_list_sort_amount_asc">Amount (Low to High)</string>
-    <string name="expense_list_apply_filters">Apply</string>
-    <string name="expense_list_clear_filters">Clear</string>
-    <string name="expense_list_filter_title">Filters</string>
-    <string name="expense_list_filter_date_range">Date Range</string>
-    <string name="expense_list_filter_start_date">From</string>
-    <string name="expense_list_filter_end_date">To</string>
-    <string name="expense_list_filter_all_types">All Categories</string>
-    <string name="expense_list_filter_select_types">Select Categories</string>
-    <string name="expense_list_filtered_count">%d results</string>
-    <string name="common_search">Search</string>
-    <string name="common_filter">Filter</string>
+    <!-- 支出统计 -->
+    <string name="expense_stats_count">记录总数</string>
+    <string name="expense_stats_total">总金额</string>
+    <string name="expense_stats_average">平均值</string>
+    <string name="expense_stats_median">中位数</string>
+    <string name="expense_stats_range">金额区间</string>
     
-    <!-- Expense Statistics -->
-    <string name="expense_stats_count">Total Records</string>
-    <string name="expense_stats_total">Total Amount</string>
-    <string name="expense_stats_average">Average</string>
-    <string name="expense_stats_median">Median</string>
-    <string name="expense_stats_range">Range</string>
+    <!-- 支出表格 -->
+    <string name="expense_type">分类</string>
+    <string name="expense_remark">备注</string>
+    <string name="expense_amount">金额</string>
     
-    <!-- Expense Table -->
-    <string name="expense_type">Category</string>
-    <string name="expense_remark">Notes</string>
-    <string name="expense_amount">Amount</string>
+    <!-- 通用 -->
+    <string name="common_loading">加载中…</string>
+    <string name="common_error">错误</string>
+    <string name="common_retry">重试</string>
+    <string name="common_refresh">刷新</string>
+    <string name="common_more_functions">更多功能</string>
+    <string name="common_actions">操作</string>
     
-    <!-- Common -->
-    <string name="common_loading">Loading…</string>
-    <string name="common_error">Error</string>
-    <string name="common_retry">Retry</string>
-    <string name="common_refresh">Refresh</string>
-    <string name="common_more_functions">More</string>
-    <string name="common_actions">Actions</string>
-    
-    <!-- Add Expense -->
-    <string name="add_expense_title">Add Expense</string>
-    <string name="add_expense_type_label">Category *</string>
-    <string name="add_expense_type_hint">Select category</string>
-    <string name="add_expense_amount_label">Amount *</string>
+    <!-- 添加支出 -->
+    <string name="add_expense_title">记一笔</string>
+    <string name="add_expense_type_label">分类 *</string>
+    <string name="add_expense_type_hint">选择分类</string>
+    <string name="add_expense_amount_label">金额 *</string>
     <string name="add_expense_amount_hint">0.00</string>
-    <string name="add_expense_date_label">Date *</string>
-    <string name="add_expense_remark_label">Notes</string>
-    <string name="add_expense_remark_hint">Add notes…</string>
-    <string name="add_expense_save_success">Expense added</string>
-    <string name="add_expense_save_failed">Failed to add: %s</string>
-    <string name="add_expense_validation_type_required">Select a category</string>
-    <string name="add_expense_validation_amount_required">Enter amount</string>
-    <string name="add_expense_validation_amount_invalid">Amount must be greater than 0</string>
-    <string name="add_expense_validation_date_required">Select date</string>
-    <string name="edit_expense_title">Edit Expense</string>
-
-    <!-- AI Expense Recognition -->
-    <string name="ai_expense_title">Smart Scan</string>
-    <string name="ai_expense_select_images">Select Photos</string>
-    <string name="ai_expense_add_images">Add Photos</string>
-    <string name="ai_expense_or_input_text">Or Enter Text</string>
-    <string name="ai_expense_text_hint">Example: groceries $45, gas $35 today</string>
-    <string name="ai_expense_start_recognition">Scan Receipt</string>
-    <string name="ai_expense_recognizing">Scanning…</string>
-    <string name="ai_expense_results">Scan Results</string>
-    <string name="ai_expense_save_all">Save All</string>
-    <string name="ai_expense_saving">Saving…</string>
-    <string name="ai_expense_edit_record">Edit</string>
-    <string name="ai_expense_delete_record">Delete</string>
-    <string name="ai_expense_edited">Edited</string>
-    <string name="ai_expense_no_input">Enter text or select photos</string>
-    <string name="ai_expense_no_records">No expenses found</string>
-    <string name="ai_expense_recognition_failed">Scan failed: %s</string>
-    <string name="ai_expense_save_success">Saved</string>
-    <string name="ai_expense_save_failed">Save failed: %s</string>
-    <string name="ai_expense_no_valid_records">No valid expenses to save</string>
-    <string name="ai_expense_select_type">Category</string>
-    <string name="ai_expense_amount">Amount</string>
-    <string name="ai_expense_remark">Notes</string>
-    <string name="search_category">Search category…</string>
-    <string name="search_results_count">%d results</string>
-    <string name="no_results_found">No matching results</string>
-    <string name="clear">Clear</string>
-    <string name="ai_expense_click_to_add">Tap to add photos</string>
-    <string name="ai_expense_records_count">Results (%d)</string>
-    <string name="ai_expense_select_image_source">Select Image Source</string>
-    <string name="ai_expense_take_photo">Take Photo</string>
-    <string name="ai_expense_choose_from_gallery">Choose from Gallery</string>
+    <string name="add_expense_date_label">日期 *</string>
+    <string name="add_expense_remark_label">备注</string>
+    <string name="add_expense_remark_hint">输入备注…</string>
+    <string name="add_expense_save_success">保存成功</string>
+    <string name="add_expense_save_failed">保存失败：%s</string>
+    <string name="add_expense_validation_type_required">请选择分类</string>
+    <string name="add_expense_validation_amount_required">请输入金额</string>
+    <string name="add_expense_validation_amount_invalid">金额需大于0</string>
+    <string name="add_expense_validation_date_required">请选择日期</string>
+    <string name="edit_expense_title">编辑支出</string>
     
-    <!-- AI Settings -->
-    <string name="settings_ai_title">AI Settings</string>
-    <string name="settings_ai_api_key">API Key</string>
-    <string name="settings_ai_api_key_hint">Enter API Key</string>
-    <string name="settings_ai_api_key_description">For smart receipt scanning</string>
-    <string name="settings_ai_get_api_key">Haven\'t got an API key? Get one here</string>
-    <string name="settings_ai_api_key_saved">API Key saved</string>
-    <string name="ai_expense_entry_description">Scan receipts or enter text to add expenses</string>
-
-    <!-- Budget Management -->
-    <string name="budget_enable_title">Budget</string>
-    <string name="budget_enable_description">Set monthly budget to track spending</string>
-    <string name="budget_enable_button">Enable Budget</string>
-    <string name="budget_enable_feature">Enable Budget</string>
-    <string name="budget_monthly_progress">Monthly Budget</string>
-    <string name="budget_settings">Budget Settings</string>
-    <string name="budget_settings_title">Budget Settings</string>
-    <string name="budget_monthly_limit">Monthly Budget</string>
-    <string name="budget_warning_threshold">Alert Level (%)</string>
-    <string name="budget_warning_threshold_hint">Show alert at this percentage (0-100)</string>
-    <string name="budget_remaining">Remaining</string>
-    <string name="budget_daily_average">Daily Average</string>
-    <string name="budget_recommended_daily">Daily Budget</string>
-    <string name="budget_expand">Show More</string>
-    <string name="budget_collapse">Show Less</string>
-    <string name="budget_alert_normal_title">On Track</string>
-    <string name="budget_alert_normal_message">%1$s remaining (%2$.0f%%)</string>
-    <string name="budget_alert_warning_title">Approaching Limit</string>
-    <string name="budget_alert_warning_message">%1$s left (%2$.0f%%), watch spending</string>
-    <string name="budget_alert_over_title">Over Budget</string>
-    <string name="budget_alert_over_message">Over by %1$s, adjust spending</string>
-    <string name="common_save">Save</string>
-    <string name="common_cancel">Cancel</string>
-    <string name="budget_error_invalid_limit">Enter valid amount</string>
-    <string name="budget_error_invalid_threshold">Enter 0-100</string>
-
-    <!-- Charts -->
-    <string name="charts_title">Analytics</string>
-    <string name="statistics_summary">Summary</string>
-    <string name="count">Count</string>
-    <string name="average_amount">Average</string>
-    <string name="median_amount">Median</string>
-    <string name="trend_chart">Trends</string>
-    <string name="category_breakdown">By Category</string>
-    <string name="weekday_analysis">Weekday Insights</string>
-    <string name="records">records</string>
-    <string name="expense_details">Expense Details</string>
-    <string name="percentage_of_total">Percentage of Total</string>
-    <string name="select_time_range">Time Period</string>
-    <string name="this_week">This Week</string>
-    <string name="this_month">This Month</string>
-    <string name="last_month">Last Month</string>
-    <string name="this_quarter">This Quarter</string>
-    <string name="this_year">This Year</string>
-    <string name="custom_range">Custom</string>
-    <string name="close">Close</string>
-    <string name="retry">Retry</string>
+    <!-- AI 智能识别 -->
+    <string name="ai_expense_title">智能记账</string>
+    <string name="ai_expense_select_images">选择图片</string>
+    <string name="ai_expense_add_images">添加图片</string>
+    <string name="ai_expense_or_input_text">或输入文字</string>
+    <string name="ai_expense_text_hint">例如：今天买了西红柿12元，黄瓜8元，鸡蛋15元</string>
+    <string name="ai_expense_start_recognition">开始识别</string>
+    <string name="ai_expense_recognizing">识别中…</string>
+    <string name="ai_expense_results">识别结果</string>
+    <string name="ai_expense_save_all">全部保存</string>
+    <string name="ai_expense_saving">保存中…</string>
+    <string name="ai_expense_edit_record">编辑</string>
+    <string name="ai_expense_delete_record">删除</string>
+    <string name="ai_expense_edited">已编辑</string>
+    <string name="ai_expense_no_input">请输入文字或选择图片</string>
+    <string name="ai_expense_no_records">未识别到消费记录</string>
+    <string name="ai_expense_recognition_failed">识别失败：%s</string>
+    <string name="ai_expense_save_success">保存成功</string>
+    <string name="ai_expense_save_failed">保存失败：%s</string>
+    <string name="ai_expense_no_valid_records">无有效记录</string>
+    <string name="ai_expense_select_type">选择分类</string>
+    <string name="ai_expense_amount">金额</string>
+    <string name="ai_expense_remark">备注</string>
+    <string name="search_category">搜索分类…</string>
+    <string name="search_results_count">%d 个结果</string>
+    <string name="no_results_found">未找到匹配项</string>
+    <string name="clear">清除</string>
+    <string name="ai_expense_click_to_add">点击添加图片</string>
+    <string name="ai_expense_records_count">识别结果（%d条）</string>
+    <string name="ai_expense_select_image_source">选择图片</string>
+    <string name="ai_expense_take_photo">拍照</string>
+    <string name="ai_expense_choose_from_gallery">从相册选择</string>
     
-    <!-- Weekdays -->
-    <string name="sunday">Sunday</string>
-    <string name="monday">Monday</string>
-    <string name="tuesday">Tuesday</string>
-    <string name="wednesday">Wednesday</string>
-    <string name="thursday">Thursday</string>
-    <string name="friday">Friday</string>
-    <string name="saturday">Saturday</string>
-    <string name="sunday_short">Sun</string>
-    <string name="monday_short">Mon</string>
-    <string name="tuesday_short">Tue</string>
-    <string name="wednesday_short">Wed</string>
-    <string name="thursday_short">Thu</string>
-    <string name="friday_short">Fri</string>
-    <string name="saturday_short">Sat</string>
-
-    <!-- Data Import/Export -->
-    <string name="data_import_export">Import &amp; Export</string>
-    <string name="data_import_export_description">Export or import data as Excel files</string>
-    <string name="export_data">Export</string>
-    <string name="import_data">Import</string>
-    <string name="export_all_data">Export All</string>
-    <string name="export_date_range">Date Range</string>
-    <string name="export_select_range">Select Dates</string>
-    <string name="export_start_date">Start Date</string>
-    <string name="export_end_date">End Date</string>
-    <string name="export_in_progress">Exporting…</string>
-    <string name="export_success">Exported: %s</string>
-    <string name="export_failed">Export failed: %s</string>
-    <string name="import_in_progress">Importing…</string>
-    <string name="import_success">Imported %d records</string>
-    <string name="import_failed">Import failed: %s</string>
-    <string name="import_select_file">Select File</string>
-    <string name="import_validation_error">Data error: %s</string>
-    <string name="import_confirm_title">Import</string>
-    <string name="import_confirm_message">Import %d records?</string>
-    <string name="export_filename_prefix">expenses</string>
-    <string name="excel_header_date">Date</string>
-    <string name="excel_header_type">Category</string>
-    <string name="excel_header_amount">Amount</string>
-    <string name="excel_header_remark">Notes</string>
-    <string name="permission_storage_required">Storage access required</string>
-    <string name="no_records_to_export">No records to export</string>
-
-    <!-- Health Check -->
-    <string name="health_check_channel_name">Server Connection Monitor</string>
-    <string name="health_check_channel_description">Monitors server connection status</string>
-    <string name="health_check_running">Monitoring Server</string>
-    <string name="health_check_monitoring">Checking server connection…</string>
-    <string name="server_connection_error">Server Connection Lost</string>
-    <string name="server_connection_error_message">Unable to connect to server. Check network connection</string>
-    <string name="server_connection_restored">Server connection restored</string>
+    <!-- AI 设置 -->
+    <string name="settings_ai_title">AI设置</string>
+    <string name="settings_ai_api_key">硅基流动API密钥</string>
+    <string name="settings_ai_api_key_hint">输入API密钥</string>
+    <string name="settings_ai_api_key_description">用于智能识别功能</string>
+    <string name="settings_ai_get_api_key">没有密钥？获取一个</string>
+    <string name="settings_ai_api_key_saved">API密钥已保存</string>
+    <string name="ai_expense_entry_description">拍照或输入文字快速记账</string>
     
-    <!-- Date Formatting -->
-    <string name="date_today">Today</string>
-    <string name="date_yesterday">Yesterday</string>
-    <string name="date_days_ago">%d days ago</string>
-   
-    <!-- Open Source Licenses -->
-    <string name="open_source_licenses">Open Source Licenses</string>
-    <string name="open_source_licenses_description">View licenses of third-party components</string>
+    <!-- 预算管理 -->
+    <string name="budget_enable_title">开启预算管理</string>
+    <string name="budget_enable_description">设置月度预算，合理规划支出</string>
+    <string name="budget_enable_button">开启预算</string>
+    <string name="budget_enable_feature">启用预算</string>
+    <string name="budget_monthly_progress">月度预算进度</string>
+    <string name="budget_settings">预算设置</string>
+    <string name="budget_settings_title">预算设置</string>
+    <string name="budget_monthly_limit">月度预算</string>
+    <string name="budget_warning_threshold">预警比例 (%)</string>
+    <string name="budget_warning_threshold_hint">达到此比例时预警（0-100）</string>
+    <string name="budget_remaining">剩余预算</string>
+    <string name="budget_daily_average">日均支出</string>
+    <string name="budget_recommended_daily">建议日均</string>
+    <string name="budget_expand">展开</string>
+    <string name="budget_collapse">收起</string>
+    <string name="budget_alert_normal_title">预算正常</string>
+    <string name="budget_alert_normal_message">剩余 %1$s，可用额度 %2$.0f%%</string>
+    <string name="budget_alert_warning_title">预算预警</string>
+    <string name="budget_alert_warning_message">剩余 %1$s（%2$.0f%%），请注意控制支出</string>
+    <string name="common_save">保存</string>
+    <string name="common_cancel">取消</string>
+    <string name="budget_alert_over_title">超出预算</string>
+    <string name="budget_alert_over_message">已超支 %1$s，请合理规划</string>
+    <string name="budget_error_invalid_limit">请输入有效的预算金额</string>
+    <string name="budget_error_invalid_threshold">预警比例需在0-100之间</string>
+    
+    <!-- 图表 -->
+    <string name="charts_title">统计分析</string>
+    <string name="statistics_summary">统计概览</string>
+    <string name="count">记录数</string>
+    <string name="average_amount">平均金额</string>
+    <string name="median_amount">金额中位数</string>
+    <string name="trend_chart">趋势图</string>
+    <string name="category_breakdown">分类占比</string>
+    <string name="weekday_analysis">星期分布</string>
+    <string name="records">条</string>
+    <string name="expense_details">支出详情</string>
+    <string name="percentage_of_total">占总比</string>
+    <string name="select_time_range">选择时间范围</string>
+    <string name="select_chart">选择图表</string>
+    <string name="this_week">本周</string>
+    <string name="this_month">本月</string>
+    <string name="last_month">上月</string>
+    <string name="this_quarter">本季度</string>
+    <string name="this_year">今年</string>
+    <string name="custom_range">自定义</string>
+    <string name="close">关闭</string>
+    <string name="retry">重试</string>
+    
+    <!-- 星期 -->
+    <string name="sunday">星期日</string>
+    <string name="monday">星期一</string>
+    <string name="tuesday">星期二</string>
+    <string name="wednesday">星期三</string>
+    <string name="thursday">星期四</string>
+    <string name="friday">星期五</string>
+    <string name="saturday">星期六</string>
+    <string name="sunday_short">日</string>
+    <string name="monday_short">一</string>
+    <string name="tuesday_short">二</string>
+    <string name="wednesday_short">三</string>
+    <string name="thursday_short">四</string>
+    <string name="friday_short">五</string>
+    <string name="saturday_short">六</string>
+
+    <!-- 数据导入导出 -->
+    <string name="data_import_export">导入导出</string>
+    <string name="data_import_export_description">导出或导入Excel格式的账单数据</string>
+    <string name="export_data">导出数据</string>
+    <string name="import_data">导入数据</string>
+    <string name="export_all_data">导出全部数据</string>
+    <string name="export_date_range">导出日期范围</string>
+    <string name="export_select_range">选择日期范围</string>
+    <string name="export_start_date">开始日期</string>
+    <string name="export_end_date">结束日期</string>
+    <string name="export_in_progress">导出中…</string>
+    <string name="export_success">导出成功：%s</string>
+    <string name="export_failed">导出失败：%s</string>
+    <string name="import_in_progress">导入中…</string>
+    <string name="import_success">导入成功：%d 条记录</string>
+    <string name="import_failed">导入失败：%s</string>
+    <string name="import_select_file">选择Excel文件</string>
+    <string name="import_validation_error">数据错误：%s</string>
+    <string name="import_confirm_title">确认导入</string>
+    <string name="import_confirm_message">发现 %d 条记录，是否导入？</string>
+    <string name="export_filename_prefix">支出记录</string>
+    <string name="excel_header_date">日期</string>
+    <string name="excel_header_type">分类</string>
+    <string name="excel_header_amount">金额</string>
+    <string name="excel_header_remark">备注</string>
+    <string name="permission_storage_required">需要存储权限</string>
+    <string name="no_records_to_export">暂无记录可导出</string>
+
+    <!-- 健康检查 -->
+    <string name="health_check_channel_name">服务器连接状态</string>
+    <string name="health_check_channel_description">监控服务器连接</string>
+    <string name="health_check_running">正在监控服务器</string>
+    <string name="health_check_monitoring">检查服务器连接…</string>
+    <string name="server_connection_error">连接失败</string>
+    <string name="server_connection_error_message">无法连接服务器，请检查网络</string>
+    <string name="server_connection_restored">连接已恢复</string>
+    
+    <!-- 日期格式化 -->
+    <string name="date_today">今天</string>
+    <string name="date_yesterday">昨天</string>
+    <string name="date_days_ago">%d天前</string>
+    
+    <!-- 开源许可证 -->
+    <string name="open_source_licenses">开源许可证</string>
+    <string name="open_source_licenses_description">查看第三方组件许可证</string>
 </resources>

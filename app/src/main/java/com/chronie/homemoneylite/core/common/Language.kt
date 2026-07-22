@@ -8,25 +8,21 @@ enum class Language(
     val localName: String,
     val locale: Locale
 ) {
-    ENGLISH("en-US", "English", "English", Locale.US),
     CHINESE("zh-CN", "Chinese", "中文", Locale.SIMPLIFIED_CHINESE);
     val displayName: String
         get() = "$englishName / $localName"
 
     companion object {
         fun fromCode(code: String): Language {
-            return values().find { it.code == code } ?: ENGLISH
+            return values().find { it.code == code } ?: CHINESE
         }
 
         fun fromLocale(locale: Locale): Language {
-            return when {
-                locale.language == "zh" -> CHINESE
-                else -> ENGLISH
-            }
+            return CHINESE
         }
 
         fun getSystemLanguage(): Language {
-            return fromLocale(Locale.getDefault())
+            return CHINESE
         }
     }
 }

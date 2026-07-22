@@ -73,14 +73,10 @@ class LanguageManager @Inject constructor(
 
     fun migrateOldLanguageCode(oldCode: String?) {
         if (oldCode == null) return
-        
-        val newLanguage = when (oldCode) {
-            "en" -> Language.ENGLISH
-            "zh" -> Language.CHINESE
-            else -> return
+
+        if (oldCode == "zh") {
+            setLanguage(Language.CHINESE)
         }
-        
-        setLanguage(newLanguage)
     }
 
     companion object {
