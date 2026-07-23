@@ -31,15 +31,13 @@ import com.chronie.homemoneylite.ui.expense.ExpenseTypeLocalizer
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
 import com.chronie.homemoneylite.ui.components.ExpressiveLinearProgressIndicator
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
-import com.chronie.homemoneylite.ui.components.AppDatePickerDialog
+import com.chronie.homemoneylite.ui.components.WheelDatePicker
 import com.chronie.homemoneylite.ui.theme.*
 import java.text.NumberFormat
 import java.time.LocalDate
-import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 
 @Composable
@@ -49,8 +47,11 @@ fun ChartsScreen(
     onNavigateToWeekdayDetail: (dayOfWeek: Int, amount: Double, count: Int, percentage: Float, startDate: String, endDate: String) -> Unit = { _, _, _, _, _, _ -> }
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val selectedTimeRange by viewModel.selectedTimeRange.collectAsState()   
-    var showTimeRangeDialog by remember { mutableStateOf(false) }
+    val selectedTimeRange by viewModel.selectedTimeRange.collectAsState()
+    val customStartDate by viewModel.customStartDate.collectAsState()
+    val customEndDate by viewModel.customEndDate.collectAsState()
+    var timeRangeMenuExpanded by remember { mutableStateOf(false) }
+    var showCustomRangeDialog by remember { mutableStateOf(false) }
     
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -73,11 +74,46 @@ fun ChartsScreen(
                         modifier = Modifier.weight(1f).padding(start = 8.dp)
                     )
                     
-                    IconButton(onClick = { showTimeRangeDialog = true }) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = "Select time range"
-                        )
+                    Box {
+                        IconButton(onClick = { timeRangeMenuExpanded = true }) {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = "Select time range"
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = timeRangeMenuExpanded,
+                            onDismissRequest = { timeRangeMenuExpanded = false }
+                        ) {
+                            listOf(
+                                TimeRange.THIS_WEEK,
+                                TimeRange.THIS_MONTH,
+                                TimeRange.LAST_MONTH,
+                                TimeRange.THIS_QUARTER,
+                                TimeRange.THIS_YEAR,
+                                TimeRange.CUSTOM
+                            ).forEach { range ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        timeRangeMenuExpanded = false
+                                        if (range == TimeRange.CUSTOM) {
+                                            showCustomRangeDialog = true
+                                        } else {
+                                            viewModel.selectTimeRange(range)
+                                        }
+                                    }
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        RadioButton(
+                                            selected = selectedTimeRange == range,
+                                            onClick = null
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(getTimeRangeText(context, range))
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -122,14 +158,15 @@ fun ChartsScreen(
             }
         }
         
-        if (showTimeRangeDialog) {
-            TimeRangeDialog(
+        if (showCustomRangeDialog) {
+            CustomDateRangeDialog(
                 context = context,
-                selectedTimeRange = selectedTimeRange,
-                onDismiss = { showTimeRangeDialog = false },
-                onTimeRangeSelected = { timeRange ->
-                    viewModel.selectTimeRange(timeRange)
-                    showTimeRangeDialog = false
+                initialStartDate = customStartDate ?: LocalDate.now().minusMonths(1),
+                initialEndDate = customEndDate ?: LocalDate.now(),
+                onDismiss = { showCustomRangeDialog = false },
+                onConfirm = { start, end ->
+                    viewModel.setCustomDateRange(start, end)
+                    showCustomRangeDialog = false
                 }
             )
         }
@@ -749,251 +786,125 @@ private fun CategoryItem(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+/**
+ * 自定义时间范围弹窗：开始/结束日期可自由切换编辑，共用一个滚轮日期选择器。
+ */
 @Composable
-private fun TimeRangeDialog(
-    context: Context,
-    selectedTimeRange: TimeRange,
-    onDismiss: () -> Unit,
-    onTimeRangeSelected: (TimeRange) -> Unit
-) {
-    val viewModel = hiltViewModel<ChartsViewModel>()
-    val customStartDate by viewModel.customStartDate.collectAsState()
-    val customEndDate by viewModel.customEndDate.collectAsState()
-
-    var showStartPicker by remember { mutableStateOf(false) }
-    var showEndPicker by remember { mutableStateOf(false) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(context.getString(R.string.select_time_range)) },
-        text = {
-            Column {
-                listOf(
-                    TimeRange.THIS_WEEK,
-                    TimeRange.THIS_MONTH,
-                    TimeRange.LAST_MONTH,
-                    TimeRange.THIS_QUARTER,
-                    TimeRange.THIS_YEAR,
-                    TimeRange.CUSTOM
-                ).forEach { range ->
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                if (range == TimeRange.CUSTOM) {
-                                    showStartPicker = true
-                                } else {
-                                    onTimeRangeSelected(range)
-                                }
-                            }
-                            .padding(vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RadioButton(
-                            selected = selectedTimeRange == range,
-                            onClick = {
-                                if (range == TimeRange.CUSTOM) {
-                                    showStartPicker = true
-                                } else {
-                                    onTimeRangeSelected(range)
-                                }
-                            }
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(getTimeRangeText(context, range))
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text(context.getString(android.R.string.ok))
-            }
-        }
-    )
-
-    if (showStartPicker) {
-        AppDatePickerDialog(
-            initialDateMillis = (customStartDate ?: LocalDate.now().minusMonths(1))
-                .atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            onDateSelected = { millis ->
-                val start = java.time.Instant.ofEpochMilli(millis)
-                    .atZone(java.time.ZoneId.systemDefault()).toLocalDate()
-                viewModel.setCustomStartDate(start)
-                showStartPicker = false
-                showEndPicker = true
-            },
-            onDismiss = { showStartPicker = false }
-        )
-    }
-
-    if (showEndPicker) {
-        AppDatePickerDialog(
-            initialDateMillis = (customEndDate ?: LocalDate.now())
-                .atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            onDateSelected = { millis ->
-                val end = java.time.Instant.ofEpochMilli(millis)
-                    .atZone(java.time.ZoneId.systemDefault()).toLocalDate()
-                viewModel.setCustomEndDate(end)
-                showEndPicker = false
-                onTimeRangeSelected(TimeRange.CUSTOM)
-            },
-            onDismiss = { showEndPicker = false }
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-private fun CustomRangeBottomSheet(
+private fun CustomDateRangeDialog(
     context: Context,
     initialStartDate: LocalDate,
     initialEndDate: LocalDate,
     onDismiss: () -> Unit,
     onConfirm: (LocalDate, LocalDate) -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    val coroutineScope = rememberCoroutineScope()
-    
     var startDate by remember { mutableStateOf(initialStartDate) }
     var endDate by remember { mutableStateOf(initialEndDate) }
-    var showStartDatePicker by remember { mutableStateOf(false) }
-    var showEndDatePicker by remember { mutableStateOf(false) }
-    
-    LaunchedEffect(Unit) { sheetState.show() }
-    LaunchedEffect(sheetState.currentValue) {
-        if (sheetState.currentValue == ModalBottomSheetValue.Hidden) onDismiss()
-    }
-    
-    ModalBottomSheetLayout(
-        sheetState = sheetState,
-        sheetShape = MaterialTheme.shapes.large,
-        sheetBackgroundColor = MaterialTheme.colors.surface,
-        sheetContent = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = context.getString(R.string.custom_range),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-                
-                OutlinedTextField(
-                    value = startDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text(context.getString(R.string.expense_list_filter_start_date)) },
-                    trailingIcon = {
-                        IconButton(onClick = { showStartDatePicker = true }) {
-                            Icon(
-                                imageVector = Icons.Default.DateRange,
-                                contentDescription = context.getString(R.string.expense_list_filter_start_date)
-                            )
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                OutlinedTextField(
-                    value = endDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text(context.getString(R.string.expense_list_filter_end_date)) },
-                    trailingIcon = {
-                        IconButton(onClick = { showEndDatePicker = true }) {
-                            Icon(
-                                imageVector = Icons.Default.DateRange,
-                                contentDescription = context.getString(R.string.expense_list_filter_end_date)
-                            )
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                
-                Spacer(modifier = Modifier.height(24.dp))
-                
+    var editingStart by remember { mutableStateOf(true) }
+    val isValid = !startDate.isAfter(endDate)
+    val dateFormatter = remember { DateTimeFormatter.ofPattern("yyyy年M月d日") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(context.getString(R.string.custom_range)) },
+        text = {
+            Column {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    OutlinedButton(
-                        onClick = {
-                            coroutineScope.launch { sheetState.hide() }
-                        },
+                    DateFieldChip(
+                        label = context.getString(R.string.expense_list_filter_start_date),
+                        value = startDate.format(dateFormatter),
+                        selected = editingStart,
+                        onClick = { editingStart = true },
                         modifier = Modifier.weight(1f)
-                    ) {
-                        Text(context.getString(R.string.cancel))
-                    }
-                    Button(
-                        onClick = {
-                            onConfirm(startDate, endDate)
-                            coroutineScope.launch { sheetState.hide() }
-                        },
-                        modifier = Modifier.weight(1f),
-                        enabled = !startDate.isAfter(endDate)
-                    ) {
-                        Text(context.getString(R.string.confirm))
-                    }
+                    )
+                    DateFieldChip(
+                        label = context.getString(R.string.expense_list_filter_end_date),
+                        value = endDate.format(dateFormatter),
+                        selected = !editingStart,
+                        onClick = { editingStart = false },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                WheelDatePicker(
+                    date = if (editingStart) startDate else endDate,
+                    onDateChange = {
+                        if (editingStart) startDate = it else endDate = it
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                if (!isValid) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = context.getString(R.string.custom_range_invalid),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colors.error
+                    )
                 }
             }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { onConfirm(startDate, endDate) },
+                enabled = isValid
+            ) {
+                Text(context.getString(R.string.confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(context.getString(R.string.cancel))
+            }
         }
-    ) {
-        // 自定义范围底部抽屉的主体内容（此处留空，筛选对话框位于抽屉外）
-    }
-    
-    if (showStartDatePicker) {
-        AppDatePickerDialog(
-            initialDateMillis = startDate.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            onDateSelected = { millis ->
-                startDate = java.time.Instant.ofEpochMilli(millis)
-                    .atZone(java.time.ZoneId.systemDefault())
-                    .toLocalDate()
-                showStartDatePicker = false
-            },
-            onDismiss = { showStartDatePicker = false }
-        )
-    }
-    
-    if (showEndDatePicker) {
-        AppDatePickerDialog(
-            initialDateMillis = endDate.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli(),
-            onDateSelected = { millis ->
-                endDate = java.time.Instant.ofEpochMilli(millis)
-                    .atZone(java.time.ZoneId.systemDefault())
-                    .toLocalDate()
-                showEndDatePicker = false
-            },
-            onDismiss = { showEndDatePicker = false }
-        )
-    }
+    )
 }
 
+/**
+ * 开始/结束日期字段（可点击切换当前编辑对象）
+ */
 @Composable
-private fun TimeRangeOption(
-    context: Context,
-    timeRange: TimeRange,
-    isSelected: Boolean,
-    onClick: () -> Unit
+private fun DateFieldChip(
+    label: String,
+    value: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Surface(
+        modifier = modifier,
+        shape = MaterialTheme.shapes.medium,
+        border = BorderStroke(
+            width = if (selected) 2.dp else 1.dp,
+            color = if (selected) MaterialTheme.colors.primary
+            else MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
+        ),
+        color = if (selected) MaterialTheme.colors.primary.copy(alpha = 0.08f)
+        else MaterialTheme.colors.surface
     ) {
-        RadioButton(selected = isSelected, onClick = onClick)
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = getTimeRangeText(context, timeRange),
-            style = MaterialTheme.typography.bodyLarge
-        )
+        Column(
+            modifier = Modifier
+                .clickable(onClick = onClick)
+                .padding(horizontal = 12.dp, vertical = 10.dp)
+        ) {
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colors.onSurfaceVariant
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = if (selected) MaterialTheme.colors.primary
+                else MaterialTheme.colors.onSurface
+            )
+        }
     }
 }
 

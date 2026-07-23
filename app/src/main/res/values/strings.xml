@@ -220,6 +220,7 @@
     <string name="this_quarter">本季度</string>
     <string name="this_year">今年</string>
     <string name="custom_range">自定义</string>
+    <string name="custom_range_invalid">开始日期不能晚于结束日期</string>
     <string name="retry">重试</string>
     
     <!-- 星期 -->
