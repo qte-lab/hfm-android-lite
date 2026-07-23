@@ -6,7 +6,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -19,6 +19,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.chronie.homemoneylite.R
+import com.chronie.homemoneylite.ui.theme.*
 import com.chronie.homemoneylite.ui.components.ExpressiveLinearProgressIndicator
 import com.chronie.homemoneylite.ui.expense.ExpenseTypeLocalizer
 import java.text.NumberFormat
@@ -54,7 +55,7 @@ fun WeekdayRadarChartCard(
                 Text(
                     text = context.getString(R.string.no_data),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colors.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 32.dp)
                 )
             } else {
@@ -103,9 +104,9 @@ private fun WeekdayRadarChart(
     onWeekdayClick: (WeekdayChartData) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val primaryColor = MaterialTheme.colorScheme.primary
-    val textColor = MaterialTheme.colorScheme.onSurface
-    val gridColor = MaterialTheme.colorScheme.outlineVariant
+    val primaryColor = MaterialTheme.colors.primary
+    val textColor = MaterialTheme.colors.onSurface
+    val gridColor = MaterialTheme.colors.outlineVariant
     
     // 存储标签位置用于点击检测
     val labelPositions = remember { mutableStateMapOf<Int, Pair<Offset, Float>>() }
@@ -318,7 +319,7 @@ fun WeekdayDataItem(
         Text(
             text = currencyFormat.format(data.amount),
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.primary,
+            color = MaterialTheme.colors.primary,
             modifier = Modifier.width(100.dp)
         )
     }
@@ -359,8 +360,8 @@ private fun CategoryDetailItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(6.dp),
-            color = MaterialTheme.colorScheme.primary,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant
+            color = MaterialTheme.colors.primary,
+            backgroundColor = MaterialTheme.colors.surfaceVariant
         )
         
         Spacer(modifier = Modifier.height(4.dp))
@@ -372,12 +373,12 @@ private fun CategoryDetailItem(
             Text(
                 text = "${category.count} ${context.getString(R.string.records)}",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colors.onSurfaceVariant
             )
             Text(
                 text = currencyFormat.format(category.amount),
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold
             )
         }

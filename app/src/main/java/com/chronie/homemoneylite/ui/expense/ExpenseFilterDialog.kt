@@ -8,13 +8,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
+import androidx.compose.material.*
+import com.chronie.homemoneylite.ui.components.AppDatePickerDialog
+import com.chronie.homemoneylite.ui.theme.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.chronie.homemoneylite.R
@@ -27,7 +30,7 @@ import java.time.format.DateTimeFormatter
 /**
  * 支出筛选对话框
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ExpenseFilterDialog(
     context: android.content.Context,
@@ -57,8 +60,8 @@ fun ExpenseFilterDialog(
                 .fillMaxWidth(0.95f)
                 .fillMaxHeight(0.9f),
             shape = MaterialTheme.shapes.large,
-            color = MaterialTheme.colorScheme.surface,
-            tonalElevation = 6.dp
+            color = MaterialTheme.colors.surface,
+            elevation = 6.dp
         ) {
             Column(
                 modifier = Modifier.fillMaxSize()
@@ -80,7 +83,7 @@ fun ExpenseFilterDialog(
                     }
                 }
                 
-                HorizontalDivider()
+                Divider()
                 
                 // 筛选内容
                 Column(
@@ -160,7 +163,7 @@ fun ExpenseFilterDialog(
                             onValueChange = { minAmount = it },
                             label = { Text(context.getString(R.string.expense_list_filter_min_amount)) },
                             modifier = Modifier.weight(1f),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true
                         )
                         
@@ -169,7 +172,7 @@ fun ExpenseFilterDialog(
                             onValueChange = { maxAmount = it },
                             label = { Text(context.getString(R.string.expense_list_filter_max_amount)) },
                             modifier = Modifier.weight(1f),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true
                         )
                     }
@@ -199,7 +202,7 @@ fun ExpenseFilterDialog(
                     }
                 }
                 
-                HorizontalDivider()
+                Divider()
                 
                 // 底部按钮
                 Row(
@@ -261,56 +264,30 @@ fun ExpenseFilterDialog(
     
     // 开始日期选择器
     if (showStartDatePicker) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = startDate?.toEpochDay()?.times(86400000L)
-        )
-        DatePickerDialog(
-            onDismissRequest = { showStartDatePicker = false },
-            confirmButton = {
-                TextButton(onClick = {
-                    datePickerState.selectedDateMillis?.let { millis ->
-                        startDate = LocalDate.ofEpochDay(millis / 86400000L)
-                    }
-                    showStartDatePicker = false
-                }) {
-                    Text(context.getString(R.string.confirm))
-                }
+        val initialStartMillis = startDate?.toEpochDay()?.times(86400000L)
+            ?: java.time.LocalDate.now().toEpochDay() * 86400000L
+        AppDatePickerDialog(
+            initialDateMillis = initialStartMillis,
+            onDateSelected = { millis ->
+                startDate = LocalDate.ofEpochDay(millis / 86400000L)
+                showStartDatePicker = false
             },
-            dismissButton = {
-                TextButton(onClick = { showStartDatePicker = false }) {
-                    Text(context.getString(R.string.cancel))
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
+            onDismiss = { showStartDatePicker = false }
+        )
     }
     
     // 结束日期选择器
     if (showEndDatePicker) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = endDate?.toEpochDay()?.times(86400000L)
-        )
-        DatePickerDialog(
-            onDismissRequest = { showEndDatePicker = false },
-            confirmButton = {
-                TextButton(onClick = {
-                    datePickerState.selectedDateMillis?.let { millis ->
-                        endDate = LocalDate.ofEpochDay(millis / 86400000L)
-                    }
-                    showEndDatePicker = false
-                }) {
-                    Text(context.getString(R.string.confirm))
-                }
+        val initialEndMillis = endDate?.toEpochDay()?.times(86400000L)
+            ?: java.time.LocalDate.now().toEpochDay() * 86400000L
+        AppDatePickerDialog(
+            initialDateMillis = initialEndMillis,
+            onDateSelected = { millis ->
+                endDate = LocalDate.ofEpochDay(millis / 86400000L)
+                showEndDatePicker = false
             },
-            dismissButton = {
-                TextButton(onClick = { showEndDatePicker = false }) {
-                    Text(context.getString(R.string.cancel))
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
+            onDismiss = { showEndDatePicker = false }
+        )
     }
 }
 
@@ -349,7 +326,7 @@ fun ExpenseTypeSelector(
                     Text(
                         text = "${context.getString(R.string.search_results_count, filteredTypes.size)}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colors.onSurfaceVariant
                     )
                 }
             }
@@ -392,7 +369,7 @@ fun ExpenseTypeSelector(
                         ) {
                             Text(
                                 text = context.getString(R.string.no_results_found),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colors.onSurfaceVariant
                             )
                         }
                     } else {

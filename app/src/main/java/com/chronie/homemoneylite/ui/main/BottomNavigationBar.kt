@@ -2,22 +2,21 @@
 
 import android.content.Context
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.InsertChart
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import com.chronie.homemoneylite.R
+import com.chronie.homemoneylite.ui.theme.*
 
 data class TabItemData(
     val icon: ImageVector,
@@ -49,16 +48,15 @@ fun BottomNavigationBar(
         )
     )
 
-    NavigationBar(
+    BottomNavigation(
         modifier = Modifier
-            .fillMaxWidth()
-            .navigationBarsPadding(),
-        containerColor = MaterialTheme.colorScheme.surface,
-        tonalElevation = 4.dp,
-        contentColor = MaterialTheme.colorScheme.onSurface
+            .fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.surface,
+        elevation = 4.dp,
+        contentColor = MaterialTheme.colors.onSurface
     ) {
         navigationItems.forEach { item ->
-            NavigationBarItem(
+            BottomNavigationItem(
                 selected = selectedTab == item.index,
                 onClick = { onTabChange(item.index) },
                 icon = {
@@ -71,13 +69,8 @@ fun BottomNavigationBar(
                     Text(text = item.label)
                 },
                 alwaysShowLabel = true,
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
-                    selectedTextColor = MaterialTheme.colorScheme.primary,
-                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    indicatorColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                selectedContentColor = MaterialTheme.colors.primary,
+                unselectedContentColor = MaterialTheme.colors.onSurfaceVariant
             )
         }
     }

@@ -7,8 +7,9 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material3.*
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -30,6 +31,8 @@ import com.chronie.homemoneylite.ui.expense.ExpenseTypeLocalizer
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
 import com.chronie.homemoneylite.ui.components.ExpressiveLinearProgressIndicator
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
+import com.chronie.homemoneylite.ui.components.AppDatePickerDialog
+import com.chronie.homemoneylite.ui.theme.*
 import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.YearMonth
@@ -38,7 +41,6 @@ import java.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ChartsScreen(
     context: Context,
@@ -54,8 +56,8 @@ fun ChartsScreen(
             // 顶部工具栏
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.surface,
-                tonalElevation = 3.dp
+                color = MaterialTheme.colors.surface,
+                elevation = 3.dp
             ) {
                 Row(
                     modifier = Modifier
@@ -108,7 +110,7 @@ fun ChartsScreen(
                         Text(
                             text = state.message,
                             style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.error
+                            color = MaterialTheme.colors.error
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(onClick = { viewModel.refresh() }) {
@@ -205,7 +207,6 @@ private enum class ChartType(val stringRes: Int) {
 /**
  * 图表选择下拉菜单
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ChartSelector(
     context: Context,
@@ -216,46 +217,46 @@ private fun ChartSelector(
     
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(16.dp)) {
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = it },
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
                 OutlinedTextField(
                     value = context.getString(selectedChart.stringRes),
                     onValueChange = {},
                     readOnly = true,
                     label = { Text(context.getString(R.string.select_chart)) },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor()
+                    trailingIcon = {
+                        IconButton(onClick = { expanded = !expanded }) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowDropDown,
+                                contentDescription = "Select chart"
+                            )
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
                 )
                 
-                ExposedDropdownMenu(
+                DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false }
                 ) {
                     ChartType.values().forEach { chartType ->
                         DropdownMenuItem(
-                            text = {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    RadioButton(
-                                        selected = selectedChart == chartType,
-                                        onClick = {
-                                            onChartSelected(chartType)
-                                            expanded = false
-                                        }
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(context.getString(chartType.stringRes))
-                                }
-                            },
                             onClick = {
                                 onChartSelected(chartType)
                                 expanded = false
                             }
-                        )
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                RadioButton(
+                                    selected = selectedChart == chartType,
+                                    onClick = {
+                                        onChartSelected(chartType)
+                                        expanded = false
+                                    }
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(context.getString(chartType.stringRes))
+                            }
+                        }
                     }
                 }
             }
@@ -280,7 +281,7 @@ private fun TimeRangeCard(
             Text(
                 text = "${formatDateByLocale(state.startDate.format(DateTimeFormatter.ISO_LOCAL_DATE), context.resources.configuration.locale.toLanguageTag())} - ${formatDateByLocale(state.endDate.format(DateTimeFormatter.ISO_LOCAL_DATE), context.resources.configuration.locale.toLanguageTag())}",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colors.onSurfaceVariant
             )
         }
     }
@@ -341,7 +342,7 @@ private fun StatisticItem(label: String, value: String) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colors.onSurfaceVariant
         )
         Text(
             text = value,
@@ -371,7 +372,7 @@ private fun TrendLineChartCard(
                 Text(
                     text = context.getString(R.string.no_data),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colors.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 32.dp)
                 )
             } else {
@@ -393,9 +394,9 @@ private fun HighQualityLineChart(
     currencyFormat: NumberFormat,
     modifier: Modifier = Modifier
 ) {
-    val primaryColor = MaterialTheme.colorScheme.primary
-    val textColor = MaterialTheme.colorScheme.onSurface
-    val gridColor = MaterialTheme.colorScheme.outlineVariant
+    val primaryColor = MaterialTheme.colors.primary
+    val textColor = MaterialTheme.colors.onSurface
+    val gridColor = MaterialTheme.colors.outlineVariant
     
     Canvas(modifier = modifier) {
         if (data.isEmpty()) return@Canvas
@@ -556,7 +557,7 @@ private fun CategoryBreakdownCard(
                 Text(
                     text = context.getString(R.string.no_data),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = MaterialTheme.colors.onSurfaceVariant,
                     modifier = Modifier.padding(vertical = 32.dp)
                 )
             } else {
@@ -596,8 +597,8 @@ private fun CategoryBarChart(
     currencyFormat: NumberFormat,
     modifier: Modifier = Modifier
 ) {
-    val textColor = MaterialTheme.colorScheme.onSurface
-    val gridColor = MaterialTheme.colorScheme.outlineVariant
+    val textColor = MaterialTheme.colors.onSurface
+    val gridColor = MaterialTheme.colors.outlineVariant
 
     Canvas(modifier = modifier) {
         if (categoryData.isEmpty()) return@Canvas
@@ -733,8 +734,8 @@ private fun CategoryItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp),
-            color = MaterialTheme.colorScheme.primary,
-            trackColor = MaterialTheme.colorScheme.surfaceVariant
+            color = MaterialTheme.colors.primary,
+            backgroundColor = MaterialTheme.colors.surfaceVariant
         )
         
         Spacer(modifier = Modifier.height(4.dp))
@@ -742,12 +743,12 @@ private fun CategoryItem(
         Text(
             text = "${currencyFormat.format(category.amount)} (${category.count} ${context.getString(R.string.records)})",
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colors.onSurfaceVariant
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun TimeRangeDialog(
     context: Context,
@@ -761,57 +762,70 @@ private fun TimeRangeDialog(
     
     var showCustomRangeBottomSheet by remember { mutableStateOf(false) }
     
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    LaunchedEffect(Unit) { sheetState.show() }
+    LaunchedEffect(sheetState.currentValue) {
+        if (sheetState.currentValue == ModalBottomSheetValue.Hidden) onDismiss()
+    }
     
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
+    ModalBottomSheetLayout(
         sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surface
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(
-                text = context.getString(R.string.select_time_range),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            
-            var expanded by remember { mutableStateOf(false) }
-            
-            ExposedDropdownMenuBox(
-                expanded = expanded,
-                onExpandedChange = { expanded = it },
-                modifier = Modifier.fillMaxWidth()
+        sheetShape = MaterialTheme.shapes.large,
+        sheetBackgroundColor = MaterialTheme.colors.surface,
+        sheetContent = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
             ) {
-                OutlinedTextField(
-                    value = getTimeRangeText(context, selectedTimeRange),
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text(context.getString(R.string.select_time_range)) },
-                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .menuAnchor()
+                Text(
+                    text = context.getString(R.string.select_time_range),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 16.dp)
                 )
                 
-                ExposedDropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    listOf(
-                        TimeRange.THIS_WEEK,
-                        TimeRange.THIS_MONTH,
-                        TimeRange.LAST_MONTH,
-                        TimeRange.THIS_QUARTER,
-                        TimeRange.THIS_YEAR,
-                        TimeRange.CUSTOM
-                    ).forEach { timeRange ->
-                        DropdownMenuItem(
-                            text = {
+                var expanded by remember { mutableStateOf(false) }
+                
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = getTimeRangeText(context, selectedTimeRange),
+                        onValueChange = {},
+                        readOnly = true,
+                        label = { Text(context.getString(R.string.select_time_range)) },
+                        trailingIcon = {
+                            IconButton(onClick = { expanded = !expanded }) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowDropDown,
+                                    contentDescription = "Select time range"
+                                )
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        listOf(
+                            TimeRange.THIS_WEEK,
+                            TimeRange.THIS_MONTH,
+                            TimeRange.LAST_MONTH,
+                            TimeRange.THIS_QUARTER,
+                            TimeRange.THIS_YEAR,
+                            TimeRange.CUSTOM
+                        ).forEach { timeRange ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    if (timeRange == TimeRange.CUSTOM) {
+                                        showCustomRangeBottomSheet = true
+                                    } else {
+                                        onTimeRangeSelected(timeRange)
+                                    }
+                                    expanded = false
+                                }
+                            ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -829,55 +843,47 @@ private fun TimeRangeDialog(
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(getTimeRangeText(context, timeRange))
                                 }
-                            },
-                            onClick = {
-                                if (timeRange == TimeRange.CUSTOM) {
-                                    showCustomRangeBottomSheet = true
-                                } else {
-                                    onTimeRangeSelected(timeRange)
-                                }
-                                expanded = false
                             }
+                        }
+                    }
+                }
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                if (selectedTimeRange == TimeRange.CUSTOM && customStartDate != null && customEndDate != null) {
+                    val start = customStartDate
+                    val end = customEndDate
+                    if (start != null && end != null) {
+                        val startDateString = start.format(DateTimeFormatter.ISO_LOCAL_DATE)
+                        val endDateString = end.format(DateTimeFormatter.ISO_LOCAL_DATE)
+                        Text(
+                            text = "${context.getString(R.string.expense_list_filter_start_date)} ${formatDateByLocale(startDateString, context.resources.configuration.locale.toLanguageTag())} ${context.getString(R.string.expense_list_filter_end_date)} ${formatDateByLocale(endDateString, context.resources.configuration.locale.toLanguageTag())}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colors.onSurfaceVariant
                         )
                     }
                 }
+                
+                Spacer(modifier = Modifier.height(16.dp))
             }
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            if (selectedTimeRange == TimeRange.CUSTOM && customStartDate != null && customEndDate != null) {
-                val start = customStartDate
-                val end = customEndDate
-                if (start != null && end != null) {
-                    val startDateString = start.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                    val endDateString = end.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                    Text(
-                        text = "${context.getString(R.string.expense_list_filter_start_date)} ${formatDateByLocale(startDateString, context.resources.configuration.locale.toLanguageTag())} ${context.getString(R.string.expense_list_filter_end_date)} ${formatDateByLocale(endDateString, context.resources.configuration.locale.toLanguageTag())}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-            
-            Spacer(modifier = Modifier.height(16.dp))
         }
-    }
-    
-    if (showCustomRangeBottomSheet) {
-        CustomRangeBottomSheet(
-            context = context,
-            initialStartDate = customStartDate ?: LocalDate.now().minusMonths(1),
-            initialEndDate = customEndDate ?: LocalDate.now(),
-            onDismiss = { showCustomRangeBottomSheet = false },
-            onConfirm = { startDate, endDate ->
-                viewModel.setCustomDateRange(startDate, endDate)
-                onTimeRangeSelected(TimeRange.CUSTOM)
-            }
-        )
+    ) {
+        if (showCustomRangeBottomSheet) {
+            CustomRangeBottomSheet(
+                context = context,
+                initialStartDate = customStartDate ?: LocalDate.now().minusMonths(1),
+                initialEndDate = customEndDate ?: LocalDate.now(),
+                onDismiss = { showCustomRangeBottomSheet = false },
+                onConfirm = { startDate, endDate ->
+                    viewModel.setCustomDateRange(startDate, endDate)
+                    onTimeRangeSelected(TimeRange.CUSTOM)
+                }
+            )
+        }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun CustomRangeBottomSheet(
     context: Context,
@@ -886,7 +892,7 @@ private fun CustomRangeBottomSheet(
     onDismiss: () -> Unit,
     onConfirm: (LocalDate, LocalDate) -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState()
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     val coroutineScope = rememberCoroutineScope()
     
     var startDate by remember { mutableStateOf(initialStartDate) }
@@ -894,151 +900,117 @@ private fun CustomRangeBottomSheet(
     var showStartDatePicker by remember { mutableStateOf(false) }
     var showEndDatePicker by remember { mutableStateOf(false) }
     
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
+    LaunchedEffect(Unit) { sheetState.show() }
+    LaunchedEffect(sheetState.currentValue) {
+        if (sheetState.currentValue == ModalBottomSheetValue.Hidden) onDismiss()
+    }
+    
+    ModalBottomSheetLayout(
         sheetState = sheetState,
-        containerColor = MaterialTheme.colorScheme.surface
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(
-                text = context.getString(R.string.custom_range),
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            
-            OutlinedTextField(
-                value = startDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
-                onValueChange = {},
-                readOnly = true,
-                label = { Text(context.getString(R.string.expense_list_filter_start_date)) },
-                trailingIcon = {
-                    IconButton(onClick = { showStartDatePicker = true }) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = context.getString(R.string.expense_list_filter_start_date)
-                        )
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            OutlinedTextField(
-                value = endDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
-                onValueChange = {},
-                readOnly = true,
-                label = { Text(context.getString(R.string.expense_list_filter_end_date)) },
-                trailingIcon = {
-                    IconButton(onClick = { showEndDatePicker = true }) {
-                        Icon(
-                            imageVector = Icons.Default.DateRange,
-                            contentDescription = context.getString(R.string.expense_list_filter_end_date)
-                        )
-                    }
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-            
-            Spacer(modifier = Modifier.height(24.dp))
-            
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+        sheetShape = MaterialTheme.shapes.large,
+        sheetBackgroundColor = MaterialTheme.colors.surface,
+        sheetContent = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
             ) {
-                OutlinedButton(
-                    onClick = {
-                        coroutineScope.launch {
-                            sheetState.hide()
-                            onDismiss()
+                Text(
+                    text = context.getString(R.string.custom_range),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                
+                OutlinedTextField(
+                    value = startDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text(context.getString(R.string.expense_list_filter_start_date)) },
+                    trailingIcon = {
+                        IconButton(onClick = { showStartDatePicker = true }) {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = context.getString(R.string.expense_list_filter_start_date)
+                            )
                         }
                     },
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(context.getString(R.string.cancel))
-                }
-                Button(
-                    onClick = {
-                        onConfirm(startDate, endDate)
-                        coroutineScope.launch {
-                            sheetState.hide()
-                            onDismiss()
+                    modifier = Modifier.fillMaxWidth()
+                )
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                OutlinedTextField(
+                    value = endDate.format(DateTimeFormatter.ISO_LOCAL_DATE),
+                    onValueChange = {},
+                    readOnly = true,
+                    label = { Text(context.getString(R.string.expense_list_filter_end_date)) },
+                    trailingIcon = {
+                        IconButton(onClick = { showEndDatePicker = true }) {
+                            Icon(
+                                imageVector = Icons.Default.DateRange,
+                                contentDescription = context.getString(R.string.expense_list_filter_end_date)
+                            )
                         }
                     },
-                    modifier = Modifier.weight(1f),
-                    enabled = !startDate.isAfter(endDate)
+                    modifier = Modifier.fillMaxWidth()
+                )
+                
+                Spacer(modifier = Modifier.height(24.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(context.getString(R.string.confirm))
+                    OutlinedButton(
+                        onClick = {
+                            coroutineScope.launch { sheetState.hide() }
+                        },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(context.getString(R.string.cancel))
+                    }
+                    Button(
+                        onClick = {
+                            onConfirm(startDate, endDate)
+                            coroutineScope.launch { sheetState.hide() }
+                        },
+                        modifier = Modifier.weight(1f),
+                        enabled = !startDate.isAfter(endDate)
+                    ) {
+                        Text(context.getString(R.string.confirm))
+                    }
                 }
             }
         }
+    ) {
+        // 自定义范围底部抽屉的主体内容（此处留空，筛选对话框位于抽屉外）
     }
     
     if (showStartDatePicker) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = startDate.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli()
-        )
-        
-        DatePickerDialog(
-            onDismissRequest = { showStartDatePicker = false },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        datePickerState.selectedDateMillis?.let { millis ->
-                            startDate = java.time.Instant.ofEpochMilli(millis)
-                                .atZone(java.time.ZoneId.systemDefault())
-                                .toLocalDate()
-                        }
-                        showStartDatePicker = false
-                    }
-                ) {
-                    Text(context.getString(R.string.confirm))
-                }
+        AppDatePickerDialog(
+            initialDateMillis = startDate.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            onDateSelected = { millis ->
+                startDate = java.time.Instant.ofEpochMilli(millis)
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate()
+                showStartDatePicker = false
             },
-            dismissButton = {
-                TextButton(onClick = { showStartDatePicker = false }) {
-                    Text(context.getString(R.string.cancel))
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
+            onDismiss = { showStartDatePicker = false }
+        )
     }
     
     if (showEndDatePicker) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = endDate.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli()
-        )
-        
-        DatePickerDialog(
-            onDismissRequest = { showEndDatePicker = false },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        datePickerState.selectedDateMillis?.let { millis ->
-                            endDate = java.time.Instant.ofEpochMilli(millis)
-                                .atZone(java.time.ZoneId.systemDefault())
-                                .toLocalDate()
-                        }
-                        showEndDatePicker = false
-                    }
-                ) {
-                    Text(context.getString(R.string.confirm))
-                }
+        AppDatePickerDialog(
+            initialDateMillis = endDate.atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            onDateSelected = { millis ->
+                endDate = java.time.Instant.ofEpochMilli(millis)
+                    .atZone(java.time.ZoneId.systemDefault())
+                    .toLocalDate()
+                showEndDatePicker = false
             },
-            dismissButton = {
-                TextButton(onClick = { showEndDatePicker = false }) {
-                    Text(context.getString(R.string.cancel))
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
+            onDismiss = { showEndDatePicker = false }
+        )
     }
 }
 

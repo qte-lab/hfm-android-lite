@@ -17,8 +17,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ContentTransform
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.EaseOutCubic
-import androidx.compose.animation.core.EaseInCubic
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
@@ -42,8 +41,10 @@ import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.material3.*
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import com.chronie.homemoneylite.ui.components.AppDatePickerDialog
+import com.chronie.homemoneylite.ui.theme.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,11 +58,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import androidx.compose.animation.ExperimentalAnimationApi
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
+
+private val EaseOutCubic = CubicBezierEasing(0.33f, 1f, 0.68f, 1f)
+private val EaseInCubic = CubicBezierEasing(0.32f, 0f, 0.67f, 0f)
 
 private enum class SettingsCategoryPage {
     FUNCTION,
@@ -83,7 +86,7 @@ private fun SettingsCategoryPage.icon(): ImageVector = when (this) {
     SettingsCategoryPage.DATA_SYNC -> Icons.Default.Storage
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SettingsScreen(
     context: Context,
@@ -111,8 +114,7 @@ fun SettingsScreen(
         ) { category ->
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.background,
-                tonalElevation = 0.dp
+                color = MaterialTheme.colors.background
             ) {
                 Row(
                     modifier = Modifier
@@ -183,7 +185,7 @@ fun SettingsScreen(
                     Text(
                         text = context.getString(R.string.settings_choose_category),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colors.onSurfaceVariant
                     )
 
                     listOf(
@@ -194,11 +196,11 @@ fun SettingsScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable { selectedCategoryName = categoryItem.name },
-                            color = MaterialTheme.colorScheme.surfaceContainerLow,
+                            color = MaterialTheme.colors.surfaceContainerLow,
                             shape = MaterialTheme.shapes.large,
                             border = BorderStroke(
                                 width = 1.dp,
-                                color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
+                                color = MaterialTheme.colors.outlineVariant.copy(alpha = 0.35f)
                             )
                         ) {
                             Row(
@@ -209,14 +211,14 @@ fun SettingsScreen(
                             ) {
                                 Surface(
                                     shape = CircleShape,
-                                    color = MaterialTheme.colorScheme.primaryContainer,
+                                    color = MaterialTheme.colors.primaryContainer,
                                     modifier = Modifier.size(44.dp)
                                 ) {
                                     Icon(
                                         imageVector = categoryItem.icon(),
                                         contentDescription = null,
                                         modifier = Modifier.padding(10.dp),
-                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                        tint = MaterialTheme.colors.onPrimaryContainer
                                     )
                                 }
 
@@ -230,7 +232,7 @@ fun SettingsScreen(
                                     Text(
                                         text = categoryItem.description(context),
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        color = MaterialTheme.colors.onSurfaceVariant
                                     )
                                 }
 
@@ -311,12 +313,10 @@ private fun SettingsCategorySection(
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        ),
+        backgroundColor = MaterialTheme.colors.surfaceContainerLow,
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
+            color = MaterialTheme.colors.outlineVariant.copy(alpha = 0.35f)
         )
     ) {
         Column(
@@ -328,14 +328,14 @@ private fun SettingsCategorySection(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colors.onSurface
                 )
                 description?.let {
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = it,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colors.onSurfaceVariant
                     )
                 }
             }
@@ -361,7 +361,7 @@ fun AppVersionInfo(context: Context) {
     Text(
         text = "Version $versionName ($versionCode)",
         style = MaterialTheme.typography.bodySmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        color = MaterialTheme.colors.onSurfaceVariant,
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 16.dp, bottom = 8.dp)
@@ -382,7 +382,7 @@ fun AISettingsSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { showApiKeyDialog = true },
-            color = MaterialTheme.colorScheme.surfaceVariant,
+            color = MaterialTheme.colors.surfaceVariant,
             shape = MaterialTheme.shapes.medium
         ) {
             Column(
@@ -403,14 +403,14 @@ fun AISettingsSection(
                         Text(
                             text = context.getString(R.string.settings_ai_api_key_description),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colors.onSurfaceVariant
                         )
                         if (apiKey.isNotEmpty()) {
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 text = context.getString(R.string.api_key_set, apiKey.take(8)),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.colors.primary
                             )
                         }
                     }
@@ -448,7 +448,7 @@ fun AISettingsSection(
                     Text(
                         text = context.getString(R.string.settings_ai_get_api_key),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .clickable {
                                 try {
@@ -501,7 +501,7 @@ fun BudgetSettingsSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { showBudgetDialog = true },
-            color = MaterialTheme.colorScheme.surfaceVariant,
+            color = MaterialTheme.colors.surfaceVariant,
             shape = MaterialTheme.shapes.medium
         ) {
             Column(
@@ -522,7 +522,7 @@ fun BudgetSettingsSection(
                         Text(
                             text = context.getString(R.string.budget_enable_description),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colors.onSurfaceVariant
                         )
                         
                         Spacer(modifier = Modifier.height(8.dp))
@@ -532,13 +532,13 @@ fun BudgetSettingsSection(
                             Text(
                                 text = "${context.getString(R.string.budget_enable_feature)}: " + context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), uiState.budget?.monthlyLimit ?: 0.0),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.primary
+                                color = MaterialTheme.colors.primary
                             )
                         } else {
                             Text(
                                 text = context.getString(R.string.budget_enable_title),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colors.onSurfaceVariant
                             )
                         }
                     }
@@ -565,7 +565,6 @@ fun BudgetSettingsSection(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DataImportExportSection(
     viewModel: SettingsViewModel,
@@ -594,8 +593,8 @@ fun DataImportExportSection(
     
     // 检查并请求权限
     fun checkAndRequestPermissions(onGranted: () -> Unit) {
-        val permissions = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            arrayOf(android.Manifest.permission.READ_MEDIA_IMAGES)
+        val permissions = if (Build.VERSION.SDK_INT >= 33) {
+            arrayOf("android.permission.READ_MEDIA_IMAGES")
         } else {
             arrayOf(
                 android.Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -628,7 +627,7 @@ fun DataImportExportSection(
         Text(
             text = context.getString(R.string.data_import_export_description),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colors.onSurfaceVariant,
             modifier = Modifier.padding(bottom = 16.dp)
         )
         
@@ -702,7 +701,7 @@ fun DataImportExportSection(
                                 showExportDialog = false
                                 viewModel.exportExpenses(null, null)
                             },
-                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        color = MaterialTheme.colors.surfaceVariant,
                         shape = MaterialTheme.shapes.medium
                     ) {
                         Text(
@@ -722,7 +721,7 @@ fun DataImportExportSection(
                                 showExportDialog = false
                                 showDateRangeDialog = true
                             },
-                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        color = MaterialTheme.colors.surfaceVariant,
                         shape = MaterialTheme.shapes.medium
                     ) {
                         Text(
@@ -763,7 +762,7 @@ fun DataImportExportSection(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { showStartDatePicker = true },
-                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        color = MaterialTheme.colors.surfaceVariant,
                         shape = MaterialTheme.shapes.medium
                     ) {
                         Text(
@@ -785,7 +784,7 @@ fun DataImportExportSection(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { showEndDatePicker = true },
-                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        color = MaterialTheme.colors.surfaceVariant,
                         shape = MaterialTheme.shapes.medium
                     ) {
                         Text(
@@ -797,59 +796,45 @@ fun DataImportExportSection(
                 
                 // 日期选择器
                 if (showStartDatePicker) {
-                    val datePickerState = androidx.compose.material3.rememberDatePickerState()
-                    androidx.compose.material3.DatePickerDialog(
-                        onDismissRequest = { showStartDatePicker = false },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    datePickerState.selectedDateMillis?.let { millis ->
-                                        startDate = java.time.Instant.ofEpochMilli(millis)
-                                            .atZone(java.time.ZoneId.systemDefault())
-                                            .toLocalDate()
-                                    }
-                                    showStartDatePicker = false
-                                }
-                            ) {
-                                Text(context.getString(R.string.confirm))
-                            }
+                    val initialStartMillis = startDate
+                        ?.atStartOfDay(java.time.ZoneId.systemDefault())
+                        ?.toInstant()
+                        ?.toEpochMilli()
+                        ?: java.time.LocalDate.now()
+                            .atStartOfDay(java.time.ZoneId.systemDefault())
+                            .toInstant()
+                            .toEpochMilli()
+                    AppDatePickerDialog(
+                        initialDateMillis = initialStartMillis,
+                        onDateSelected = { millis ->
+                            startDate = java.time.Instant.ofEpochMilli(millis)
+                                .atZone(java.time.ZoneId.systemDefault())
+                                .toLocalDate()
+                            showStartDatePicker = false
                         },
-                        dismissButton = {
-                            TextButton(onClick = { showStartDatePicker = false }) {
-                                Text(context.getString(R.string.cancel))
-                            }
-                        }
-                    ) {
-                        androidx.compose.material3.DatePicker(state = datePickerState)
-                    }
+                        onDismiss = { showStartDatePicker = false }
+                    )
                 }
                 
                 if (showEndDatePicker) {
-                    val datePickerState = androidx.compose.material3.rememberDatePickerState()
-                    androidx.compose.material3.DatePickerDialog(
-                        onDismissRequest = { showEndDatePicker = false },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    datePickerState.selectedDateMillis?.let { millis ->
-                                        endDate = java.time.Instant.ofEpochMilli(millis)
-                                            .atZone(java.time.ZoneId.systemDefault())
-                                            .toLocalDate()
-                                    }
-                                    showEndDatePicker = false
-                                }
-                            ) {
-                                Text(context.getString(R.string.confirm))
-                            }
+                    val initialEndMillis = endDate
+                        ?.atStartOfDay(java.time.ZoneId.systemDefault())
+                        ?.toInstant()
+                        ?.toEpochMilli()
+                        ?: java.time.LocalDate.now()
+                            .atStartOfDay(java.time.ZoneId.systemDefault())
+                            .toInstant()
+                            .toEpochMilli()
+                    AppDatePickerDialog(
+                        initialDateMillis = initialEndMillis,
+                        onDateSelected = { millis ->
+                            endDate = java.time.Instant.ofEpochMilli(millis)
+                                .atZone(java.time.ZoneId.systemDefault())
+                                .toLocalDate()
+                            showEndDatePicker = false
                         },
-                        dismissButton = {
-                            TextButton(onClick = { showEndDatePicker = false }) {
-                                Text(context.getString(R.string.cancel))
-                            }
-                        }
-                    ) {
-                        androidx.compose.material3.DatePicker(state = datePickerState)
-                    }
+                        onDismiss = { showEndDatePicker = false }
+                    )
                 }
             },
             confirmButton = {
@@ -895,7 +880,7 @@ fun SyncSection(
     Column {
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surfaceVariant,
+            color = MaterialTheme.colors.surfaceVariant,
             shape = MaterialTheme.shapes.medium
         ) {
             Column(
@@ -929,11 +914,11 @@ fun SyncSection(
                         style = MaterialTheme.typography.bodyMedium,
                         color = when (syncStatus) {
                             com.chronie.homemoneylite.domain.model.SyncStatus.SUCCESS -> 
-                                MaterialTheme.colorScheme.primary
+                                MaterialTheme.colors.primary
                             com.chronie.homemoneylite.domain.model.SyncStatus.FAILED,
                             com.chronie.homemoneylite.domain.model.SyncStatus.CONFLICT -> 
-                                MaterialTheme.colorScheme.error
-                            else -> MaterialTheme.colorScheme.onSurfaceVariant
+                                MaterialTheme.colors.error
+                            else -> MaterialTheme.colors.onSurfaceVariant
                         }
                     )
                 }
@@ -970,7 +955,7 @@ fun SyncSection(
                             }
                         } ?: context.getString(R.string.sync_never),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colors.onSurfaceVariant
                     )
                 }
                 
@@ -990,9 +975,9 @@ fun SyncSection(
                         text = pendingSyncCount.toString(),
                         style = MaterialTheme.typography.bodyMedium,
                         color = if (pendingSyncCount > 0) {
-                            MaterialTheme.colorScheme.primary
+                            MaterialTheme.colors.primary
                         } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
+                            MaterialTheme.colors.onSurfaceVariant
                         }
                     )
                 }
@@ -1310,12 +1295,10 @@ private fun OpenSourceLicensesInline(context: Context) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow
-        ),
+        backgroundColor = MaterialTheme.colors.surfaceContainerLow,
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f)
+            color = MaterialTheme.colors.outlineVariant.copy(alpha = 0.35f)
         )
     ) {
         Column(
@@ -1326,7 +1309,7 @@ private fun OpenSourceLicensesInline(context: Context) {
             Text(
                 text = context.getString(R.string.open_source_licenses),
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
+                color = MaterialTheme.colors.onSurface,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
@@ -1355,14 +1338,14 @@ private fun OpenSourceLicensesInline(context: Context) {
                             text = buildAnnotatedString {
                                 withStyle(
                                     SpanStyle(
-                                        color = MaterialTheme.colorScheme.primary,
+                                        color = MaterialTheme.colors.primary,
                                         fontWeight = FontWeight.Bold
                                     )
                                 ) {
                                     append("$license: ")
                                 }
                                 withStyle(
-                                    SpanStyle(color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                    SpanStyle(color = MaterialTheme.colors.onSurfaceVariant)
                                 ) {
                                     append(libs.joinToString(separator = "、") { it.name })
                                 }
@@ -1374,7 +1357,7 @@ private fun OpenSourceLicensesInline(context: Context) {
                             imageVector = Icons.Filled.OpenInNew,
                             contentDescription = null,
                             modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colors.onSurfaceVariant
                         )
                     }
                 }

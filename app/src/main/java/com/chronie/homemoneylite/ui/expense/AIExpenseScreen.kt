@@ -10,15 +10,17 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.*
+import androidx.compose.material.*
+import com.chronie.homemoneylite.ui.components.AppDatePickerDialog
+import com.chronie.homemoneylite.ui.theme.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.clickable
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
 import com.chronie.homemoneylite.ui.components.CircularIconButton
@@ -46,7 +48,6 @@ import android.content.Intent
 /**
  * AI 智能记录界面
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AIExpenseScreen(
     context: android.content.Context,
@@ -294,15 +295,13 @@ fun AIExpenseScreen(
                 title = { Text(context.getString(R.string.ai_expense_title)) },
                 navigationIcon = {
                     CircularIconButton(onClick = onNavigateBack, modifier = Modifier.padding(start = 8.dp, end = 4.dp)) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = context.getString(R.string.back))
+                        Icon(Icons.Filled.ArrowBack, contentDescription = context.getString(R.string.back))
                     }
                 },
                 actions = {
                     Box(modifier = Modifier.padding(end = 8.dp))
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
+                backgroundColor = MaterialTheme.colors.background
             )
         }
     ) { paddingValues ->
@@ -387,7 +386,7 @@ fun AIExpenseScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = error,
-                    color = MaterialTheme.colorScheme.error,
+                    color = MaterialTheme.colors.error,
                     style = MaterialTheme.typography.bodySmall
                 )
             }
@@ -398,7 +397,6 @@ fun AIExpenseScreen(
 /**
  * 图片选择区域
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ImageSelectionSection(
     context: android.content.Context,
@@ -431,41 +429,39 @@ private fun ImageSelectionSection(
                     onDismissRequest = { showDropdown = false }
                 ) {
                     DropdownMenuItem(
-                        text = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    Icons.Default.CameraAlt,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(context.getString(R.string.ai_expense_take_photo))
-                            }
-                        },
                         onClick = {
                             showDropdown = false
                             onCameraSelected()
                         }
-                    )
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Default.CameraAlt,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                                tint = MaterialTheme.colors.primary
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(context.getString(R.string.ai_expense_take_photo))
+                        }
+                    }
                     DropdownMenuItem(
-                        text = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    Icons.Default.PhotoLibrary,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(20.dp),
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(context.getString(R.string.ai_expense_choose_from_gallery))
-                            }
-                        },
                         onClick = {
                             showDropdown = false
                             onGallerySelected()
                         }
-                    )
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                Icons.Default.PhotoLibrary,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                                tint = MaterialTheme.colors.primary
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(context.getString(R.string.ai_expense_choose_from_gallery))
+                        }
+                    }
                 }
             }
         }
@@ -485,14 +481,12 @@ private fun ImageSelectionSection(
             }
         } else {
             Card(
-                onClick = { showDropdown = true },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                ),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+                    .height(120.dp)
+                    .clickable { showDropdown = true },
+                backgroundColor = MaterialTheme.colors.surfaceVariant,
+                border = BorderStroke(1.dp, MaterialTheme.colors.outline)
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -503,12 +497,12 @@ private fun ImageSelectionSection(
                             Icons.Default.Add,
                             contentDescription = null,
                             modifier = Modifier.size(48.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            tint = MaterialTheme.colors.onSurfaceVariant
                         )
                         Text(
                             context.getString(R.string.ai_expense_click_to_add),
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colors.onSurfaceVariant
                         )
                     }
                 }
@@ -530,8 +524,8 @@ private fun ImagePreviewCard(
         modifier = Modifier.size(100.dp)
     ) {
         Box {
-            AsyncImage(
-                model = imageUri,
+            Image(
+                painter = rememberImagePainter(imageUri),
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()
@@ -549,7 +543,7 @@ private fun ImagePreviewCard(
                 Icon(
                     Icons.Default.Close,
                     contentDescription = "删除",
-                    tint = MaterialTheme.colorScheme.error
+                    tint = MaterialTheme.colors.error
                 )
             }
         }
@@ -644,7 +638,6 @@ private fun RecognizedRecordsSection(
 /**
  * 记录编辑卡片
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RecordEditCard(
     context: android.content.Context,
@@ -656,12 +649,10 @@ private fun RecordEditCard(
     
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = if (record.isValid) 
-                MaterialTheme.colorScheme.surface 
-            else 
-                MaterialTheme.colorScheme.errorContainer
-        )
+        backgroundColor = if (record.isValid) 
+            MaterialTheme.colors.surface 
+        else 
+            MaterialTheme.colors.errorContainer
     ) {
         Column(
             modifier = Modifier
@@ -680,12 +671,12 @@ private fun RecordEditCard(
                     Text(
                         text = context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), record.amount),
                         style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colors.primary
                     )
                     Text(
                         text = record.date,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colors.onSurfaceVariant
                     )
                     if (record.remark.isNotBlank()) {
                         Text(
@@ -698,7 +689,7 @@ private fun RecordEditCard(
                         Text(
                             text = context.getString(R.string.ai_expense_edited),
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.secondary,
+                            color = MaterialTheme.colors.secondary,
                             modifier = Modifier.padding(top = 4.dp)
                         )
                     }
@@ -712,7 +703,7 @@ private fun RecordEditCard(
                         Icon(
                             Icons.Default.Delete,
                             contentDescription = context.getString(R.string.ai_expense_delete_record),
-                            tint = MaterialTheme.colorScheme.error
+                            tint = MaterialTheme.colors.error
                         )
                     }
                 }
@@ -736,7 +727,6 @@ private fun RecordEditCard(
 /**
  * 记录编辑对话框
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun RecordEditDialog(
     context: android.content.Context,
@@ -775,7 +765,7 @@ private fun RecordEditDialog(
                     onValueChange = { amount = it },
                     label = { Text(context.getString(R.string.ai_expense_amount)) },
                     modifier = Modifier.fillMaxWidth(),
-                    prefix = { Text(context.getString(R.string.currency_symbol)) }
+                    leadingIcon = { Text(context.getString(R.string.currency_symbol)) }
                 )
                 
                 // 日期选择
@@ -834,32 +824,15 @@ private fun RecordEditDialog(
     }
     
     if (showDatePicker) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = selectedDate.toEpochDay() * 24 * 60 * 60 * 1000
-        )
-        
-        DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        datePickerState.selectedDateMillis?.let { millis ->
-                            selectedDate = java.time.LocalDate.ofEpochDay(millis / (24 * 60 * 60 * 1000))
-                        }
-                        showDatePicker = false
-                    }
-                ) {
-                    Text(context.getString(R.string.confirm))
-                }
+        val initialMillis = selectedDate.toEpochDay() * 86400000L
+        AppDatePickerDialog(
+            initialDateMillis = initialMillis,
+            onDateSelected = { millis ->
+                selectedDate = java.time.LocalDate.ofEpochDay(millis / (24 * 60 * 60 * 1000))
+                showDatePicker = false
             },
-            dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) {
-                    Text(context.getString(R.string.cancel))
-                }
-            }
-        ) {
-            DatePicker(state = datePickerState)
-        }
+            onDismiss = { showDatePicker = false }
+        )
     }
 }
 
@@ -897,7 +870,7 @@ private fun ExpenseTypePickerDialog(
                     Text(
                         text = "${context.getString(R.string.search_results_count, filteredTypes.size)}",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colors.onSurfaceVariant
                     )
                 }
             }
@@ -918,8 +891,7 @@ private fun ExpenseTypePickerDialog(
                             }
                         }
                     },
-                    singleLine = true,
-                    colors = OutlinedTextFieldDefaults.colors()
+                    singleLine = true
                 )
                 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -934,7 +906,7 @@ private fun ExpenseTypePickerDialog(
                     ) {
                         Text(
                             text = context.getString(R.string.no_results_found),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colors.onSurfaceVariant
                         )
                     }
                 } else {
@@ -951,9 +923,9 @@ private fun ExpenseTypePickerDialog(
                                     text = ExpenseTypeLocalizer.getLocalizedName(context, type),
                                     modifier = Modifier.fillMaxWidth(),
                                     color = if (type == selectedType)
-                                        MaterialTheme.colorScheme.primary
+                                        MaterialTheme.colors.primary
                                     else
-                                        MaterialTheme.colorScheme.onSurface
+                                        MaterialTheme.colors.onSurface
                                 )
                             }
                         }

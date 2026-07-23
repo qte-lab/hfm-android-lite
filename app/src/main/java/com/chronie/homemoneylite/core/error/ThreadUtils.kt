@@ -1,6 +1,5 @@
 package com.chronie.homemoneylite.core.error
 
-import android.os.Build
 import android.os.Looper
 
 /**
@@ -13,13 +12,9 @@ object ThreadUtils {
      * 获取线程ID
      * 兼容Android 14以下版本
      */
+    @Suppress("DEPRECATION")
     fun getThreadId(thread: Thread): Long {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            thread.threadId()
-        } else {
-            @Suppress("DEPRECATION")
-            thread.id
-        }
+        return thread.id
     }
 
     /**

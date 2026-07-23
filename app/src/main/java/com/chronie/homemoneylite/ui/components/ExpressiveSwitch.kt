@@ -4,11 +4,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.Switch
+import androidx.compose.material.SwitchDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.chronie.homemoneylite.ui.theme.*
 
 @Composable
 fun ExpressiveSwitch(
@@ -21,13 +22,6 @@ fun ExpressiveSwitch(
         checked = checked,
         onCheckedChange = onCheckedChange,
         modifier = modifier,
-        enabled = enabled,
-        thumbContent = {
-            Icon(
-                imageVector = if (checked) Icons.Filled.Check else Icons.Filled.Close,
-                contentDescription = null,
-                modifier = Modifier.size(SwitchDefaults.IconSize)
-            )
-        }
+        enabled = enabled
     )
 }

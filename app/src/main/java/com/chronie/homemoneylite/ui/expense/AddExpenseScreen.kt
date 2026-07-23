@@ -6,11 +6,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.*
+import com.chronie.homemoneylite.ui.components.AppDatePickerDialog
+import com.chronie.homemoneylite.ui.theme.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +33,6 @@ import java.time.format.DateTimeFormatter
 /**
  * 添加支出界面
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddExpenseScreen(
     context: android.content.Context,
@@ -66,7 +68,7 @@ fun AddExpenseScreen(
                 },
                 navigationIcon = {
                     CircularIconButton(onClick = onNavigateBack, modifier = Modifier.padding(start = 8.dp, end = 4.dp)) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = context.getString(R.string.back))
+                        Icon(Icons.Filled.ArrowBack, contentDescription = context.getString(R.string.back))
                     }
                 },
                 actions = {
@@ -91,9 +93,7 @@ fun AddExpenseScreen(
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
+                backgroundColor = MaterialTheme.colors.background
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -111,7 +111,7 @@ fun AddExpenseScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable(onClick = onNavigateToAI),
-                color = MaterialTheme.colorScheme.primaryContainer,
+                color = MaterialTheme.colors.primaryContainer,
                 shape = MaterialTheme.shapes.medium
             ) {
                 Row(
@@ -128,30 +128,30 @@ fun AddExpenseScreen(
                         Icon(
                             Icons.Default.Star,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = MaterialTheme.colors.primary
                         )
                         Column {
                             Text(
                                 text = context.getString(R.string.ai_expense_title),
                                 style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                                color = MaterialTheme.colors.onPrimaryContainer
                             )
                             Text(
                                 text = context.getString(R.string.ai_expense_entry_description),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                                color = MaterialTheme.colors.onPrimaryContainer.copy(alpha = 0.7f)
                             )
                         }
                     }
                     Text(
                         text = ">",
                         style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colors.primary
                     )
                 }
             }
 
-            HorizontalDivider()
+            Divider()
 
             // 类型选择
             ExpenseTypeDropdown(
@@ -213,7 +213,6 @@ fun AddExpenseScreen(
 /**
  * 类型选择下拉菜单 - 支持搜索功能
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseTypeDropdown(
     selectedType: ExpenseType?,
@@ -251,10 +250,7 @@ fun ExpenseTypeDropdown(
         )
         Spacer(modifier = Modifier.height(8.dp))
         
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = it }
-        ) {
+        Box {
             OutlinedTextField(
                 value = if (selectedType != null && !expanded) {
                     ExpenseTypeLocalizer.getLocalizedName(context, selectedType)
@@ -265,55 +261,56 @@ fun ExpenseTypeDropdown(
                 } else {
                     ""
                 },
-                onValueChange = { 
+                onValueChange = {
                     searchQuery = it
                     if (!expanded) expanded = true
                 },
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .menuAnchor(),
+                    .fillMaxWidth(),
                 placeholder = { Text(context.getString(R.string.add_expense_type_hint)) },
-                leadingIcon = { 
-                    Icon(Icons.Default.Search, contentDescription = null) 
+                leadingIcon = {
+                    Icon(Icons.Default.Search, contentDescription = null)
                 },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowDropDown,
+                        contentDescription = null,
+                        modifier = Modifier.clickable { expanded = !expanded }
+                    )
+                },
                 isError = error != null,
                 singleLine = true
             )
-            
-            ExposedDropdownMenu(
-                modifier = Modifier.heightIn(max = 280.dp),
+
+            DropdownMenu(
                 expanded = expanded,
-                onDismissRequest = { expanded = false }
+                onDismissRequest = { expanded = false },
+                modifier = Modifier.heightIn(max = 280.dp)
             ) {
                 if (filteredTypes.isEmpty()) {
                     DropdownMenuItem(
-                        text = { 
-                            Text(
-                                context.getString(R.string.no_results_found),
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            ) 
-                        },
                         onClick = { expanded = false },
                         enabled = false
-                    )
+                    ) {
+                        Text(
+                            context.getString(R.string.no_results_found),
+                            color = MaterialTheme.colors.onSurfaceVariant
+                        )
+                    }
                 } else {
                     filteredTypes.forEach { type ->
                         DropdownMenuItem(
-                            text = { 
-                                Text(
-                                    ExpenseTypeLocalizer.getLocalizedName(context, type),
-                                    fontWeight = if (type == selectedType) FontWeight.Bold else FontWeight.Normal
-                                ) 
-                            },
                             onClick = {
                                 onTypeSelected(type)
                                 searchQuery = ""
                                 expanded = false
-                            },
-                            contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
-                        )
+                            }
+                        ) {
+                            Text(
+                                ExpenseTypeLocalizer.getLocalizedName(context, type),
+                                fontWeight = if (type == selectedType) FontWeight.Bold else FontWeight.Normal
+                            )
+                        }
                     }
                 }
             }
@@ -325,7 +322,7 @@ fun ExpenseTypeDropdown(
                     "TYPE_REQUIRED" -> context.getString(R.string.add_expense_validation_type_required)
                     else -> error
                 },
-                color = MaterialTheme.colorScheme.error,
+                color = MaterialTheme.colors.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(start = 16.dp, top = 4.dp)
             )
@@ -354,8 +351,8 @@ fun ExpenseAmountField(
             onValueChange = onAmountChange,
             modifier = Modifier.fillMaxWidth(),
             placeholder = { Text(context.getString(R.string.add_expense_amount_hint)) },
-            prefix = { Text(context.getString(R.string.currency_symbol) + " ") },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+            leadingIcon = { Text(context.getString(R.string.currency_symbol) + " ") },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             singleLine = true,
             isError = error != null
         )
@@ -366,7 +363,7 @@ fun ExpenseAmountField(
                     "AMOUNT_INVALID" -> context.getString(R.string.add_expense_validation_amount_invalid)
                     else -> error
                 },
-                color = MaterialTheme.colorScheme.error,
+                color = MaterialTheme.colors.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(start = 16.dp, top = 4.dp)
             )
@@ -377,7 +374,6 @@ fun ExpenseAmountField(
 /**
  * 日期选择字段
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseDateField(
     selectedDate: LocalDate,
@@ -393,9 +389,11 @@ fun ExpenseDateField(
             style = MaterialTheme.typography.labelLarge
         )
         Spacer(modifier = Modifier.height(8.dp))
-        OutlinedCard(
-            onClick = onClick,
-            modifier = Modifier.fillMaxWidth()
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick),
+            backgroundColor = MaterialTheme.colors.surface
         ) {
             Box(
                 modifier = Modifier
@@ -414,7 +412,7 @@ fun ExpenseDateField(
                     "DATE_REQUIRED" -> context.getString(R.string.add_expense_validation_date_required)
                     else -> error
                 },
-                color = MaterialTheme.colorScheme.error,
+                color = MaterialTheme.colors.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(start = 16.dp, top = 4.dp)
             )
@@ -452,7 +450,6 @@ fun ExpenseRemarkField(
 /**
  * 日期选择器对话框
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseDatePickerDialog(
     context: android.content.Context,
@@ -460,41 +457,14 @@ fun ExpenseDatePickerDialog(
     onDismiss: () -> Unit,
     onDateSelected: (LocalDate) -> Unit
 ) {
-    val datePickerState = rememberDatePickerState(
-        initialSelectedDateMillis = initialDate.toEpochDay() * 24 * 60 * 60 * 1000
+    val initialMillis = initialDate.toEpochDay() * 86400000L
+
+    AppDatePickerDialog(
+        initialDateMillis = initialMillis,
+        onDateSelected = { millis ->
+            val date = LocalDate.ofEpochDay(millis / (24 * 60 * 60 * 1000))
+            onDateSelected(date)
+        },
+        onDismiss = onDismiss
     )
-
-    val surfaceColor = MaterialTheme.colorScheme.surface
-
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    datePickerState.selectedDateMillis?.let { millis ->
-                        val date = LocalDate.ofEpochDay(millis / (24 * 60 * 60 * 1000))
-                        onDateSelected(date)
-                    }
-                }
-            ) {
-                Text(context.getString(R.string.confirm))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(context.getString(R.string.cancel))
-            }
-        },
-        shape = androidx.compose.ui.graphics.RectangleShape,
-        colors = DatePickerDefaults.colors(
-            containerColor = surfaceColor
-        )
-    ) {
-        DatePicker(
-            state = datePickerState,
-            colors = DatePickerDefaults.colors(
-                containerColor = surfaceColor
-            )
-        )
-    }
 }

@@ -5,7 +5,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material3.*
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,11 +16,11 @@ import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.domain.model.Budget
 import com.chronie.homemoneylite.ui.components.ExpressiveSwitch
 import com.chronie.homemoneylite.ui.components.CircularIconButton
+import com.chronie.homemoneylite.ui.theme.*
 
 /**
  * 预算设置对话框
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BudgetSettingsDialog(
     context: android.content.Context,
@@ -90,7 +90,7 @@ fun BudgetSettingsDialog(
                         },
                         label = { Text(context.getString(R.string.budget_monthly_limit)) },
                         placeholder = { Text("0.00") },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true,
                         modifier = Modifier.weight(1f),
                         enabled = isEnabled,
@@ -136,10 +136,7 @@ fun BudgetSettingsDialog(
                         singleLine = true,
                         modifier = Modifier.weight(1f),
                         enabled = isEnabled,
-                        isError = showError,
-                        supportingText = {
-                            Text(context.getString(R.string.budget_warning_threshold_hint))
-                        }
+                        isError = showError
                     )
                     CircularIconButton(
                         onClick = {
@@ -157,7 +154,7 @@ fun BudgetSettingsDialog(
                 if (showError) {
                     Text(
                         text = errorMessage,
-                        color = MaterialTheme.colorScheme.error,
+                        color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.bodySmall
                     )
                 }

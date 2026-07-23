@@ -1,10 +1,6 @@
 package com.chronie.homemoneylite.ui.expense
 
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,10 +10,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.*
-
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -30,6 +23,8 @@ import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.domain.model.Expense
 import com.chronie.homemoneylite.ui.budget.BudgetCard
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
+import com.chronie.homemoneylite.ui.components.PullToRefreshBox
+import com.chronie.homemoneylite.ui.theme.*
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlinx.coroutines.delay
@@ -39,7 +34,6 @@ import kotlinx.coroutines.launch
 /**
  * 支出列表界面
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpenseListScreen(
     context: android.content.Context,
@@ -55,8 +49,6 @@ fun ExpenseListScreen(
     var showMoreMenu by remember { mutableStateOf(false) }
     var isRefreshing by remember { mutableStateOf(false) }
     var budgetRefreshTrigger by remember { mutableStateOf(0) }
-    
-    val pullRefreshState = rememberPullToRefreshState()
     
     // 处理刷新请求
     LaunchedEffect(shouldRefresh) {
@@ -81,13 +73,12 @@ fun ExpenseListScreen(
             isRefreshing = false
         }
     }
-    
     Box(modifier = Modifier.fillMaxSize()) {
         // 顶部工具栏 - 固定在页面顶部，不随内容滚动
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surface,
-            tonalElevation = 3.dp
+            color = MaterialTheme.colors.surface,
+            elevation = 3.dp
         ) {
             Row(
                 modifier = Modifier
@@ -115,19 +106,21 @@ fun ExpenseListScreen(
                         onDismissRequest = { showMoreMenu = false }
                     ) {
                         DropdownMenuItem(
-                            text = { Text(context.getString(R.string.common_filter)) },
                             onClick = {
                                 showMoreMenu = false
                                 showFilterDialog = true
                             }
-                        )
+                        ) {
+                            Text(context.getString(R.string.common_filter))
+                        }
                         DropdownMenuItem(
-                            text = { Text(context.getString(R.string.expense_list_clear_filters)) },
                             onClick = {
                                 showMoreMenu = false
                                 viewModel.resetFilters()
                             }
-                        )
+                        ) {
+                            Text(context.getString(R.string.expense_list_clear_filters))
+                        }
                     }
                 }
             }
@@ -182,7 +175,7 @@ fun ExpenseListScreen(
                             Text(
                                 text = context.getString(R.string.expense_list_empty_description),
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colors.onSurfaceVariant
                             )
                         }
                     }
@@ -190,7 +183,7 @@ fun ExpenseListScreen(
                 else -> {
                     val listState = rememberLazyListState()
                     val groupedExpenses = uiState.groupedExpenses
-                    var lastLoadTime by remember { mutableLongStateOf(0L) }
+                    var lastLoadTime by remember { mutableStateOf(0L) }
                     
                     // 改进的滚动检测：仅当真正接近底部时才加载更多
                     LaunchedEffect(listState, uiState.hasMore, uiState.isLoading) {
@@ -217,7 +210,6 @@ fun ExpenseListScreen(
                     PullToRefreshBox(
                         isRefreshing = isRefreshing,
                         onRefresh = onRefresh,
-                        state = pullRefreshState,
                         modifier = Modifier.fillMaxSize()
                     ) {
                         LazyColumn(
@@ -300,12 +292,13 @@ fun ExpenseListScreen(
                 }
             }
         }
-    }   
+    }
+        
         // 浮动按钮
         FloatingActionButton(
             onClick = onNavigateToAddExpense,
-            containerColor = MaterialTheme.colorScheme.primary,
-            contentColor = MaterialTheme.colorScheme.onPrimary,
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(16.dp)
@@ -354,19 +347,19 @@ fun ExpenseDateHeader(
                 text = displayDate,
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colors.onSurface
             )
             Text(
                 text = context.getString(R.string.expense_stats_count) + ": $count",
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colors.onSurfaceVariant
             )
         }
         Text(
             text = "-" + context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), totalAmount),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.error
+            color = MaterialTheme.colors.error
         )
     }
 }
@@ -382,9 +375,7 @@ fun ExpenseStatisticsCard(
 ) {
     Card(
         modifier = modifier,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
+        backgroundColor = MaterialTheme.colors.primaryContainer
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -433,13 +424,13 @@ fun StatisticItem(
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+            color = MaterialTheme.colors.onPrimaryContainer.copy(alpha = 0.7f)
         )
         Text(
             text = value,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = MaterialTheme.colors.onPrimaryContainer
         )
     }
 }
@@ -447,7 +438,7 @@ fun StatisticItem(
 /**
  * 长按触发的支出列表项
  */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun LongPressExpenseItem(
     expense: Expense,
@@ -458,12 +449,20 @@ fun LongPressExpenseItem(
 ) {
     // 底部托盘菜单显示状态
     val showBottomSheetMenu = remember { mutableStateOf(false) }
-    val bottomSheetState = rememberModalBottomSheetState()
+    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
     
     // 弹窗状态 - 第一次确认
     val showFirstConfirmDialog = remember { mutableStateOf(false) }
     // 弹窗状态 - 第二次确认
     val showSecondConfirmDialog = remember { mutableStateOf(false) }
+    
+    // 同步显隐到 MD2 底部抽屉状态
+    LaunchedEffect(showBottomSheetMenu.value) {
+        if (showBottomSheetMenu.value) bottomSheetState.show() else bottomSheetState.hide()
+    }
+    LaunchedEffect(bottomSheetState.currentValue) {
+        if (bottomSheetState.currentValue == ModalBottomSheetValue.Hidden) showBottomSheetMenu.value = false
+    }
     
     // 处理第一次确认
     fun handleFirstConfirm() {
@@ -493,163 +492,161 @@ fun LongPressExpenseItem(
     // 使用传递的context来获取本地化字符串
     val typeDisplayName = ExpenseTypeLocalizer.getLocalizedName(context, expense.type)
     
-    Box(modifier = modifier.fillMaxWidth()) {
-        // 支出列表项 - 添加长按检测
-        ExpenseListItem(
-            expense = expense,
-            context = context,
-            modifier = Modifier
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onLongPress = {
-                            showBottomSheetMenu.value = true
-                        }
-                    )
-                }
-        )
-        
-        // 底部托盘菜单 - 使用ModalBottomSheet
-        if (showBottomSheetMenu.value) {
-            ModalBottomSheet(
-                onDismissRequest = { showBottomSheetMenu.value = false },
-                sheetState = bottomSheetState,
-                contentColor = MaterialTheme.colorScheme.onSurface,
-                containerColor = MaterialTheme.colorScheme.surface,
-                dragHandle = { BottomSheetDefaults.DragHandle() }
+    ModalBottomSheetLayout(
+        sheetState = bottomSheetState,
+        sheetShape = MaterialTheme.shapes.large,
+        sheetBackgroundColor = MaterialTheme.colors.surface,
+        sheetContentColor = MaterialTheme.colors.onSurface,
+        sheetContent = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // 选中记录的详细信息
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // 选中记录的详细信息
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
+                    Text(
+                        text = typeDisplayName,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    if (!expense.remark.isNullOrBlank()) {
                         Text(
-                            text = typeDisplayName,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            text = expense.remark,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colors.onSurfaceVariant
                         )
-                        if (!expense.remark.isNullOrBlank()) {
-                            Text(
-                                text = expense.remark,
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = formatDateByLocale(expense.date, context.resources.configuration.locale.toLanguageTag()),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            Text(
-                                text = "-" + context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), expense.amount),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.error
-                            )
-                        }
                     }
-                    
-                    // 操作按钮
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // 编辑按钮
-                        Button(
-                            onClick = {
-                                showBottomSheetMenu.value = false
-                                onEdit()
-                            },
-                            modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Edit,
-                                contentDescription = "Edit",
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = context.getString(R.string.edit))
-                        }
-                        
-                        // 删除按钮
-                        Button(
-                            onClick = {
-                                showDeleteConfirm()
-                            },
-                            modifier = Modifier.weight(1f),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.errorContainer,
-                                contentColor = MaterialTheme.colorScheme.onErrorContainer
-                            )
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = "Delete",
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text(text = context.getString(R.string.delete))
-                        }
+                        Text(
+                            text = formatDateByLocale(expense.date, context.resources.configuration.locale.toLanguageTag()),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colors.onSurfaceVariant
+                        )
+                        Text(
+                            text = "-" + context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), expense.amount),
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colors.error
+                        )
+                    }
+                }
+                
+                // 操作按钮
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // 编辑按钮
+                    Button(
+                        onClick = {
+                            showBottomSheetMenu.value = false
+                            onEdit()
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colors.primaryContainer,
+                            contentColor = MaterialTheme.colors.onPrimaryContainer
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Edit,
+                            contentDescription = "Edit",
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = context.getString(R.string.edit))
+                    }
+                    
+                    // 删除按钮
+                    Button(
+                        onClick = {
+                            showDeleteConfirm()
+                        },
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = MaterialTheme.colors.errorContainer,
+                            contentColor = MaterialTheme.colors.onErrorContainer
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete",
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = context.getString(R.string.delete))
                     }
                 }
             }
         }
-        
-        // 第一次确认弹窗
-        if (showFirstConfirmDialog.value) {
-            AlertDialog(
-                onDismissRequest = { cancelDelete() },
-                title = { Text(text = context.getString(R.string.delete_confirm_title)) },
-                text = { Text(text = context.getString(R.string.delete_confirm_message)) },
-                confirmButton = {
-                    Button(onClick = { handleFirstConfirm() }) {
-                        Text(text = context.getString(R.string.confirm))
-                    }
-                },
-                dismissButton = {
-                    Button(onClick = { cancelDelete() }) {
-                        Text(text = context.getString(R.string.cancel))
-                    }
-                }
-            )
-        }
-        
-        // 第二次确认弹窗
-        if (showSecondConfirmDialog.value) {
-            AlertDialog(
-                onDismissRequest = { cancelDelete() },
-                title = { Text(text = context.getString(R.string.delete_second_confirm_title)) },
-                text = { Text(text = context.getString(R.string.delete_second_confirm_message)) },
-                confirmButton = {
-                    Button(
-                        onClick = { handleSecondConfirm() },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.onErrorContainer
+    ) {
+        // 原屏幕主体内容
+        Box(modifier = modifier.fillMaxWidth()) {
+            // 支出列表项 - 添加长按检测
+            ExpenseListItem(
+                expense = expense,
+                context = context,
+                modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onLongPress = {
+                                showBottomSheetMenu.value = true
+                            }
                         )
-                    ) {
-                        Text(text = context.getString(R.string.delete))
                     }
-                },
-                dismissButton = {
-                    Button(onClick = { cancelDelete() }) {
-                        Text(text = context.getString(R.string.cancel))
-                    }
-                }
             )
+            
+            // 第一次确认弹窗
+            if (showFirstConfirmDialog.value) {
+                AlertDialog(
+                    onDismissRequest = { cancelDelete() },
+                    title = { Text(text = context.getString(R.string.delete_confirm_title)) },
+                    text = { Text(text = context.getString(R.string.delete_confirm_message)) },
+                    confirmButton = {
+                        Button(onClick = { handleFirstConfirm() }) {
+                            Text(text = context.getString(R.string.confirm))
+                        }
+                    },
+                    dismissButton = {
+                        Button(onClick = { cancelDelete() }) {
+                            Text(text = context.getString(R.string.cancel))
+                        }
+                    }
+                )
+            }
+            
+            // 第二次确认弹窗
+            if (showSecondConfirmDialog.value) {
+                AlertDialog(
+                    onDismissRequest = { cancelDelete() },
+                    title = { Text(text = context.getString(R.string.delete_second_confirm_title)) },
+                    text = { Text(text = context.getString(R.string.delete_second_confirm_message)) },
+                    confirmButton = {
+                        Button(
+                            onClick = { handleSecondConfirm() },
+                            colors = ButtonDefaults.buttonColors(
+                                backgroundColor = MaterialTheme.colors.errorContainer,
+                                contentColor = MaterialTheme.colors.onErrorContainer
+                            )
+                        ) {
+                            Text(text = context.getString(R.string.delete))
+                        }
+                    },
+                    dismissButton = {
+                        Button(onClick = { cancelDelete() }) {
+                            Text(text = context.getString(R.string.cancel))
+                        }
+                    }
+                )
+            }
         }
     }
 }
@@ -665,11 +662,10 @@ fun ExpenseListItem(
 ) {
     // 使用传递的context来获取本地化字符串
     val typeDisplayName = ExpenseTypeLocalizer.getLocalizedName(context, expense.type)
-    
-    
+
     Card(
         modifier = modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation()
+        elevation = 1.dp
     ) {
         Row(
             modifier = Modifier
@@ -691,22 +687,21 @@ fun ExpenseListItem(
                     Text(
                         text = expense.remark,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colors.onSurfaceVariant
                     )
                 }
                 Text(
                     text = formatDateByLocale(expense.date, context.resources.configuration.locale.toLanguageTag()),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colors.onSurfaceVariant
                 )
             }
             Text(
                 text = "-" + context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), expense.amount),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.error
-            )
-        }
+            color = MaterialTheme.colors.error
+        )
     }
 }
-
+}

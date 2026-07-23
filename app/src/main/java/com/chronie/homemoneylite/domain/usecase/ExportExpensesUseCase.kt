@@ -13,10 +13,7 @@ import kotlinx.coroutines.flow.first
 import org.dhatim.fastexcel.Workbook
 import org.dhatim.fastexcel.Worksheet
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
-import java.security.AccessControlException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -91,8 +88,8 @@ class ExportExpensesUseCase @Inject constructor(
             android.util.Log.d("ExportExpensesUseCase", "Creating Excel file: ${file.absolutePath}")
             
             FileOutputStream(file).use { outputStream ->
-                Workbook(outputStream, "HomeMoney", "1.0").use { workbook ->
-                    val sheet = workbook.newWorksheet(context.getString(R.string.expense_records))
+                val workbook = Workbook(outputStream, "HomeMoney", "1.0")
+                val sheet = workbook.newWorksheet(context.getString(R.string.expense_records))
                     
                     val headers = listOf(
                         context.getString(R.string.excel_header_date),
@@ -141,7 +138,6 @@ class ExportExpensesUseCase @Inject constructor(
                     sheet.width(2, 10.0)
                     sheet.width(3, 20.0)
                     android.util.Log.d("ExportExpensesUseCase", "Column widths set successfully")
-                }
             }
             
             android.util.Log.d("ExportExpensesUseCase", "Export completed successfully: ${file.absolutePath}")

@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -17,9 +17,9 @@ import com.chronie.homemoneylite.ui.expense.ExpenseTypeLocalizer
 import com.chronie.homemoneylite.ui.components.CircularIconButton
 import com.chronie.homemoneylite.ui.components.ExpressiveLinearProgressIndicator
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
+import com.chronie.homemoneylite.ui.theme.*
 import java.text.NumberFormat
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeekdayDetailScreen(
     context: Context,
@@ -46,7 +46,7 @@ fun WeekdayDetailScreen(
                         Text(
                             text = context.getString(R.string.expense_details),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colors.onSurfaceVariant
                         )
                     }
                 },
@@ -56,14 +56,12 @@ fun WeekdayDetailScreen(
                         modifier = Modifier.padding(start = 8.dp, end = 4.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = Icons.Filled.ArrowBack,
                             contentDescription = context.getString(R.string.back)
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
+                backgroundColor = MaterialTheme.colors.surface
             )
         }
     ) { paddingValues ->
@@ -77,9 +75,7 @@ fun WeekdayDetailScreen(
             // 总金额和占比
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
+                backgroundColor = MaterialTheme.colors.primaryContainer
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Row(
@@ -94,7 +90,7 @@ fun WeekdayDetailScreen(
                             text = currencyFormat.format(amount),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colors.primary
                         )
                     }
                     
@@ -170,7 +166,7 @@ fun WeekdayDetailScreen(
                             Text(
                                 text = context.getString(R.string.no_data),
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                color = MaterialTheme.colors.onSurfaceVariant,
                                 modifier = Modifier.padding(vertical = 32.dp, horizontal = 16.dp)
                             )
                         }
@@ -179,14 +175,12 @@ fun WeekdayDetailScreen(
                 is WeekdayDetailUiState.Error -> {
                     Card(
                         modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.errorContainer
-                        )
+                        backgroundColor = MaterialTheme.colors.errorContainer
                     ) {
                         Text(
                             text = state.message,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            color = MaterialTheme.colors.onErrorContainer,
                             modifier = Modifier.padding(vertical = 32.dp, horizontal = 16.dp)
                         )
                     }
@@ -229,8 +223,8 @@ private fun CategoryDetailItem(
             ExpressiveLinearProgressIndicator(
                 progress = category.percentage / 100f,
                 modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colorScheme.primary,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant
+                color = MaterialTheme.colors.primary,
+                backgroundColor = MaterialTheme.colors.surfaceVariant
             )
             
             Spacer(modifier = Modifier.height(8.dp))
@@ -242,12 +236,12 @@ private fun CategoryDetailItem(
                 Text(
                     text = "${category.count} ${context.getString(R.string.records)}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colors.onSurfaceVariant
                 )
                 Text(
                     text = currencyFormat.format(category.amount),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold
                 )
             }

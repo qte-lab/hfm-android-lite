@@ -5,13 +5,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.filled.InsertChart
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.Icon
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.IconButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,11 +19,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.ui.expense.ExpenseListScreen
 import com.chronie.homemoneylite.ui.settings.SettingsScreen
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
+import com.chronie.homemoneylite.ui.theme.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     context: Context,
@@ -42,8 +38,7 @@ fun MainScreen(
 
     // 原生界面（带底部 Tab 栏）
     Box(modifier = Modifier
-        .fillMaxSize()
-        .windowInsetsPadding(WindowInsets.safeDrawing)) {
+        .fillMaxSize()) {
         Box(
             modifier = Modifier
                 .fillMaxSize()

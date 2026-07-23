@@ -6,7 +6,7 @@ import android.content.Context
 import android.util.Log
 import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
+import androidx.security.crypto.MasterKeys
 import com.chronie.homemoneylite.data.local.AppDatabase
 import com.chronie.homemoneylite.data.local.DatabaseMigrations
 import com.chronie.homemoneylite.data.local.dao.ExpenseDao
@@ -47,15 +47,13 @@ object DatabaseModule {
     @Suppress("DEPRECATION")
     fun provideDatabasePassphrase(@ApplicationContext context: Context): ByteArray {
         // 尝试使用 EncryptedSharedPreferences
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
+        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
         
         try {
             val encryptedPrefs = EncryptedSharedPreferences.create(
-                context,
                 ENCRYPTED_PREFS_FILE,
-                masterKey,
+                masterKeyAlias,
+                context,
                 EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                 EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             )
@@ -122,7 +120,7 @@ object DatabaseModule {
             )
                 .openHelperFactory(factory)
                 .addMigrations(*DatabaseMigrations.getAllMigrations())
-                .fallbackToDestructiveMigration(true)
+                .fallbackToDestructiveMigration()
                 .build()
             // 主动触发数据库打开，以便能捕获 SQLCipher 解密异常
             db.openHelper?.writableDatabase
@@ -138,7 +136,7 @@ object DatabaseModule {
             )
                 .openHelperFactory(factory)
                 .addMigrations(*DatabaseMigrations.getAllMigrations())
-                .fallbackToDestructiveMigration(true)
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }

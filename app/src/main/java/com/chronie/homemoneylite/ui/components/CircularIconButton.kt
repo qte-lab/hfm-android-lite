@@ -3,14 +3,15 @@ package com.chronie.homemoneylite.ui.components
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.chronie.homemoneylite.ui.theme.*
 
 /**
  * 圆形图标按钮组件
@@ -26,7 +27,7 @@ fun CircularIconButton(
 ) {
     Surface(
         shape = CircleShape,
-        color = MaterialTheme.colorScheme.surfaceVariant,
+        color = MaterialTheme.colors.surfaceVariant,
         modifier = modifier
     ) {
         IconButton(

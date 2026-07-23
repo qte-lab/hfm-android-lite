@@ -7,7 +7,7 @@ import androidx.compose.material.icons.filled.AccountBalance
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.core.os.LocaleListCompat
 import com.chronie.homemoneylite.R
+import com.chronie.homemoneylite.ui.theme.*
 import com.chronie.homemoneylite.domain.model.BudgetStatus
 import com.chronie.homemoneylite.ui.components.ExpressiveLinearProgressIndicator
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
@@ -65,9 +66,7 @@ fun BudgetCard(
             // 加载中状态
             Card(
                 modifier = modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
-                )
+                backgroundColor = MaterialTheme.colors.surfaceVariant
             ) {
                 Box(
                     modifier = Modifier
@@ -106,9 +105,7 @@ fun BudgetEnablePrompt(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
-        )
+        backgroundColor = MaterialTheme.colors.secondaryContainer
     ) {
         Column(
             modifier = Modifier
@@ -121,7 +118,7 @@ fun BudgetEnablePrompt(
                 imageVector = Icons.Default.AccountBalance,
                 contentDescription = null,
                 modifier = Modifier.size(48.dp),
-                tint = MaterialTheme.colorScheme.onSecondaryContainer
+                tint = MaterialTheme.colors.onSecondaryContainer
             )
             
             Text(
@@ -133,7 +130,7 @@ fun BudgetEnablePrompt(
             Text(
                 text = context.getString(R.string.budget_enable_description),
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+                color = MaterialTheme.colors.onSecondaryContainer.copy(alpha = 0.7f)
             )
             
             Button(
@@ -165,16 +162,14 @@ fun BudgetUsageCard(
     }
     
     val progressColor = when (status) {
-        BudgetStatus.OVER_LIMIT -> MaterialTheme.colorScheme.error
-        BudgetStatus.WARNING -> MaterialTheme.colorScheme.tertiary
-        BudgetStatus.NORMAL -> MaterialTheme.colorScheme.primary
+        BudgetStatus.OVER_LIMIT -> MaterialTheme.colors.error
+        BudgetStatus.WARNING -> MaterialTheme.colors.tertiary
+        BudgetStatus.NORMAL -> MaterialTheme.colors.primary
     }
     
     Card(
         modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
+        backgroundColor = MaterialTheme.colors.primaryContainer
     ) {
         Column(
             modifier = Modifier
@@ -223,7 +218,7 @@ fun BudgetUsageCard(
                         Text(
                             text = formatMonthLabelByLocale(usage.currentMonth + "-01", LocaleListCompat.getDefault()[0]!!.toLanguageTag()),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                            color = MaterialTheme.colors.onPrimaryContainer.copy(alpha = 0.7f)
                         )
                     }
                 }
@@ -265,7 +260,7 @@ fun BudgetUsageCard(
                         Text(
                             text = "/ " + context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), usage.monthlyLimit),
                             style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                            color = MaterialTheme.colors.onPrimaryContainer.copy(alpha = 0.7f)
                         )
                         Text(
                             text = "(${String.format(Locale.getDefault(), "%.0f", usage.spendingPercentage)}%)",
@@ -282,7 +277,7 @@ fun BudgetUsageCard(
                             .fillMaxWidth()
                             .height(8.dp),
                         color = progressColor,
-                        trackColor = MaterialTheme.colorScheme.surfaceVariant
+                        backgroundColor = MaterialTheme.colors.surfaceVariant
                     )
                     
                     // 状态提示
@@ -295,8 +290,8 @@ fun BudgetUsageCard(
                                     R.string.budget_alert_over_message,
                                     context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), usage.currentSpending - usage.monthlyLimit)
                                 ),
-                                containerColor = MaterialTheme.colorScheme.errorContainer,
-                                contentColor = MaterialTheme.colorScheme.onErrorContainer
+                                containerColor = MaterialTheme.colors.errorContainer,
+                                contentColor = MaterialTheme.colors.onErrorContainer
                             )
                         }
                         BudgetStatus.WARNING -> {
@@ -308,8 +303,8 @@ fun BudgetUsageCard(
                                     context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), usage.remainingAmount),
                                     usage.spendingPercentage
                                 ),
-                                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                                containerColor = MaterialTheme.colors.tertiaryContainer,
+                                contentColor = MaterialTheme.colors.onTertiaryContainer
                             )
                         }
                         BudgetStatus.NORMAL -> {
@@ -321,8 +316,8 @@ fun BudgetUsageCard(
                                     context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), usage.remainingAmount),
                                     100 - usage.spendingPercentage
                                 ),
-                                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                                containerColor = MaterialTheme.colors.secondaryContainer,
+                                contentColor = MaterialTheme.colors.onSecondaryContainer
                             )
                         }
                     }
@@ -343,11 +338,11 @@ fun BudgetUsageCard(
                             label = context.getString(R.string.budget_recommended_daily),
                             value = context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), usage.recommendedDaily),
                             valueColor = if (usage.recommendedDaily <= 0) {
-                                MaterialTheme.colorScheme.error
+                                MaterialTheme.colors.error
                             } else if (usage.recommendedDaily < usage.dailyAverage * 0.8) {
-                                MaterialTheme.colorScheme.tertiary
+                                MaterialTheme.colors.tertiary
                             } else {
-                                MaterialTheme.colorScheme.primary
+                                MaterialTheme.colors.primary
                             }
                         )
                     }
@@ -401,14 +396,14 @@ fun DetailItem(
     context: android.content.Context,
     label: String,
     value: String,
-    valueColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onPrimaryContainer,
+    valueColor: androidx.compose.ui.graphics.Color = MaterialTheme.colors.onPrimaryContainer,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+            color = MaterialTheme.colors.onPrimaryContainer.copy(alpha = 0.7f)
         )
         Text(
             text = value,

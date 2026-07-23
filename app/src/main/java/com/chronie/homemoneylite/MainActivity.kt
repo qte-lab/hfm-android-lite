@@ -5,17 +5,10 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.EaseOutCubic
-import androidx.compose.animation.core.EaseInCubic
+import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -40,12 +33,16 @@ import com.chronie.homemoneylite.ui.expense.AddExpenseScreen
 import com.chronie.homemoneylite.ui.expense.AIExpenseScreen
 import com.chronie.homemoneylite.ui.main.MainScreen
 import com.chronie.homemoneylite.ui.settings.SettingsScreen
+import com.chronie.homemoneylite.ui.theme.*
 import com.chronie.homemoneylite.ui.theme.HomeMoneyTheme
 import com.chronie.homemoneylite.service.HealthCheckService
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.util.Locale
 import javax.inject.Inject
+
+private val EaseOutCubic = CubicBezierEasing(0.33f, 1f, 0.68f, 1f)
+private val EaseInCubic = CubicBezierEasing(0.32f, 0f, 0.67f, 0f)
 
 val LocalLanguageManager = staticCompositionLocalOf<LanguageManager> {
     error("No LanguageManager provided")
@@ -85,9 +82,6 @@ class MainActivity : ComponentActivity() {
         // 清除启动图背景，设置为透明背景
         window.setBackgroundDrawableResource(android.R.color.transparent)
 
-        // Enable edge-to-edge display
-        enableEdgeToEdge()
-
         // Make sure the window draws behind system bars
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -111,7 +105,7 @@ class MainActivity : ComponentActivity() {
                 HomeMoneyTheme {
                     Surface(
                         modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colorScheme.background
+                        color = MaterialTheme.colors.background
                     ) {
                         HomeMoneyApp(
                             context = localizedContext
@@ -153,25 +147,7 @@ fun HomeMoneyApp(
 
     NavHost(
         navController = navController,
-        startDestination = startDestination,
-        enterTransition = {
-            slideInHorizontally(
-                initialOffsetX = { fullWidth -> fullWidth / 4 },
-                animationSpec = tween(durationMillis = 300, easing = EaseOutCubic)
-            ) + fadeIn(animationSpec = tween(durationMillis = 200, easing = EaseOutCubic))
-        },
-        exitTransition = {
-            fadeOut(animationSpec = tween(durationMillis = 150, easing = EaseInCubic))
-        },
-        popEnterTransition = {
-            fadeIn(animationSpec = tween(durationMillis = 200, easing = EaseOutCubic))
-        },
-        popExitTransition = {
-            slideOutHorizontally(
-                targetOffsetX = { fullWidth -> fullWidth / 4 },
-                animationSpec = tween(durationMillis = 300, easing = EaseInCubic)
-            ) + fadeOut(animationSpec = tween(durationMillis = 150, easing = EaseInCubic))
-        }
+        startDestination = startDestination
     ) {
         composable("settings") {
             SettingsScreen(
