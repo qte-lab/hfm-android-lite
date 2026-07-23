@@ -59,8 +59,12 @@ android {
     
     buildTypes {
         release {
-            minifyEnabled false
-            shrinkResources false
+            // A 方案：开启 R8 收缩（tree-shaking）+ 资源收缩，但“不混淆”。
+            // 只收缩不重命名，可大幅减小 dex/内存占用、提升低性能设备流畅度，
+            // 同时避免 Retrofit/Gson/OkHttp 因类名被改而产生的网络/解析错误。
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
     }

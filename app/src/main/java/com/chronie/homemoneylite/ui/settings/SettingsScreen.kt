@@ -24,9 +24,11 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.BorderStroke
@@ -1348,15 +1350,16 @@ private fun OpenSourceLicensesInline(context: Context) {
                                 .padding(vertical = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Surface(
-                                shape = MaterialTheme.shapes.small,
-                                color = MaterialTheme.colors.primary.copy(alpha = 0.12f)
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(4.dp))
+                                    .background(MaterialTheme.colors.primary.copy(alpha = 0.12f))
+                                    .padding(horizontal = 8.dp, vertical = 3.dp)
                             ) {
                                 Text(
                                     text = license,
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colors.primary,
-                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                    color = MaterialTheme.colors.primary
                                 )
                             }
                             Spacer(modifier = Modifier.width(6.dp))
@@ -1394,15 +1397,16 @@ private fun OpenSourceLicensesInline(context: Context) {
                                         )
                                     }
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Surface(
-                                        shape = MaterialTheme.shapes.small,
-                                        color = MaterialTheme.colors.surfaceVariant
+                                    Box(
+                                        modifier = Modifier
+                                            .clip(RoundedCornerShape(4.dp))
+                                            .background(MaterialTheme.colors.surfaceVariant)
+                                            .padding(horizontal = 8.dp, vertical = 3.dp)
                                     ) {
                                         Text(
                                             text = lib.version,
                                             style = MaterialTheme.typography.bodySmall,
-                                            color = MaterialTheme.colors.onSurfaceVariant,
-                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                            color = MaterialTheme.colors.onSurfaceVariant
                                         )
                                     }
                                     Spacer(modifier = Modifier.width(8.dp))

@@ -5,6 +5,10 @@
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
 
+# A 方案：只收缩、不混淆（避免 Retrofit/Gson/OkHttp 因类名重命名而报错）。
+# 这是性能优化（减小 dex、降低内存）与网络稳定性之间的折中。
+-dontobfuscate
+
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
@@ -124,3 +128,23 @@
 -keepclassmembers class * {
     @kotlinx.serialization.* <fields>;
 }
+
+# ============================================================
+# R8 可选依赖告警静音（非错误，不影响运行）
+# 以下类均被 OkHttp 平台探测代码（BouncyCastlePlatform /
+# ConscryptPlatform / OpenJSSEPlatform）以反射方式"探测性引用"，
+# 但它们是可选的 TLS provider，本应用未打包，运行时不会走到。
+# R8 仅告警，不会导致崩溃，这里统一 dontwarn 让构建输出干净。
+# 对应的 missing_rules.txt 建议加 -keep，但类根本不在 classpath 中，
+# 加 -keep 无效，正确做法是 -dontwarn。
+# ============================================================
+-dontwarn com.google.errorprone.annotations.Immutable
+-dontwarn org.bouncycastle.jsse.BCSSLParameters
+-dontwarn org.bouncycastle.jsse.BCSSLSocket
+-dontwarn org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
+-dontwarn org.conscrypt.Conscrypt
+-dontwarn org.conscrypt.Conscrypt$Version
+-dontwarn org.conscrypt.ConscryptHostnameVerifier
+-dontwarn org.openjsse.javax.net.ssl.SSLParameters
+-dontwarn org.openjsse.javax.net.ssl.SSLSocket
+-dontwarn org.openjsse.net.ssl.OpenJSSE

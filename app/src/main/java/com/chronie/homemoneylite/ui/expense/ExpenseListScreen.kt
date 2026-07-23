@@ -333,7 +333,7 @@ fun ExpenseDateHeader(
     locale: String? = null,
     modifier: Modifier = Modifier
 ) {
-    val displayDate = formatRelativeDate(date, context, locale)
+    val displayDate = remember(date, locale) { formatRelativeDate(date, context, locale) }
     
     Row(
         modifier = modifier
@@ -647,8 +647,16 @@ fun ExpenseListItem(
     context: android.content.Context,
     modifier: Modifier = Modifier
 ) {
-    // 使用传递的context来获取本地化字符串
-    val typeDisplayName = ExpenseTypeLocalizer.getLocalizedName(context, expense.type)
+    // 缓存本地化/格式化结果，避免列表滚动时每一项都重复计算（低端设备尤为重要）
+    val typeDisplayName = remember(expense.type) {
+        ExpenseTypeLocalizer.getLocalizedName(context, expense.type)
+    }
+    val formattedDate = remember(expense.date) {
+        formatDateByLocale(expense.date, context.resources.configuration.locale.toLanguageTag())
+    }
+    val formattedAmount = remember(expense.amount) {
+        "-" + context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), expense.amount)
+    }
 
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -678,13 +686,13 @@ fun ExpenseListItem(
                     )
                 }
                 Text(
-                    text = formatDateByLocale(expense.date, context.resources.configuration.locale.toLanguageTag()),
+                    text = formattedDate,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colors.onSurfaceVariant
                 )
             }
             Text(
-                text = "-" + context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), expense.amount),
+                text = formattedAmount,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.error
