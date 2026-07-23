@@ -80,21 +80,44 @@
 -keep class com.chronie.homemoneylite.data.remote.api.** { *; }
 -keep class com.chronie.homemoneylite.domain.model.** { *; }
 
+# 显式保留所有“仅通过 Retrofit 泛型返回类型被引用”的响应 DTO。
+# 这类类极易被 R8 误判为“未使用”而树摇删除，导致运行时
+# Response<SyncResponseDto> 等泛型解析失败（Class cannot be cast to ParameterizedType）。
+-keep class com.chronie.homemoneylite.data.remote.dto.SyncResponseDto { *; }
+-keep class com.chronie.homemoneylite.data.remote.dto.ExpenseListResponse { *; }
+-keep class com.chronie.homemoneylite.data.remote.dto.ExpenseMetaDto { *; }
+-keep class com.chronie.homemoneylite.data.remote.dto.ExpenseStatisticsDto { *; }
+-keep class com.chronie.homemoneylite.data.remote.dto.TypeDistributionDto { *; }
+-keep class com.chronie.homemoneylite.data.remote.dto.ConflictDto { *; }
+-keep class com.chronie.homemoneylite.data.remote.dto.SyncRequestDto { *; }
+-keep class com.chronie.homemoneylite.data.remote.dto.ApiResponse { *; }
+
 # Retrofit
 -keepattributes Signature
 -keepattributes Exceptions
 -keepattributes *Annotation*
+-keepattributes EnclosingMethod
+-keepattributes InnerClasses
 -keep class retrofit2.** { *; }
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
 }
+# 保留 API 接口及其方法签名（Retrofit 需要泛型返回值信息）
+-keep interface com.chronie.homemoneylite.data.remote.api.** { <methods>; }
 
 # Gson
+# 保留所有 DTO 类的 @SerializedName 字段
+-keepclassmembers class com.chronie.homemoneylite.data.remote.dto.** {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+-keep class com.chronie.homemoneylite.data.remote.dto.** { <fields>; }
 -keep class com.google.gson.** { *; }
 -keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.stream.** { *; }
--keep class com.google.gson.reflect.TypeToken { *; }
--keep class * extends com.google.gson.reflect.TypeToken { *; }
+# 保留 TypeToken 及其子类的泛型信息（防止 R8 删除 ParameterizedType）
+-keep class com.google.gson.reflect.TypeToken
+-keep class * extends com.google.gson.reflect.TypeToken
+-keepclassmembers class * extends com.google.gson.reflect.TypeToken { *; }
 
 # Kotlin Serialization
 -keep class kotlinx.serialization.** { *; }

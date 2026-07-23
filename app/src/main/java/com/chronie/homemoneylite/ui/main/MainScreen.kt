@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.insets.navigationBarsPadding
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.ui.expense.ExpenseListScreen
 import com.chronie.homemoneylite.ui.settings.SettingsScreen
@@ -77,6 +78,7 @@ fun MainScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
+                .navigationBarsPadding()
         ) {
             BottomNavigationBar(
                 context = context,

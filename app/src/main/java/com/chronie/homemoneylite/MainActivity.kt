@@ -20,7 +20,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.layout.Box
 import androidx.core.view.WindowCompat
+import com.google.accompanist.insets.statusBarsPadding
+import com.google.accompanist.insets.ProvideWindowInsets
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -102,14 +105,16 @@ class MainActivity : ComponentActivity() {
             CompositionLocalProvider(
                 LocalLanguageManager provides languageManager
             ) {
-                HomeMoneyTheme {
-                    Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = MaterialTheme.colors.background
-                    ) {
-                        HomeMoneyApp(
-                            context = localizedContext
-                        )
+                ProvideWindowInsets {
+                    HomeMoneyTheme {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colors.background
+                        ) {
+                            HomeMoneyApp(
+                                context = localizedContext
+                            )
+                        }
                     }
                 }
             }
@@ -145,10 +150,11 @@ fun HomeMoneyApp(
     // 直接进入主页面，移除开屏欢迎页
     val startDestination = remember { "main" }
 
-    NavHost(
-        navController = navController,
-        startDestination = startDestination
-    ) {
+    Box(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
+        NavHost(
+            navController = navController,
+            startDestination = startDestination
+        ) {
         composable("settings") {
             SettingsScreen(
                 context = context
@@ -250,6 +256,7 @@ fun HomeMoneyApp(
                     navController.popBackStack()
                 }
             )
+        }
         }
     }
 }

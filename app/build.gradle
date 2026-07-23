@@ -59,9 +59,8 @@ android {
     
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled false
+            shrinkResources false
             signingConfig signingConfigs.release
         }
     }
@@ -116,6 +115,9 @@ dependencies {
     // 注意：本项目 Compose 固定为 1.1.0，必须用 0.20.x（0.20.3 是 1.1.0 对应的稳定线）；
     // 0.23+ 要求 Compose 1.1.1、0.24+ 要求 Compose 1.2.0，会触发版本冲突。0.24.9-alpha 此版本根本不存在。
     implementation 'com.google.accompanist:accompanist-swiperefresh:0.20.3'
+    // Accompanist Insets：为 Compose 1.1.0 提供 statusBarsPadding / navigationBarsPadding
+    // （Compose 1.2+ 才内置 WindowInsets API，本项目固定在 1.1.0，必须用 accompanist-insets 0.20.x）
+    implementation 'com.google.accompanist:accompanist-insets:0.20.3'
     implementation "androidx.activity:activity-compose:$androidxActivityVersion"
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
     
