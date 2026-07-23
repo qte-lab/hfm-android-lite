@@ -153,7 +153,7 @@ fun BudgetUsageCard(
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
+    var isExpanded by remember { mutableStateOf(true) }
     
     val status = when {
         usage.isOverLimit -> BudgetStatus.OVER_LIMIT
@@ -183,12 +183,10 @@ fun BudgetUsageCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 收起状态下的简要信息
+                // 收起状态下的简要信息（纵向堆叠，避免横向裁切）
                 if (!isExpanded) {
-                    Row(
-                        modifier = Modifier.weight(1f),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                    Column(
+                        modifier = Modifier.weight(1f)
                     ) {
                         Text(
                             text = formatMonthLabelByLocale(usage.currentMonth + "-01", LocaleListCompat.getDefault()[0]!!.toLanguageTag()),
@@ -196,14 +194,9 @@ fun BudgetUsageCard(
                             fontWeight = FontWeight.Medium
                         )
                         Text(
-                            text = context.getString(R.string.currency_format_no_decimal, context.getString(R.string.currency_symbol), usage.currentSpending) + "/" + context.getString(R.string.currency_format_no_decimal, context.getString(R.string.currency_symbol), usage.monthlyLimit),
+                            text = context.getString(R.string.currency_format_no_decimal, context.getString(R.string.currency_symbol), usage.currentSpending) + "/" + context.getString(R.string.currency_format_no_decimal, context.getString(R.string.currency_symbol), usage.monthlyLimit) + " (" + String.format(Locale.getDefault(), "%.0f", usage.spendingPercentage) + "%)",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
-                            color = progressColor
-                        )
-                        Text(
-                            text = "(${String.format(Locale.getDefault(), "%.0f", usage.spendingPercentage)}%)",
-                            style = MaterialTheme.typography.bodySmall,
                             color = progressColor
                         )
                     }

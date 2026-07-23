@@ -216,7 +216,7 @@ fun ExpenseListScreen(
                             state = listState,
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(bottom = 80.dp), // 为浮动按钮留出空间
-                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
                         // 预算管理卡片
                         item(key = "budget_card") {

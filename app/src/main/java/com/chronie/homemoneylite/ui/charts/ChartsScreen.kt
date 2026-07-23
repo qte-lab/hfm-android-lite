@@ -40,6 +40,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.clickable
 
 @Composable
 fun ChartsScreen(
@@ -759,127 +760,87 @@ private fun TimeRangeDialog(
     val viewModel = hiltViewModel<ChartsViewModel>()
     val customStartDate by viewModel.customStartDate.collectAsState()
     val customEndDate by viewModel.customEndDate.collectAsState()
-    
-    var showCustomRangeBottomSheet by remember { mutableStateOf(false) }
-    
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    LaunchedEffect(Unit) { sheetState.show() }
-    LaunchedEffect(sheetState.currentValue) {
-        if (sheetState.currentValue == ModalBottomSheetValue.Hidden) onDismiss()
-    }
-    
-    ModalBottomSheetLayout(
-        sheetState = sheetState,
-        sheetShape = MaterialTheme.shapes.large,
-        sheetBackgroundColor = MaterialTheme.colors.surface,
-        sheetContent = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = context.getString(R.string.select_time_range),
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-                
-                var expanded by remember { mutableStateOf(false) }
-                
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    OutlinedTextField(
-                        value = getTimeRangeText(context, selectedTimeRange),
-                        onValueChange = {},
-                        readOnly = true,
-                        label = { Text(context.getString(R.string.select_time_range)) },
-                        trailingIcon = {
-                            IconButton(onClick = { expanded = !expanded }) {
-                                Icon(
-                                    imageVector = Icons.Default.ArrowDropDown,
-                                    contentDescription = "Select time range"
-                                )
+
+    var showStartPicker by remember { mutableStateOf(false) }
+    var showEndPicker by remember { mutableStateOf(false) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(context.getString(R.string.select_time_range)) },
+        text = {
+            Column {
+                listOf(
+                    TimeRange.THIS_WEEK,
+                    TimeRange.THIS_MONTH,
+                    TimeRange.LAST_MONTH,
+                    TimeRange.THIS_QUARTER,
+                    TimeRange.THIS_YEAR,
+                    TimeRange.CUSTOM
+                ).forEach { range ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                if (range == TimeRange.CUSTOM) {
+                                    showStartPicker = true
+                                } else {
+                                    onTimeRangeSelected(range)
+                                }
                             }
-                        },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false }
+                            .padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        listOf(
-                            TimeRange.THIS_WEEK,
-                            TimeRange.THIS_MONTH,
-                            TimeRange.LAST_MONTH,
-                            TimeRange.THIS_QUARTER,
-                            TimeRange.THIS_YEAR,
-                            TimeRange.CUSTOM
-                        ).forEach { timeRange ->
-                            DropdownMenuItem(
-                                onClick = {
-                                    if (timeRange == TimeRange.CUSTOM) {
-                                        showCustomRangeBottomSheet = true
-                                    } else {
-                                        onTimeRangeSelected(timeRange)
-                                    }
-                                    expanded = false
-                                }
-                            ) {
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    RadioButton(
-                                        selected = selectedTimeRange == timeRange,
-                                        onClick = {
-                                            if (timeRange == TimeRange.CUSTOM) {
-                                                showCustomRangeBottomSheet = true
-                                            } else {
-                                                onTimeRangeSelected(timeRange)
-                                            }
-                                            expanded = false
-                                        }
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Text(getTimeRangeText(context, timeRange))
+                        RadioButton(
+                            selected = selectedTimeRange == range,
+                            onClick = {
+                                if (range == TimeRange.CUSTOM) {
+                                    showStartPicker = true
+                                } else {
+                                    onTimeRangeSelected(range)
                                 }
                             }
-                        }
-                    }
-                }
-                
-                Spacer(modifier = Modifier.height(16.dp))
-                
-                if (selectedTimeRange == TimeRange.CUSTOM && customStartDate != null && customEndDate != null) {
-                    val start = customStartDate
-                    val end = customEndDate
-                    if (start != null && end != null) {
-                        val startDateString = start.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                        val endDateString = end.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                        Text(
-                            text = "${context.getString(R.string.expense_list_filter_start_date)} ${formatDateByLocale(startDateString, context.resources.configuration.locale.toLanguageTag())} ${context.getString(R.string.expense_list_filter_end_date)} ${formatDateByLocale(endDateString, context.resources.configuration.locale.toLanguageTag())}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colors.onSurfaceVariant
                         )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(getTimeRangeText(context, range))
                     }
                 }
-                
-                Spacer(modifier = Modifier.height(16.dp))
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(context.getString(android.R.string.ok))
             }
         }
-    ) {
-        if (showCustomRangeBottomSheet) {
-            CustomRangeBottomSheet(
-                context = context,
-                initialStartDate = customStartDate ?: LocalDate.now().minusMonths(1),
-                initialEndDate = customEndDate ?: LocalDate.now(),
-                onDismiss = { showCustomRangeBottomSheet = false },
-                onConfirm = { startDate, endDate ->
-                    viewModel.setCustomDateRange(startDate, endDate)
-                    onTimeRangeSelected(TimeRange.CUSTOM)
-                }
-            )
-        }
+    )
+
+    if (showStartPicker) {
+        AppDatePickerDialog(
+            initialDateMillis = (customStartDate ?: LocalDate.now().minusMonths(1))
+                .atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            onDateSelected = { millis ->
+                val start = java.time.Instant.ofEpochMilli(millis)
+                    .atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+                viewModel.setCustomStartDate(start)
+                showStartPicker = false
+                showEndPicker = true
+            },
+            onDismiss = { showStartPicker = false }
+        )
+    }
+
+    if (showEndPicker) {
+        AppDatePickerDialog(
+            initialDateMillis = (customEndDate ?: LocalDate.now())
+                .atStartOfDay(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli(),
+            onDateSelected = { millis ->
+                val end = java.time.Instant.ofEpochMilli(millis)
+                    .atZone(java.time.ZoneId.systemDefault()).toLocalDate()
+                viewModel.setCustomEndDate(end)
+                showEndPicker = false
+                onTimeRangeSelected(TimeRange.CUSTOM)
+            },
+            onDismiss = { showEndPicker = false }
+        )
     }
 }
 
