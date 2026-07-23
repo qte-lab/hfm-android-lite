@@ -88,56 +88,62 @@ class ExportExpensesUseCase @Inject constructor(
             android.util.Log.d("ExportExpensesUseCase", "Creating Excel file: ${file.absolutePath}")
             
             FileOutputStream(file).use { outputStream ->
+                // fastexcel 的 Workbook 必须在写完所有单元格后调用 finish() 才会
+                // 把 OOXML 真正序列化写入输出流；不调用会导致文件为空。
                 val workbook = Workbook(outputStream, "HomeMoney", "1.0")
                 val sheet = workbook.newWorksheet(context.getString(R.string.expense_records))
-                    
-                    val headers = listOf(
-                        context.getString(R.string.excel_header_date),
-                        context.getString(R.string.excel_header_type),
-                        context.getString(R.string.excel_header_amount),
-                        context.getString(R.string.excel_header_remark)
-                    )
-                    
-                    headers.forEachIndexed { index, header ->
-                        sheet.value(0, index, header)
-                        sheet.style(0, index).bold().set()
+
+                val headers = listOf(
+                    context.getString(R.string.excel_header_date),
+                    context.getString(R.string.excel_header_type),
+                    context.getString(R.string.excel_header_amount),
+                    context.getString(R.string.excel_header_remark)
+                )
+
+                headers.forEachIndexed { index, header ->
+                    sheet.value(0, index, header)
+                    sheet.style(0, index).bold().set()
+                }
+
+                validExpenses.forEachIndexed { index, expense ->
+                    val row = index + 1
+
+                    if (index % 100 == 0) {
+                        android.util.Log.d("ExportExpensesUseCase", "Writing row $row/${validExpenses.size}, id=${expense.id}")
                     }
-                    
-                    validExpenses.forEachIndexed { index, expense ->
-                        val row = index + 1
-                        
-                        if (index % 100 == 0) {
-                            android.util.Log.d("ExportExpensesUseCase", "Writing row $row/${validExpenses.size}, id=${expense.id}")
-                        }
-                        
-                        try {
-                            val dateValue = expense.date.ifBlank { "" }
-                            android.util.Log.v("ExportExpensesUseCase", "Row $row - Writing date: '$dateValue'")
-                            sheet.value(row, 0, dateValue)
-                            
-                            val typeValue = getExpenseTypeName(expense.type)
-                            android.util.Log.v("ExportExpensesUseCase", "Row $row - Writing type: '$typeValue'")
-                            sheet.value(row, 1, typeValue)
-                            
-                            val amountValue = if (expense.amount.isNaN() || expense.amount.isInfinite()) 0.0 else expense.amount
-                            android.util.Log.v("ExportExpensesUseCase", "Row $row - Writing amount: $amountValue")
-                            sheet.value(row, 2, amountValue)
-                            
-                            val remarkValue = expense.remark?.ifBlank { "" } ?: ""
-                            android.util.Log.v("ExportExpensesUseCase", "Row $row - Writing remark: '$remarkValue'")
-                            sheet.value(row, 3, remarkValue)
-                        } catch (e: Exception) {
-                            android.util.Log.e("ExportExpensesUseCase", "Failed to write row $row: id=${expense.id}, date='${expense.date}', amount=${expense.amount}, type=${expense.type}", e)
-                            throw e
-                        }
+
+                    try {
+                        val dateValue = expense.date.ifBlank { "" }
+                        android.util.Log.v("ExportExpensesUseCase", "Row $row - Writing date: '$dateValue'")
+                        sheet.value(row, 0, dateValue)
+
+                        val typeValue = getExpenseTypeName(expense.type)
+                        android.util.Log.v("ExportExpensesUseCase", "Row $row - Writing type: '$typeValue'")
+                        sheet.value(row, 1, typeValue)
+
+                        val amountValue = if (expense.amount.isNaN() || expense.amount.isInfinite()) 0.0 else expense.amount
+                        android.util.Log.v("ExportExpensesUseCase", "Row $row - Writing amount: $amountValue")
+                        sheet.value(row, 2, amountValue)
+
+                        val remarkValue = expense.remark?.ifBlank { "" } ?: ""
+                        android.util.Log.v("ExportExpensesUseCase", "Row $row - Writing remark: '$remarkValue'")
+                        sheet.value(row, 3, remarkValue)
+                    } catch (e: Exception) {
+                        android.util.Log.e("ExportExpensesUseCase", "Failed to write row $row: id=${expense.id}, date='${expense.date}', amount=${expense.amount}, type=${expense.type}", e)
+                        throw e
                     }
-                    
-                    android.util.Log.d("ExportExpensesUseCase", "Setting column widths")
-                    sheet.width(0, 15.0)
-                    sheet.width(1, 12.0)
-                    sheet.width(2, 10.0)
-                    sheet.width(3, 20.0)
-                    android.util.Log.d("ExportExpensesUseCase", "Column widths set successfully")
+                }
+
+                android.util.Log.d("ExportExpensesUseCase", "Setting column widths")
+                sheet.width(0, 15.0)
+                sheet.width(1, 12.0)
+                sheet.width(2, 10.0)
+                sheet.width(3, 20.0)
+                android.util.Log.d("ExportExpensesUseCase", "Column widths set successfully")
+
+                // 关键：finish() 将工作簿写入输出流，缺失则导出文件为空
+                workbook.finish()
+                android.util.Log.d("ExportExpensesUseCase", "Workbook written to stream")
             }
             
             android.util.Log.d("ExportExpensesUseCase", "Export completed successfully: ${file.absolutePath}")

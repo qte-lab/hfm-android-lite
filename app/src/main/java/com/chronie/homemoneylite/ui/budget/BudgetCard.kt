@@ -169,7 +169,7 @@ fun BudgetUsageCard(
     
     Card(
         modifier = modifier.fillMaxWidth(),
-        backgroundColor = MaterialTheme.colors.primaryContainer
+        backgroundColor = MaterialTheme.colors.surface
     ) {
         Column(
             modifier = Modifier
@@ -211,7 +211,7 @@ fun BudgetUsageCard(
                         Text(
                             text = formatMonthLabelByLocale(usage.currentMonth + "-01", LocaleListCompat.getDefault()[0]!!.toLanguageTag()),
                             style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colors.onPrimaryContainer.copy(alpha = 0.7f)
+                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                         )
                     }
                 }
@@ -253,7 +253,7 @@ fun BudgetUsageCard(
                         Text(
                             text = "/ " + context.getString(R.string.currency_format, context.getString(R.string.currency_symbol), usage.monthlyLimit),
                             style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colors.onPrimaryContainer.copy(alpha = 0.7f)
+                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                         )
                         Text(
                             text = "(${String.format(Locale.getDefault(), "%.0f", usage.spendingPercentage)}%)",
@@ -389,14 +389,14 @@ fun DetailItem(
     context: android.content.Context,
     label: String,
     value: String,
-    valueColor: androidx.compose.ui.graphics.Color = MaterialTheme.colors.onPrimaryContainer,
+    valueColor: androidx.compose.ui.graphics.Color = MaterialTheme.colors.onSurface,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colors.onPrimaryContainer.copy(alpha = 0.7f)
+            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
         )
         Text(
             text = value,

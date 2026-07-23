@@ -24,6 +24,19 @@
         <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
     </style>
 
+    <!-- 日期选择器主题（适配浅色/深色模式） -->
+    <style name="DatePickerDialogLight" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">#FF66BB6A</item>
+    </style>
+
+    <style name="DatePickerDialogDark" parent="android:Theme.Material.Dialog">
+        <item name="android:colorAccent">#FF66BB6A</item>
+        <item name="android:textColorPrimary">#FFFFFFFF</item>
+        <item name="android:textColorSecondary">#FFB0B0B0</item>
+        <item name="android:windowBackground">#FF1E1E1E</item>
+        <item name="android:colorBackground">#FF1E1E1E</item>
+    </style>
+
     <!-- UCrop Theme - 确保不占用状态栏空间 -->
     <style name="UCropTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowActionBar">false</item>
