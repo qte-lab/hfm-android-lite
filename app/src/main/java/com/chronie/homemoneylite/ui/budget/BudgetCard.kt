@@ -153,7 +153,7 @@ fun BudgetUsageCard(
     onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var isExpanded by remember { mutableStateOf(true) }
+    var isExpanded by remember { mutableStateOf(false) }
     
     val status = when {
         usage.isOverLimit -> BudgetStatus.OVER_LIMIT

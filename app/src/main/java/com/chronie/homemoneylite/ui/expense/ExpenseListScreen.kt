@@ -447,22 +447,13 @@ fun LongPressExpenseItem(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // 底部托盘菜单显示状态
+    // 长按菜单显示状态（使用标准 AlertDialog，可靠弹出）
     val showBottomSheetMenu = remember { mutableStateOf(false) }
-    val bottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
-    
+
     // 弹窗状态 - 第一次确认
     val showFirstConfirmDialog = remember { mutableStateOf(false) }
     // 弹窗状态 - 第二次确认
     val showSecondConfirmDialog = remember { mutableStateOf(false) }
-    
-    // 同步显隐到 MD2 底部抽屉状态
-    LaunchedEffect(showBottomSheetMenu.value) {
-        if (showBottomSheetMenu.value) bottomSheetState.show() else bottomSheetState.hide()
-    }
-    LaunchedEffect(bottomSheetState.currentValue) {
-        if (bottomSheetState.currentValue == ModalBottomSheetValue.Hidden) showBottomSheetMenu.value = false
-    }
     
     // 处理第一次确认
     fun handleFirstConfirm() {
@@ -492,28 +483,22 @@ fun LongPressExpenseItem(
     // 使用传递的context来获取本地化字符串
     val typeDisplayName = ExpenseTypeLocalizer.getLocalizedName(context, expense.type)
     
-    ModalBottomSheetLayout(
-        sheetState = bottomSheetState,
-        sheetShape = MaterialTheme.shapes.large,
-        sheetBackgroundColor = MaterialTheme.colors.surface,
-        sheetContentColor = MaterialTheme.colors.onSurface,
-        sheetContent = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // 选中记录的详细信息
+    // 长按弹出的操作菜单（标准 AlertDialog，可靠弹出）
+    if (showBottomSheetMenu.value) {
+        AlertDialog(
+            onDismissRequest = { showBottomSheetMenu.value = false },
+            title = {
+                Text(
+                    text = typeDisplayName,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(
-                        text = typeDisplayName,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
                     if (!expense.remark.isNullOrBlank()) {
                         Text(
                             text = expense.remark,
@@ -538,13 +523,14 @@ fun LongPressExpenseItem(
                         )
                     }
                 }
-                
-                // 操作按钮
+            },
+            confirmButton = {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // 编辑按钮
                     Button(
                         onClick = {
                             showBottomSheetMenu.value = false
@@ -564,8 +550,7 @@ fun LongPressExpenseItem(
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(text = context.getString(R.string.edit))
                     }
-                    
-                    // 删除按钮
+
                     Button(
                         onClick = {
                             showDeleteConfirm()
@@ -586,8 +571,10 @@ fun LongPressExpenseItem(
                     }
                 }
             }
-        }
-    ) {
+        )
+    }
+
+    Box(modifier = modifier.fillMaxWidth()) {
         // 原屏幕主体内容
         Box(modifier = modifier.fillMaxWidth()) {
             // 支出列表项 - 添加长按检测

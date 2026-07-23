@@ -1,6 +1,8 @@
 package com.chronie.homemoneylite.ui.expense
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -293,7 +295,10 @@ fun ExpenseFilterDialog(
 
 /**
  * 支出类型选择器 - 支持搜索功能
+ * 使用自定义 Dialog + LazyColumn，避免 AlertDialog 内部嵌套 verticalScroll 在滚动时
+ * 出现测量异常（内容上移/崩坏/空白）的问题。
  */
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ExpenseTypeSelector(
     context: android.content.Context,
@@ -303,7 +308,7 @@ fun ExpenseTypeSelector(
 ) {
     var tempSelectedTypes by remember { mutableStateOf(selectedTypes) }
     var searchQuery by remember { mutableStateOf("") }
-    
+
     // Filter types based on search query
     val filteredTypes = remember(searchQuery) {
         if (searchQuery.isBlank()) {
@@ -316,26 +321,38 @@ fun ExpenseTypeSelector(
             }
         }
     }
-    
-    AlertDialog(
+
+    Dialog(
         onDismissRequest = onDismiss,
-        title = { 
-            Column {
-                Text(context.getString(R.string.expense_list_filter_select_types))
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .fillMaxHeight(0.8f),
+            shape = MaterialTheme.shapes.large,
+            color = MaterialTheme.colors.surface,
+            elevation = 6.dp
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = context.getString(R.string.expense_list_filter_select_types),
+                    style = MaterialTheme.typography.titleLarge
+                )
                 if (filteredTypes.size != ExpenseType.values().size) {
                     Text(
-                        text = "${context.getString(R.string.search_results_count, filteredTypes.size)}",
+                        text = context.getString(R.string.search_results_count, filteredTypes.size),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colors.onSurfaceVariant
                     )
                 }
-            }
-        },
-        text = {
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                // Search field
+
+                Spacer(modifier = Modifier.height(8.dp))
+
                 OutlinedTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
@@ -351,29 +368,29 @@ fun ExpenseTypeSelector(
                     },
                     singleLine = true
                 )
-                
+
                 Spacer(modifier = Modifier.height(8.dp))
-                
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(max = 300.dp)
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    if (filteredTypes.isEmpty()) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 32.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = context.getString(R.string.no_results_found),
-                                color = MaterialTheme.colors.onSurfaceVariant
-                            )
-                        }
-                    } else {
-                        filteredTypes.forEach { type ->
+
+                if (filteredTypes.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                            .padding(vertical = 32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = context.getString(R.string.no_results_found),
+                            color = MaterialTheme.colors.onSurfaceVariant
+                        )
+                    }
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f)
+                    ) {
+                        items(filteredTypes) { type ->
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically
@@ -396,19 +413,29 @@ fun ExpenseTypeSelector(
                         }
                     }
                 }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { onConfirm(tempSelectedTypes) }) {
-                Text(context.getString(R.string.confirm))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(context.getString(R.string.cancel))
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    TextButton(
+                        onClick = onDismiss,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(context.getString(R.string.cancel))
+                    }
+                    Button(
+                        onClick = { onConfirm(tempSelectedTypes) },
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Text(context.getString(R.string.confirm))
+                    }
+                }
             }
         }
-    )
+    }
 }
 
 /**
