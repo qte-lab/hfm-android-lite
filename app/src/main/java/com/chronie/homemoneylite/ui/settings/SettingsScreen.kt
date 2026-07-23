@@ -49,13 +49,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -1026,45 +1022,234 @@ private data class LibraryInfo(
 private val libraries = listOf(
     LibraryInfo(
         name = "Kotlin Coroutines Android",
-        version = "1.11.0",
+        version = "1.6.0",
         license = "Apache License 2.0",
         licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
         projectUrl = "https://github.com/Kotlin/kotlinx.coroutines"
     ),
     LibraryInfo(
+        name = "Kotlin Coroutines Test",
+        version = "1.6.1",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/Kotlin/kotlinx.coroutines"
+    ),
+    LibraryInfo(
+        name = "AndroidX Desugar JDK Libs",
+        version = "1.1.9",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/google/desugar_jdk_libs"
+    ),
+    LibraryInfo(
         name = "AndroidX Core KTX",
-        version = "1.19.0",
+        version = "1.7.0",
         license = "Apache License 2.0",
         licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
         projectUrl = "https://developer.android.com/jetpack/androidx/releases/core"
     ),
     LibraryInfo(
         name = "AndroidX AppCompat",
-        version = "1.7.1",
+        version = "1.4.2",
         license = "Apache License 2.0",
         licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
         projectUrl = "https://developer.android.com/jetpack/androidx/releases/appcompat"
     ),
     LibraryInfo(
         name = "AndroidX CoordinatorLayout",
-        version = "1.3.0",
+        version = "1.2.0",
         license = "Apache License 2.0",
         licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
         projectUrl = "https://developer.android.com/jetpack/androidx/releases/coordinatorlayout"
     ),
     LibraryInfo(
         name = "AndroidX Core Splashscreen",
-        version = "1.2.0",
+        version = "1.0.0",
         license = "Apache License 2.0",
         licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
         projectUrl = "https://developer.android.com/jetpack/androidx/releases/core"
     ),
     LibraryInfo(
+        name = "Jetpack Compose UI",
+        version = "1.1.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/compose"
+    ),
+    LibraryInfo(
+        name = "Jetpack Compose Material (Material 2)",
+        version = "1.1.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/compose-material"
+    ),
+    LibraryInfo(
+        name = "Accompanist SwipeRefresh",
+        version = "0.20.3",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/google/accompanist"
+    ),
+    LibraryInfo(
+        name = "Accompanist Insets",
+        version = "0.20.3",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/google/accompanist"
+    ),
+    LibraryInfo(
         name = "AndroidX Activity Compose",
-        version = "1.13.0",
+        version = "1.3.0",
         license = "Apache License 2.0",
         licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
         projectUrl = "https://developer.android.com/jetpack/androidx/releases/activity"
+    ),
+    LibraryInfo(
+        name = "AndroidX Lifecycle ViewModel Compose",
+        version = "2.5.1",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/lifecycle"
+    ),
+    LibraryInfo(
+        name = "AndroidX Navigation Compose",
+        version = "2.4.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/navigation"
+    ),
+    LibraryInfo(
+        name = "Dagger Hilt Android",
+        version = "2.41",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://dagger.dev/hilt/"
+    ),
+    LibraryInfo(
+        name = "AndroidX Hilt Navigation Compose",
+        version = "1.0.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/hilt"
+    ),
+    LibraryInfo(
+        name = "AndroidX Hilt Work",
+        version = "1.0.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/hilt"
+    ),
+    LibraryInfo(
+        name = "AndroidX Room Runtime",
+        version = "2.4.3",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/room"
+    ),
+    LibraryInfo(
+        name = "AndroidX Room KTX",
+        version = "2.4.3",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/room"
+    ),
+    LibraryInfo(
+        name = "Retrofit",
+        version = "2.9.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/square/retrofit"
+    ),
+    LibraryInfo(
+        name = "Retrofit Gson Converter",
+        version = "2.9.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/square/retrofit/tree/master/retrofit-converters/gson"
+    ),
+    LibraryInfo(
+        name = "OkHttp Logging Interceptor",
+        version = "4.10.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/square/okhttp"
+    ),
+    LibraryInfo(
+        name = "AndroidX Paging Runtime KTX",
+        version = "3.1.1",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/paging"
+    ),
+    LibraryInfo(
+        name = "Coil Compose",
+        version = "1.4.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/coil-kt/coil"
+    ),
+    LibraryInfo(
+        name = "AndroidX Security Crypto",
+        version = "1.0.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/security"
+    ),
+    LibraryInfo(
+        name = "SQLCipher Android",
+        version = "4.5.7",
+        license = "BSD 3-Clause License",
+        licenseUrl = "https://opensource.org/licenses/BSD-3-Clause",
+        projectUrl = "https://www.zetetic.net/sqlcipher/"
+    ),
+    LibraryInfo(
+        name = "AndroidX SQLite",
+        version = "2.2.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/sqlite"
+    ),
+    LibraryInfo(
+        name = "AndroidX Work Runtime KTX",
+        version = "2.7.1",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/work"
+    ),
+    LibraryInfo(
+        name = "FastExcel",
+        version = "0.12.15",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/dhatim/fastexcel"
+    ),
+    LibraryInfo(
+        name = "FastExcel Reader",
+        version = "0.12.15",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/dhatim/fastexcel"
+    ),
+    LibraryInfo(
+        name = "Aalto XML",
+        version = "1.3.2",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/FasterXML/aalto-xml"
+    ),
+    LibraryInfo(
+        name = "XZ",
+        version = "1.9",
+        license = "Public Domain",
+        licenseUrl = "https://tukaani.org/xz/legal.html",
+        projectUrl = "https://tukaani.org/xz/"
+    ),
+    LibraryInfo(
+        name = "UCrop",
+        version = "2.2.8",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://github.com/Yalantis/uCrop"
     ),
     LibraryInfo(
         name = "JUnit",
@@ -1075,220 +1260,45 @@ private val libraries = listOf(
     ),
     LibraryInfo(
         name = "AndroidX Test JUnit",
-        version = "1.3.0",
+        version = "1.1.3",
         license = "Apache License 2.0",
         licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
         projectUrl = "https://developer.android.com/jetpack/androidx/releases/test"
     ),
     LibraryInfo(
         name = "AndroidX Test Espresso",
-        version = "3.7.0",
+        version = "3.4.0",
         license = "Apache License 2.0",
         licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
         projectUrl = "https://developer.android.com/jetpack/androidx/releases/test"
     ),
     LibraryInfo(
-        name = "Jetpack Compose BOM",
-        version = "2026.06.00",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/compose-bom"
-    ),
-    LibraryInfo(
-        name = "M3Color",
-        version = "2026.1",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://github.com/Kyant0/M3Color"
-    ),
-    LibraryInfo(
-        name = "AndroidX Material3",
-        version = "1.4.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/compose-material3"
-    ),
-    LibraryInfo(
-        name = "AndroidX Lifecycle Runtime Compose",
-        version = "2.10.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/lifecycle"
-    ),
-    LibraryInfo(
-        name = "AndroidX Lifecycle ViewModel Compose",
-        version = "2.10.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/lifecycle"
-    ),
-    LibraryInfo(
-        name = "AndroidX Navigation Compose",
-        version = "2.9.8",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/navigation"
-    ),
-    LibraryInfo(
-        name = "Dagger Hilt Android",
-        version = "2.60",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://dagger.dev/hilt/"
-    ),
-    LibraryInfo(
-        name = "AndroidX Hilt Navigation Compose",
-        version = "1.3.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/hilt"
-    ),
-    LibraryInfo(
-        name = "AndroidX Room Runtime",
-        version = "2.8.4",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/room"
-    ),
-    LibraryInfo(
-        name = "AndroidX Room KTX",
-        version = "2.8.4",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/room"
-    ),
-    LibraryInfo(
-        name = "Retrofit",
-        version = "3.0.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://github.com/square/retrofit"
-    ),
-    LibraryInfo(
-        name = "Retrofit Gson Converter",
-        version = "3.0.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://github.com/square/retrofit/tree/master/retrofit-converters/gson"
-    ),
-    LibraryInfo(
-        name = "OkHttp Logging Interceptor",
-        version = "5.4.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://github.com/square/okhttp"
-    ),
-    LibraryInfo(
-        name = "AndroidX Paging Runtime KTX",
-        version = "3.5.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/paging"
-    ),
-    LibraryInfo(
-        name = "AndroidX Paging Compose",
-        version = "3.5.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/paging"
-    ),
-    LibraryInfo(
-        name = "Coil Compose",
-        version = "2.7.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://github.com/coil-kt/coil"
-    ),
-    LibraryInfo(
-        name = "AndroidX Security Crypto",
-        version = "1.1.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/security"
-    ),
-    LibraryInfo(
-        name = "SQLCipher Android",
-        version = "4.16.0",
-        license = "BSD 3-Clause License",
-        licenseUrl = "https://opensource.org/licenses/BSD-3-Clause",
-        projectUrl = "https://www.zetetic.net/sqlcipher/"
-    ),
-    LibraryInfo(
-        name = "AndroidX SQLite",
-        version = "2.6.2",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/sqlite"
-    ),
-    LibraryInfo(
-        name = "AndroidX Work Runtime KTX",
-        version = "2.11.2",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/work"
-    ),
-    LibraryInfo(
-        name = "AndroidX Hilt Work",
-        version = "1.3.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://developer.android.com/jetpack/androidx/releases/hilt"
-    ),
-    LibraryInfo(
-        name = "FastExcel",
-        version = "0.20.2",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://github.com/dhatim/fastexcel"
-    ),
-    LibraryInfo(
-        name = "FastExcel Reader",
-        version = "0.20.2",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://github.com/dhatim/fastexcel"
-    ),
-    LibraryInfo(
-        name = "Aalto XML",
-        version = "1.4.0",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://github.com/FasterXML/aalto-xml"
-    ),
-    LibraryInfo(
-        name = "XZ",
-        version = "1.12",
-        license = "Public Domain",
-        licenseUrl = "https://tukaani.org/xz/legal.html",
-        projectUrl = "https://tukaani.org/xz/"
-    ),
-    LibraryInfo(
-        name = "UCrop",
-        version = "2.2.11",
-        license = "Apache License 2.0",
-        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://github.com/Yalantis/uCrop"
-    ),
-    LibraryInfo(
         name = "MockK",
-        version = "1.14.9",
+        version = "1.12.4",
         license = "Apache License 2.0",
         licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
         projectUrl = "https://mockk.io/"
     ),
     LibraryInfo(
-        name = "Kotlin Coroutines Test",
-        version = "1.11.0",
+        name = "AndroidX Compose UI Test",
+        version = "1.1.0",
         license = "Apache License 2.0",
         licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
-        projectUrl = "https://github.com/Kotlin/kotlinx.coroutines"
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/compose"
+    ),
+    LibraryInfo(
+        name = "AndroidX Compose UI Tooling",
+        version = "1.1.0",
+        license = "Apache License 2.0",
+        licenseUrl = "https://www.apache.org/licenses/LICENSE-2.0",
+        projectUrl = "https://developer.android.com/jetpack/androidx/releases/compose"
     )
 )
 
 /**
- * 在设置主界面（版本信息上方）直接展示所有开源库的许可证，按许可证分组，
- * 每一组可点击跳转到对应许可证页面。格式示例：
- * Apache License 2.0: M3Color、AndroidX Material3、...
+ * 在设置主界面（版本信息上方）直接展示所有开源库，按许可证分组。
+ * - 每个库显示名称、版本号，并可在点击后跳转至项目主页；
+ * - 每个许可证分组标题可点击跳转至对应许可证全文页面。
  */
 @Composable
 private fun OpenSourceLicensesInline(context: Context) {
@@ -1306,62 +1316,120 @@ private fun OpenSourceLicensesInline(context: Context) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text(
-                text = context.getString(R.string.open_source_licenses),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colors.onSurface,
-                modifier = Modifier.padding(bottom = 12.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = context.getString(R.string.open_source_licenses),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier.weight(1f)
+                )
+                Text(
+                    text = "共 ${libraries.size} 个开源库",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colors.onSurfaceVariant
+                )
+            }
 
             val grouped = libraries.groupBy { it.license }
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 grouped.forEach { (license, libs) ->
                     val licenseUrl = libs.first().licenseUrl
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                try {
-                                    context.startActivity(
-                                        Intent(Intent.ACTION_VIEW, Uri.parse(licenseUrl)).apply {
-                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        }
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        // 许可证分组标题（可点击跳转许可证全文）
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable { openLink(context, licenseUrl) }
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Surface(
+                                shape = MaterialTheme.shapes.small,
+                                color = MaterialTheme.colors.primary.copy(alpha = 0.12f)
+                            ) {
+                                Text(
+                                    text = license,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colors.primary,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Icon(
+                                imageVector = Icons.Default.OpenInNew,
+                                contentDescription = null,
+                                modifier = Modifier.size(14.dp),
+                                tint = MaterialTheme.colors.onSurfaceVariant
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        // 该许可证下的各个开源库（点击跳转项目主页）
+                        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            libs.forEach { lib ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { openLink(context, lib.projectUrl) }
+                                        .padding(vertical = 8.dp, horizontal = 4.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = lib.name,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colors.onSurface
+                                        )
+                                        Text(
+                                            text = lib.projectUrl,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colors.onSurfaceVariant,
+                                            maxLines = 1
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Surface(
+                                        shape = MaterialTheme.shapes.small,
+                                        color = MaterialTheme.colors.surfaceVariant
+                                    ) {
+                                        Text(
+                                            text = lib.version,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = MaterialTheme.colors.onSurfaceVariant,
+                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Icon(
+                                        imageVector = Icons.Default.OpenInNew,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp),
+                                        tint = MaterialTheme.colors.primary
                                     )
-                                } catch (_: Exception) {
-                                    // 忽略无法打开链接的异常
                                 }
                             }
-                            .padding(vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = buildAnnotatedString {
-                                withStyle(
-                                    SpanStyle(
-                                        color = MaterialTheme.colors.primary,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                ) {
-                                    append("$license: ")
-                                }
-                                withStyle(
-                                    SpanStyle(color = MaterialTheme.colors.onSurfaceVariant)
-                                ) {
-                                    append(libs.joinToString(separator = "、") { it.name })
-                                }
-                            },
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Icon(
-                            imageVector = Icons.Filled.OpenInNew,
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = MaterialTheme.colors.onSurfaceVariant
-                        )
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+private fun openLink(context: Context, url: String) {
+    try {
+        context.startActivity(
+            Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+        )
+    } catch (_: Exception) {
+        // 忽略无法打开链接的异常
     }
 }
