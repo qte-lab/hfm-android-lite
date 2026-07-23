@@ -1,5 +1,6 @@
 package com.chronie.homemoneylite.ui.charts
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -96,6 +97,7 @@ fun WeekdayRadarChartCard(
 /**
  * 雷达图组件
  */
+@SuppressLint("DefaultLocale")
 @Composable
 private fun WeekdayRadarChart(
     context: Context,
@@ -293,6 +295,7 @@ private fun WeekdayRadarChart(
 /**
  * 星期数据项
  */
+@SuppressLint("DefaultLocale")
 @Composable
 fun WeekdayDataItem(
     context: Context,

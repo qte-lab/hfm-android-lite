@@ -15,12 +15,12 @@ import com.chronie.homemoneylite.domain.model.SortOption
 import com.chronie.homemoneylite.domain.repository.ExpenseRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withTimeout
 import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
 class ExpenseRepositoryImpl @Inject constructor(
@@ -53,7 +53,7 @@ class ExpenseRepositoryImpl @Inject constructor(
             val networkTimeoutMillis = 3000L
             
             val expenses = try {
-                withTimeout(networkTimeoutMillis) {
+                withTimeout(networkTimeoutMillis.milliseconds) {
                     val response = expenseApi.getExpenses(
                         page = page,
                         limit = limit,

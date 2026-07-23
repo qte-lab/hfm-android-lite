@@ -116,7 +116,6 @@
 }
 -keep class com.chronie.homemoneylite.data.remote.dto.** { <fields>; }
 -keep class com.google.gson.** { *; }
--keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.stream.** { *; }
 # 保留 TypeToken 及其子类的泛型信息（防止 R8 删除 ParameterizedType）
 -keep class com.google.gson.reflect.TypeToken

@@ -48,7 +48,6 @@ data class SyncConflict(
  */
 enum class ConflictType {
     UPDATE_CONFLICT,  // 本地和服务器都有更新
-    DELETE_CONFLICT   // 一方删除，另一方更新
 }
 
 /**

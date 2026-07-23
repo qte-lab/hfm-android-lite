@@ -2,22 +2,11 @@ package com.chronie.homemoneylite.ui.main
 
 import android.content.Context
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.filled.InsertChart
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.IconButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.insets.navigationBarsPadding
-import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.ui.expense.ExpenseListScreen
 import com.chronie.homemoneylite.ui.settings.SettingsScreen
 import com.chronie.homemoneylite.ui.theme.*
@@ -51,7 +40,6 @@ fun MainScreen(
                         context = context,
                         shouldRefresh = shouldRefreshExpenses,
                         onRefreshHandled = onRefreshHandled,
-                        onNavigateToMoreFunctions = {},
                         onNavigateToAddExpense = onNavigateToAddExpense,
                         onNavigateToEditExpense = onNavigateToEditExpense
                     )

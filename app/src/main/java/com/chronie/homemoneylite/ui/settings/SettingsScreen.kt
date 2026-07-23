@@ -60,6 +60,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
+import kotlin.time.Duration.Companion.milliseconds
 
 private val EaseOutCubic = CubicBezierEasing(0.33f, 1f, 0.68f, 1f)
 private val EaseInCubic = CubicBezierEasing(0.32f, 0f, 0.67f, 0f)
@@ -291,8 +292,7 @@ private fun DataSyncSettingsContent(
     SettingsCategorySection(title = context.getString(R.string.sync_title)) {
         SyncSection(
             viewModel = viewModel,
-            context = context,
-            onNavigateToLanSync = onNavigateToLanSync
+            context = context
         )
     }
 
@@ -349,7 +349,7 @@ private fun SettingsCategorySection(
 fun AppVersionInfo(context: Context) {
     val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
     val versionName = packageInfo.versionName
-    val versionCode = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+    val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
         packageInfo.longVersionCode
     } else {
         @Suppress("DEPRECATION")
@@ -576,15 +576,15 @@ fun DataImportExportSection(
     var endDate by remember { mutableStateOf<java.time.LocalDate?>(null) }
     
     // 权限请求
-    val permissionLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
-        contract = androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions()
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         val allGranted = permissions.values.all { it }
         if (!allGranted) {
-            android.widget.Toast.makeText(
+            Toast.makeText(
                 context,
                 context.getString(R.string.permission_storage_required),
-                android.widget.Toast.LENGTH_LONG
+                Toast.LENGTH_LONG
             ).show()
         }
     }
@@ -604,7 +604,7 @@ fun DataImportExportSection(
             androidx.core.content.ContextCompat.checkSelfPermission(
                 context,
                 permission
-            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED
         }
         
         if (allGranted) {
@@ -615,9 +615,9 @@ fun DataImportExportSection(
     }
     
     // 文件选择器
-    val filePickerLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
-        contract = androidx.activity.result.contract.ActivityResultContracts.GetContent()
-    ) { uri: android.net.Uri? ->
+    val filePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
         uri?.let { viewModel.importExpenses(it) }
     }
     
@@ -858,8 +858,7 @@ fun DataImportExportSection(
 @Composable
 fun SyncSection(
     viewModel: SettingsViewModel,
-    context: Context,
-    onNavigateToLanSync: () -> Unit = {}
+    context: Context
 ) {
     val syncStatus by viewModel.syncStatus.collectAsState()
     val lastSyncTime by viewModel.lastSyncTime.collectAsState()
@@ -870,7 +869,7 @@ fun SyncSection(
     syncMessage?.let { message ->
         LaunchedEffect(message) {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-            kotlinx.coroutines.delay(3000)
+            kotlinx.coroutines.delay(3000.milliseconds)
             viewModel.clearSyncMessage()
         }
     }

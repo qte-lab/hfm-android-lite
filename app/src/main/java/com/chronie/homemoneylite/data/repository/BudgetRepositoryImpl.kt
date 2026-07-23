@@ -72,10 +72,10 @@ class BudgetRepositoryImpl @Inject constructor(
             }
             
             // 获取当月的起始和结束日期字符串
-            val now = java.time.LocalDate.now()
-            val yearMonth = java.time.YearMonth.from(now)
-            val startOfMonth = yearMonth.atDay(1).format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            val endOfMonth = yearMonth.atEndOfMonth().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            val now = LocalDate.now()
+            val yearMonth = YearMonth.from(now)
+            val startOfMonth = yearMonth.atDay(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            val endOfMonth = yearMonth.atEndOfMonth().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
             
             android.util.Log.d("BudgetRepository", "Querying expenses from $startOfMonth to $endOfMonth")
             

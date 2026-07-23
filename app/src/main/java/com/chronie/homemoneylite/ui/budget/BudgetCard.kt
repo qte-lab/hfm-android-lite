@@ -1,5 +1,6 @@
 package com.chronie.homemoneylite.ui.budget
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -11,7 +12,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,7 +32,7 @@ import java.util.Locale
 fun BudgetCard(
     context: android.content.Context,
     viewModel: BudgetViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier,
+    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier,
     refreshTrigger: Int = 0
 ) {
     val uiState by viewModel.uiState.collectAsState()

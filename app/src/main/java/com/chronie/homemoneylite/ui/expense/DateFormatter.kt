@@ -1,12 +1,13 @@
 package com.chronie.homemoneylite.ui.expense
 
+import android.annotation.SuppressLint
 import android.content.Context
 import com.chronie.homemoneylite.R
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
+@SuppressLint("DefaultLocale")
 fun formatDateShort(dateString: String, locale: String): String {
     try {
         val date = LocalDate.parse(dateString)
@@ -66,10 +67,10 @@ fun formatRelativeDate(dateString: String, context: Context, locale: String? = n
 
         val formattedDate = if (locale != null) formatDateShort(dateString, locale) else dateString
 
-        return when {
-            daysBetween == 0L -> "${context.getString(R.string.date_today)}（$weekdayString）"
-            daysBetween == 1L -> "${context.getString(R.string.date_yesterday)}（$weekdayString）"
-            daysBetween in 2..6 -> "${context.getString(R.string.date_days_ago, daysBetween)}（$weekdayString）"
+        return when (daysBetween) {
+            0L -> "${context.getString(R.string.date_today)}（$weekdayString）"
+            1L -> "${context.getString(R.string.date_yesterday)}（$weekdayString）"
+            in 2..6 -> "${context.getString(R.string.date_days_ago, daysBetween)}（$weekdayString）"
             else -> "$formattedDate（$weekdayString）"
         }
     } catch (e: Exception) {

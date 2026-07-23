@@ -1,5 +1,6 @@
 package com.chronie.homemoneylite.ui.charts
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,6 +21,7 @@ import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
 import com.chronie.homemoneylite.ui.theme.*
 import java.text.NumberFormat
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun WeekdayDetailScreen(
     context: Context,
@@ -190,6 +192,7 @@ fun WeekdayDetailScreen(
     }
 }
 
+@SuppressLint("DefaultLocale")
 @Composable
 private fun CategoryDetailItem(
     context: Context,

@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -43,9 +42,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.util.Locale
 import javax.inject.Inject
-
-private val EaseOutCubic = CubicBezierEasing(0.33f, 1f, 0.68f, 1f)
-private val EaseInCubic = CubicBezierEasing(0.32f, 0f, 0.67f, 0f)
 
 val LocalLanguageManager = staticCompositionLocalOf<LanguageManager> {
     error("No LanguageManager provided")

@@ -71,14 +71,6 @@ class LanguageManager @Inject constructor(
         resources.updateConfiguration(config, resources.displayMetrics)
     }
 
-    fun migrateOldLanguageCode(oldCode: String?) {
-        if (oldCode == null) return
-
-        if (oldCode == "zh") {
-            setLanguage(Language.CHINESE)
-        }
-    }
-
     companion object {
         private const val KEY_LANGUAGE = "selected_language"
         private const val KEY_LANGUAGE_SET_BY_USER = "language_set_by_user"

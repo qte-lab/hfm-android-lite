@@ -25,11 +25,8 @@ import com.chronie.homemoneylite.ui.budget.BudgetCard
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
 import com.chronie.homemoneylite.ui.components.PullToRefreshBox
 import com.chronie.homemoneylite.ui.theme.*
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * 支出列表界面
@@ -69,7 +66,7 @@ fun ExpenseListScreen(
     // 处理刷新状态重置
     LaunchedEffect(isRefreshing) {
         if (isRefreshing) {
-            delay(1000)
+            delay(1000.milliseconds)
             isRefreshing = false
         }
     }

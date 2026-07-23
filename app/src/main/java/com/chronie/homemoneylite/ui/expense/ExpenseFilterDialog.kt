@@ -267,7 +267,7 @@ fun ExpenseFilterDialog(
     // 开始日期选择器
     if (showStartDatePicker) {
         val initialStartMillis = startDate?.toEpochDay()?.times(86400000L)
-            ?: java.time.LocalDate.now().toEpochDay() * 86400000L
+            ?: (LocalDate.now().toEpochDay() * 86400000L)
         AppDatePickerDialog(
             initialDateMillis = initialStartMillis,
             onDateSelected = { millis ->
@@ -281,7 +281,7 @@ fun ExpenseFilterDialog(
     // 结束日期选择器
     if (showEndDatePicker) {
         val initialEndMillis = endDate?.toEpochDay()?.times(86400000L)
-            ?: java.time.LocalDate.now().toEpochDay() * 86400000L
+            ?: (LocalDate.now().toEpochDay() * 86400000L)
         AppDatePickerDialog(
             initialDateMillis = initialEndMillis,
             onDateSelected = { millis ->

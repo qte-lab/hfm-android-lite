@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
 class HealthCheckService @Inject constructor(
@@ -61,7 +62,7 @@ class HealthCheckService @Inject constructor(
                 } else {
                     android.util.Log.w("HealthCheckService", "No network connection, skipping health check")
                 }
-                delay(CHECK_INTERVAL)
+                delay(CHECK_INTERVAL.milliseconds)
             }
         }
     }
@@ -71,7 +72,7 @@ class HealthCheckService @Inject constructor(
             android.util.Log.d("HealthCheckService", "Checking server health...")
             
             // 使用超时机制，避免长时间阻塞
-            val response = withTimeout(HEALTH_CHECK_TIMEOUT) {
+            val response = withTimeout(HEALTH_CHECK_TIMEOUT.milliseconds) {
                 memberApi.checkHealth()
             }
             

@@ -1,7 +1,6 @@
 package com.chronie.homemoneylite.ui.expense
 
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Environment
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.*
@@ -25,8 +23,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.clickable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,7 +38,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import com.yalantis.ucrop.UCrop
-import com.yalantis.ucrop.UCropActivity
 import android.content.Intent
 
 /**
@@ -50,7 +45,7 @@ import android.content.Intent
  */
 @Composable
 fun AIExpenseScreen(
-    context: android.content.Context,
+    context: Context,
     onNavigateBack: () -> Unit,
     onRecordsSaved: () -> Unit,
     viewModel: AIExpenseViewModel = hiltViewModel()
@@ -64,7 +59,7 @@ fun AIExpenseScreen(
         if (it.resultCode == android.app.Activity.RESULT_OK) {
             // 从uCrop获取裁剪后的图片URI
             val outputUri = UCrop.getOutput(it.data ?: Intent())
-            outputUri?.let {
+            outputUri?.let { it ->
                 viewModel.addImages(listOf(it))
                 // 删除临时文件
                 val file = File(it.path ?: "")
@@ -132,7 +127,7 @@ fun AIExpenseScreen(
                     .withOptions(options)
                 cropLauncher.launch(uCrop.getIntent(context))
             } catch (e: Exception) {
-                android.util.Log.e("AIExpenseScreen", "Failed to start crop", e)
+                Log.e("AIExpenseScreen", "Failed to start crop", e)
             }
         }
     }
@@ -181,7 +176,7 @@ fun AIExpenseScreen(
                         .withOptions(options)
                     cropLauncher.launch(uCrop.getIntent(context))
                 } catch (e: Exception) {
-                    android.util.Log.e("AIExpenseScreen", "Failed to start crop", e)
+                    Log.e("AIExpenseScreen", "Failed to start crop", e)
                 }
             }
         }
@@ -223,7 +218,7 @@ fun AIExpenseScreen(
                 .withOptions(options)
             existingImageCropLauncher.launch(uCrop.getIntent(context))
         } catch (e: Exception) {
-            android.util.Log.e("AIExpenseScreen", "Failed to start crop", e)
+            Log.e("AIExpenseScreen", "Failed to start crop", e)
         }
     }
 
@@ -399,7 +394,7 @@ fun AIExpenseScreen(
  */
 @Composable
 private fun ImageSelectionSection(
-    context: android.content.Context,
+    context: Context,
     selectedImages: List<Uri>,
     onCameraSelected: () -> Unit,
     onGallerySelected: () -> Unit,
@@ -555,7 +550,7 @@ private fun ImagePreviewCard(
  */
 @Composable
 private fun TextInputSection(
-    context: android.content.Context,
+    context: Context,
     textInput: String,
     onTextChange: (String) -> Unit
 ) {
@@ -582,7 +577,7 @@ private fun TextInputSection(
  */
 @Composable
 private fun RecognizedRecordsSection(
-    context: android.content.Context,
+    context: Context,
     records: List<AIExpenseRecord>,
     onUpdateRecord: (Int, AIExpenseRecord) -> Unit,
     onDeleteRecord: (Int) -> Unit,
@@ -640,7 +635,7 @@ private fun RecognizedRecordsSection(
  */
 @Composable
 private fun RecordEditCard(
-    context: android.content.Context,
+    context: Context,
     record: AIExpenseRecord,
     onUpdate: (AIExpenseRecord) -> Unit,
     onDelete: () -> Unit
@@ -729,7 +724,7 @@ private fun RecordEditCard(
  */
 @Composable
 private fun RecordEditDialog(
-    context: android.content.Context,
+    context: Context,
     record: AIExpenseRecord,
     onDismiss: () -> Unit,
     onConfirm: (AIExpenseRecord) -> Unit
@@ -773,7 +768,7 @@ private fun RecordEditDialog(
                     onClick = { showDatePicker = true },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(selectedDate.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                    Text(selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     Spacer(modifier = Modifier.weight(1f))
                     Icon(Icons.Default.DateRange, contentDescription = null)
                 }
@@ -794,7 +789,7 @@ private fun RecordEditDialog(
                     val updatedRecord = record.copy(
                         type = selectedType,
                         amount = amount.toDoubleOrNull() ?: record.amount,
-                        date = selectedDate.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                        date = selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                         remark = remark,
                         isEdited = true
                     )
@@ -841,7 +836,7 @@ private fun RecordEditDialog(
  */
 @Composable
 private fun ExpenseTypePickerDialog(
-    context: android.content.Context,
+    context: Context,
     selectedType: ExpenseType,
     onDismiss: () -> Unit,
     onTypeSelected: (ExpenseType) -> Unit
@@ -868,7 +863,7 @@ private fun ExpenseTypePickerDialog(
                 Text(context.getString(R.string.ai_expense_select_type))
                 if (filteredTypes.size != ExpenseType.values().size) {
                     Text(
-                        text = "${context.getString(R.string.search_results_count, filteredTypes.size)}",
+                        text = context.getString(R.string.search_results_count, filteredTypes.size),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colors.onSurfaceVariant
                     )

@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chronie.homemoneylite.R
-import com.chronie.homemoneylite.core.common.Language
 import com.chronie.homemoneylite.core.common.LanguageManager
 import com.chronie.homemoneylite.data.sync.SyncScheduler
 import com.chronie.homemoneylite.domain.model.SyncStatus
@@ -14,7 +13,6 @@ import com.chronie.homemoneylite.domain.usecase.ImportExpensesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlin.coroutines.resume
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -29,8 +27,6 @@ class SettingsViewModel @Inject constructor(
     private val importExpensesUseCase: ImportExpensesUseCase,
     @param:dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
 ) : ViewModel() {
-
-    val currentLanguage: StateFlow<Language> = languageManager.currentLanguage
 
     private val _aiApiKey = MutableStateFlow("")
     val aiApiKey: StateFlow<String> = _aiApiKey.asStateFlow()
@@ -61,10 +57,6 @@ class SettingsViewModel @Inject constructor(
     init {
         loadSyncInfo()
         loadAIApiKey()
-    }
-
-    fun setLanguage(language: Language) {
-        languageManager.setLanguage(language)
     }
 
     fun clearSyncMessage() {

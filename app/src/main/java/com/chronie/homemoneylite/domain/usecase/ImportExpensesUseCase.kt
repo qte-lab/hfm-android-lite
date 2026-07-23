@@ -8,8 +8,6 @@ import com.chronie.homemoneylite.domain.model.ExpenseType
 import com.chronie.homemoneylite.domain.repository.ExpenseRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.dhatim.fastexcel.reader.ReadableWorkbook
-import org.dhatim.fastexcel.reader.Sheet
-import org.dhatim.fastexcel.reader.Row
 import org.dhatim.fastexcel.reader.Cell
 
 import java.util.*
@@ -63,7 +61,7 @@ class ImportExpensesUseCase @Inject constructor(
         
         context.contentResolver.openInputStream(uri)?.use { inputStream ->
             ReadableWorkbook(inputStream).use { workbook ->
-                val sheet = workbook.getFirstSheet()
+                val sheet = workbook.firstSheet
                 
                 val rows = sheet.read()
                 if (rows.isEmpty()) {
