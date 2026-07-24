@@ -21,6 +21,7 @@ import com.chronie.homemoneylite.ui.budget.BudgetSettingsDialogFragment
 import com.chronie.homemoneylite.ui.budget.BudgetUiState
 import com.chronie.homemoneylite.ui.budget.BudgetViewModel
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
+import com.chronie.homemoneylite.ui.common.slideNavOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.appcompat.widget.PopupMenu
@@ -305,15 +306,19 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
     }
 
     private fun navigateEdit(id: String) {
-        findNavController().navigate(R.id.addExpenseFragment, bundleOf("expenseId" to id))
+        findNavController().navigate(
+            R.id.addExpenseFragment,
+            bundleOf("expenseId" to id),
+            slideNavOptions()
+        )
     }
 
     private fun navigateAdd() {
-        findNavController().navigate(R.id.addExpenseFragment)
+        findNavController().navigate(R.id.addExpenseFragment, null, slideNavOptions())
     }
 
     private fun navigateAI() {
-        findNavController().navigate(R.id.aiExpenseFragment)
+        findNavController().navigate(R.id.aiExpenseFragment, null, slideNavOptions())
     }
 
     private fun getSortOptionText(option: SortOption): String = when (option) {

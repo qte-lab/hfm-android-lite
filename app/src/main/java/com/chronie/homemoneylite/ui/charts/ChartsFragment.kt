@@ -22,6 +22,7 @@ import com.chronie.homemoneylite.databinding.ItemChartCategoryBinding
 import com.chronie.homemoneylite.databinding.ItemChartWeekdayBinding
 import com.chronie.homemoneylite.domain.model.TimeRange
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
+import com.chronie.homemoneylite.ui.common.slideNavOptions
 import com.chronie.homemoneylite.ui.components.showWheelDateRangePicker
 import com.chronie.homemoneylite.ui.expense.ExpenseTypeLocalizer
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
@@ -531,7 +532,8 @@ class ChartsFragment : Fragment() {
                 "percentage" to wd.percentage,
                 "startDate" to currentStartStr,
                 "endDate" to currentEndStr
-            )
+            ),
+            slideNavOptions()
         )
     }
 
