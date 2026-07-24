@@ -7,7 +7,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -51,6 +51,8 @@ fun ChartsScreen(
     val customStartDate by viewModel.customStartDate.collectAsState()
     val customEndDate by viewModel.customEndDate.collectAsState()
     var timeRangeMenuExpanded by remember { mutableStateOf(false) }
+    var chartMenuExpanded by remember { mutableStateOf(false) }
+    var selectedChart by remember { mutableStateOf(ChartType.TREND) }
     var showCustomRangeDialog by remember { mutableStateOf(false) }
     
     Box(modifier = Modifier.fillMaxSize()) {
@@ -73,7 +75,39 @@ fun ChartsScreen(
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.weight(1f).padding(start = 8.dp)
                     )
-                    
+
+                    // 图表类型选择（下拉菜单，已迁移到标题栏）
+                    Box {
+                        IconButton(onClick = { chartMenuExpanded = true }) {
+                            Icon(
+                                imageVector = Icons.Default.BarChart,
+                                contentDescription = context.getString(R.string.select_chart)
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = chartMenuExpanded,
+                            onDismissRequest = { chartMenuExpanded = false }
+                        ) {
+                            ChartType.values().forEach { chartType ->
+                                DropdownMenuItem(
+                                    onClick = {
+                                        selectedChart = chartType
+                                        chartMenuExpanded = false
+                                    }
+                                ) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        RadioButton(
+                                            selected = selectedChart == chartType,
+                                            onClick = null
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(context.getString(chartType.stringRes))
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     Box {
                         IconButton(onClick = { timeRangeMenuExpanded = true }) {
                             Icon(
@@ -132,6 +166,7 @@ fun ChartsScreen(
                     ChartsContent(
                         context = context,
                         state = state,
+                        selectedChart = selectedChart,
                         selectedTimeRange = selectedTimeRange,
                         onNavigateToWeekdayDetail = onNavigateToWeekdayDetail
                     )
@@ -177,15 +212,13 @@ fun ChartsScreen(
 private fun ChartsContent(
     context: Context,
     state: ChartsUiState.Success,
+    selectedChart: ChartType,
     selectedTimeRange: TimeRange,
     onNavigateToWeekdayDetail: (dayOfWeek: Int, amount: Double, count: Int, percentage: Float, startDate: String, endDate: String) -> Unit = { _, _, _, _, _, _ -> }
 ) {
     val scrollState = rememberScrollState()
     val currencyFormat = remember { NumberFormat.getCurrencyInstance(Locale.getDefault()) }
 
-    // 当前选中的图表（通过下拉菜单切换）
-    var selectedChart by remember { mutableStateOf(ChartType.TREND) }
-    
     // 调试日志
     LaunchedEffect(state) {
         android.util.Log.d("ChartsScreen", "UI updated: total=${state.statistics.totalAmount}, categories=${state.categoryData.size}, daily=${state.dailyData.size}")
@@ -205,15 +238,6 @@ private fun ChartsContent(
         
         // 统计摘要
         StatisticsSummaryCard(context, state.statistics, currencyFormat)
-        
-        Spacer(modifier = Modifier.height(16.dp))
-        
-        // 图表类型选择（下拉菜单）
-        ChartSelector(
-            context = context,
-            selectedChart = selectedChart,
-            onChartSelected = { selectedChart = it }
-        )
         
         Spacer(modifier = Modifier.height(16.dp))
         
@@ -240,66 +264,6 @@ private enum class ChartType(val stringRes: Int) {
     TREND(R.string.trend_chart),
     CATEGORY(R.string.category_breakdown),
     WEEKDAY(R.string.weekday_analysis)
-}
-
-/**
- * 图表选择下拉菜单
- */
-@Composable
-private fun ChartSelector(
-    context: Context,
-    selectedChart: ChartType,
-    onChartSelected: (ChartType) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    
-    Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                OutlinedTextField(
-                    value = context.getString(selectedChart.stringRes),
-                    onValueChange = {},
-                    readOnly = true,
-                    label = { Text(context.getString(R.string.select_chart)) },
-                    trailingIcon = {
-                        IconButton(onClick = { expanded = !expanded }) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowDropDown,
-                                contentDescription = "Select chart"
-                            )
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                )
-                
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    ChartType.values().forEach { chartType ->
-                        DropdownMenuItem(
-                            onClick = {
-                                onChartSelected(chartType)
-                                expanded = false
-                            }
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                RadioButton(
-                                    selected = selectedChart == chartType,
-                                    onClick = {
-                                        onChartSelected(chartType)
-                                        expanded = false
-                                    }
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                                Text(context.getString(chartType.stringRes))
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
 
 @Composable

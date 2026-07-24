@@ -22,6 +22,7 @@ fun MainScreen(
     onNavigateToAddExpense: () -> Unit = {},
     onNavigateToEditExpense: (expenseId: String) -> Unit = {},
     onNavigateToMoreFunctions: () -> Unit = {},
+    onNavigateToAIExpense: () -> Unit = {},
     onNavigateToWeekdayDetail: (dayOfWeek: Int, amount: Double, count: Int, percentage: Float, startDate: String, endDate: String) -> Unit = { _, _, _, _, _, _ -> },
     onNavigateToLanSync: () -> Unit = {}
 ) {
@@ -41,6 +42,7 @@ fun MainScreen(
                         shouldRefresh = shouldRefreshExpenses,
                         onRefreshHandled = onRefreshHandled,
                         onNavigateToAddExpense = onNavigateToAddExpense,
+                        onNavigateToAIExpense = onNavigateToAIExpense,
                         onNavigateToEditExpense = onNavigateToEditExpense
                     )
                 }

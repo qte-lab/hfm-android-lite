@@ -46,7 +46,6 @@ fun ExpenseFilterDialog(
     var maxAmount by remember { mutableStateOf(currentFilters.maxAmount?.toString() ?: "") }
     var startDate by remember { mutableStateOf(currentFilters.startDate) }
     var endDate by remember { mutableStateOf(currentFilters.endDate) }
-    var sortOption by remember { mutableStateOf(currentFilters.sortBy) }
     var showTypeSelector by remember { mutableStateOf(false) }
     var showStartDatePicker by remember { mutableStateOf(false) }
     var showEndDatePicker by remember { mutableStateOf(false) }
@@ -59,8 +58,8 @@ fun ExpenseFilterDialog(
     ) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth(0.95f)
-                .fillMaxHeight(0.9f),
+                .fillMaxWidth(0.8f)
+                .height(500.dp),
             shape = MaterialTheme.shapes.large,
             color = MaterialTheme.colors.surface,
             elevation = 6.dp
@@ -178,30 +177,6 @@ fun ExpenseFilterDialog(
                             singleLine = true
                         )
                     }
-                    
-                    // 排序选项
-                    Text(
-                        text = context.getString(R.string.expense_list_sort),
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                    
-                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        SortOption.values().forEach { option ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                RadioButton(
-                                    selected = sortOption == option,
-                                    onClick = { sortOption = option }
-                                )
-                                Text(
-                                    text = getSortOptionText(context, option),
-                                    modifier = Modifier.padding(start = 8.dp)
-                                )
-                            }
-                        }
-                    }
                 }
                 
                 Divider()
@@ -221,7 +196,6 @@ fun ExpenseFilterDialog(
                             maxAmount = ""
                             startDate = null
                             endDate = null
-                            sortOption = SortOption.DATE_DESC
                         },
                         modifier = Modifier.weight(1f)
                     ) {
@@ -237,7 +211,7 @@ fun ExpenseFilterDialog(
                                 maxAmount = maxAmount.toDoubleOrNull(),
                                 startDate = startDate,
                                 endDate = endDate,
-                                sortBy = sortOption
+                                sortBy = currentFilters.sortBy
                             )
                             onApplyFilters(filters)
                             onDismiss()
@@ -441,7 +415,7 @@ fun ExpenseTypeSelector(
 /**
  * 获取排序选项的本地化文本
  */
-private fun getSortOptionText(context: android.content.Context, option: SortOption): String {
+internal fun getSortOptionText(context: android.content.Context, option: SortOption): String {
     return when (option) {
         SortOption.DATE_DESC -> context.getString(R.string.expense_list_sort_date_desc)
         SortOption.DATE_ASC -> context.getString(R.string.expense_list_sort_date_asc)

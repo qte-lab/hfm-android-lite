@@ -8,7 +8,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.*
@@ -38,8 +37,7 @@ fun AddExpenseScreen(
     context: android.content.Context,
     expenseId: String? = null,
     viewModel: AddExpenseViewModel = hiltViewModel(),
-    onNavigateBack: () -> Unit,
-    onNavigateToAI: () -> Unit = {}
+    onNavigateBack: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -106,53 +104,6 @@ fun AddExpenseScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // AI 智能识别入口
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable(onClick = onNavigateToAI),
-                color = MaterialTheme.colors.primaryContainer,
-                shape = MaterialTheme.shapes.medium
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Star,
-                            contentDescription = null,
-                            tint = MaterialTheme.colors.primary
-                        )
-                        Column {
-                            Text(
-                                text = context.getString(R.string.ai_expense_title),
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colors.onPrimaryContainer
-                            )
-                            Text(
-                                text = context.getString(R.string.ai_expense_entry_description),
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colors.onPrimaryContainer.copy(alpha = 0.7f)
-                            )
-                        }
-                    }
-                    Text(
-                        text = ">",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colors.primary
-                    )
-                }
-            }
-
-            Divider()
-
             // 类型选择
             ExpenseTypeDropdown(
                 selectedType = uiState.selectedType,

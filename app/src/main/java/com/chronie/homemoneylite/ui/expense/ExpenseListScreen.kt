@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshotFlow
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.domain.model.Expense
+import com.chronie.homemoneylite.domain.model.SortOption
 import com.chronie.homemoneylite.ui.budget.BudgetCard
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
 import com.chronie.homemoneylite.ui.components.PullToRefreshBox
@@ -39,14 +41,18 @@ fun ExpenseListScreen(
     onRefreshHandled: () -> Unit = {},
     onNavigateToMoreFunctions: () -> Unit = {},
     onNavigateToAddExpense: () -> Unit = {},
+    onNavigateToAIExpense: () -> Unit = {},
     onNavigateToEditExpense: (expenseId: String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showFilterDialog by remember { mutableStateOf(false) }
     var showMoreMenu by remember { mutableStateOf(false) }
+    var showSortMenu by remember { mutableStateOf(false) }
+    var showAddMenu by remember { mutableStateOf(false) }
     var isRefreshing by remember { mutableStateOf(false) }
     var budgetRefreshTrigger by remember { mutableStateOf(0) }
-    
+    val currentFilters = uiState.filters
+
     // 处理刷新请求
     LaunchedEffect(shouldRefresh) {
         if (shouldRefresh) {
@@ -89,7 +95,71 @@ fun ExpenseListScreen(
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.weight(1f).padding(start = 8.dp)
                 )
-                
+
+                // 排序下拉（已从筛选对话框迁移到标题栏，置于添加按钮左侧）
+                Box {
+                    IconButton(onClick = { showSortMenu = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Sort,
+                            contentDescription = context.getString(R.string.expense_list_sort)
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = showSortMenu,
+                        onDismissRequest = { showSortMenu = false }
+                    ) {
+                        SortOption.values().forEach { option ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    showSortMenu = false
+                                    viewModel.updateFilters(currentFilters.copy(sortBy = option))
+                                }
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    RadioButton(
+                                        selected = currentFilters.sortBy == option,
+                                        onClick = null
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(getSortOptionText(context, option))
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 添加下拉：记一笔 / 智能记账
+                Box {
+                    IconButton(onClick = { showAddMenu = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = context.getString(R.string.add_expense_title)
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = showAddMenu,
+                        onDismissRequest = { showAddMenu = false }
+                    ) {
+                        DropdownMenuItem(
+                            onClick = {
+                                showAddMenu = false
+                                onNavigateToAddExpense()
+                            }
+                        ) {
+                            Text(context.getString(R.string.add_expense_title))
+                        }
+                        DropdownMenuItem(
+                            onClick = {
+                                showAddMenu = false
+                                onNavigateToAIExpense()
+                            }
+                        ) {
+                            Text(context.getString(R.string.ai_expense_title))
+                        }
+                    }
+                }
+
+                // 更多菜单：筛选 / 清除筛选
                 Box {
                     IconButton(onClick = { showMoreMenu = true }) {
                         Icon(
@@ -97,7 +167,7 @@ fun ExpenseListScreen(
                             contentDescription = context.getString(R.string.common_more_functions)
                         )
                     }
-                    
+
                     DropdownMenu(
                         expanded = showMoreMenu,
                         onDismissRequest = { showMoreMenu = false }
@@ -290,19 +360,6 @@ fun ExpenseListScreen(
             }
         }
     }
-        
-        // 浮动按钮
-        FloatingActionButton(
-            onClick = onNavigateToAddExpense,
-            backgroundColor = MaterialTheme.colors.primary,
-            contentColor = MaterialTheme.colors.onPrimary,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-                .padding(bottom = 80.dp) // 抬高按钮，避免被底部导航栏遮挡
-        ) {
-            Icon(Icons.Default.Add, contentDescription = context.getString(R.string.add_expense_title))
-        }
         
         // 筛选对话框
         if (showFilterDialog) {
