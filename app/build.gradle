@@ -106,7 +106,7 @@ dependencies {
     
     // ===== 传统 View 体系（XML 迁移目标，compileSdk 31 约束：material 只能用 1.5.x，1.6+ 需要 compileSdk 32）=====
     implementation 'com.google.android.material:material:1.14.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
 
     // 图表库（替换手写的趋势折线 / 分类柱状 / 星期雷达三张 Canvas 图）
