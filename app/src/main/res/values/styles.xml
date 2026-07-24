@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme.（迁移到传统 View 体系：Material Components DayNight） -->
+    <!-- 基础应用主题（迁移到传统 View 体系：Material Components DayNight）。
+         所有变体（浅色/深色、API 分级）都继承此 Base，避免在各限定符目录重复定义
+         导致桥接属性（colorOutline / textAppearanceTitle*）丢失而崩溃（见第七轮事故）。 -->
 
-    <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="AppTheme.Base" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
 
@@ -27,7 +29,10 @@
 
         <item name="android:windowBackground">@color/app_background</item>
         <item name="android:statusBarColor">@color/app_surface</item>
-        <item name="android:navigationBarColor">@color/app_surface</item>
+        <!-- 导航栏默认黑色：保证老旧设备（API < 27，不支持 windowLightNavigationBar，
+             系统按钮固定白色）在浅色主题下白色按钮依然可见。API 27+ 在 values-v27
+             中改回浅色并开启 windowLightNavigationBar 使用深色按钮。 -->
+        <item name="android:navigationBarColor">@android:color/black</item>
         <item name="android:windowLightStatusBar">@bool/light_system_bars</item>
 
         <!-- MD3 排版属性桥接到 MD2 文本样式：布局里用 ?attr/textAppearanceTitleMedium 等
@@ -41,6 +46,11 @@
         <item name="textAppearanceBodyMedium">@style/TextAppearance.MaterialComponents.Body2</item>
         <item name="textAppearanceBodySmall">@style/TextAppearance.MaterialComponents.Caption</item>
     </style>
+
+    <!-- 默认（< API 27）使用的主题：直接继承 AppTheme.Base。
+         API 27+ 在 values-v27 / values-night-v27 中以同名样式覆盖，仅追加导航栏相关项，
+         因为同名样式在更具体限定符目录会整体替换而非合并，所以必须由 AppTheme.Base 继承。 -->
+    <style name="AppTheme.NoActionBar" parent="AppTheme.Base" />
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="android:windowBackground">@android:color/transparent</item>

@@ -13,4 +13,12 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:fitsSystemWindows">true</item>
     </style>
+
+    <!-- API 27+ 浅色模式：导航栏随主题设为浅色，并用 windowLightNavigationBar 让系统
+         按钮显示为深色，兼顾美观与可见性。继承 AppTheme.Base 以保留全部桥接属性，
+         仅在此追加导航栏相关项。基础主题已为旧设备（<27）回退为黑色导航栏。 -->
+    <style name="AppTheme.NoActionBar" parent="AppTheme.Base">
+        <item name="android:navigationBarColor">@color/app_surface</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
 </resources>

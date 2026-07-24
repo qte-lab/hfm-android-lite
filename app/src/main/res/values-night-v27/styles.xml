@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 深色模式 + API 27+：导航栏随深色主题为深色，系统按钮默认白色（可见）。
+         windowLightNavigationBar=false 确保按钮不被误设为深色。继承 AppTheme.Base
+         以保留全部桥接属性。基础主题已为旧设备（<27）回退为黑色导航栏。 -->
+    <style name="AppTheme.NoActionBar" parent="AppTheme.Base">
+        <item name="android:navigationBarColor">@color/app_surface</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+</resources>
