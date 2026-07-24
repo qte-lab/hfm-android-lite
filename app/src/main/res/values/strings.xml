@@ -207,6 +207,7 @@
     <string name="average_amount">平均金额</string>
     <string name="median_amount">金额中位数</string>
     <string name="trend_chart">趋势图</string>
+    <string name="daily_amount">每日金额</string>
     <string name="category_breakdown">分类占比</string>
     <string name="weekday_analysis">星期分布</string>
     <string name="records">条</string>

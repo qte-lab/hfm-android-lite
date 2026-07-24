@@ -1,13 +1,18 @@
 package com.chronie.homemoneylite.ui.charts
 
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.HorizontalScrollView
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,13 +22,27 @@ import com.chronie.homemoneylite.databinding.FragmentChartsBinding
 import com.chronie.homemoneylite.databinding.ItemChartCategoryBinding
 import com.chronie.homemoneylite.databinding.ItemChartWeekdayBinding
 import com.chronie.homemoneylite.domain.model.TimeRange
-import com.chronie.homemoneylite.ui.charts.view.CategoryBarChartView
-import com.chronie.homemoneylite.ui.charts.view.LineChartView
-import com.chronie.homemoneylite.ui.charts.view.WeekdayRadarChartView
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.components.showWheelDateRangePicker
 import com.chronie.homemoneylite.ui.expense.ExpenseTypeLocalizer
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.RadarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.RadarData
+import com.github.mikephil.charting.data.RadarDataSet
+import com.github.mikephil.charting.data.RadarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.github.mikephil.charting.highlight.Highlight
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.NumberFormat
 import java.time.LocalDate
@@ -39,6 +58,15 @@ class ChartsFragment : Fragment() {
     private val viewModel: ChartsViewModel by viewModels()
 
     private val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
+
+    private val shortDateFormatter = DateTimeFormatter.ofPattern("MM/dd", Locale.getDefault())
+
+    // 分类柱状图每根柱子的配色（charts.xml 中 chart_series_1..10）
+    private val seriesColorRes = intArrayOf(
+        R.color.chart_series_1, R.color.chart_series_2, R.color.chart_series_3, R.color.chart_series_4,
+        R.color.chart_series_5, R.color.chart_series_6, R.color.chart_series_7, R.color.chart_series_8,
+        R.color.chart_series_9, R.color.chart_series_10
+    )
 
     private var selectedChart = ChartType.TREND
     private var lastSuccess: ChartsUiState.Success? = null
@@ -140,19 +168,67 @@ class ChartsFragment : Fragment() {
         }
     }
 
-    // ---------- 各图表卡片 ----------
+    // ---------- 各图表卡片（MPAndroidChart 实现）----------
 
     private fun buildTrendCard(state: ChartsUiState.Success) {
         val (card, inner) = buildChartCard(R.string.trend_chart)
         if (state.dailyData.isEmpty()) {
             inner.addView(noDataText())
         } else {
-            val chart = LineChartView(requireContext())
-            chart.layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp(300)
+            val chart = LineChart(requireContext()).apply {
+                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(300))
+            }
+            val primary = ContextCompat.getColor(requireContext(), R.color.brand_primary)
+            val textColor = ContextCompat.getColor(requireContext(), R.color.text_primary)
+            val divider = ContextCompat.getColor(requireContext(), R.color.divider)
+
+            val entries = state.dailyData.mapIndexed { i, d -> Entry(i.toFloat(), d.amount.toFloat()) }
+            val dataSet = LineDataSet(entries, getString(R.string.daily_amount)).apply {
+                color = primary
+                lineWidth = 2f
+                setDrawCircleHole(false)
+                circleRadius = 3f
+                setCircleColor(primary)
+                setDrawValues(false)
+                mode = LineDataSet.Mode.CUBIC_BEZIER
+                setDrawFilled(true)
+                fillColor = primary
+                fillAlpha = 40
+                valueTextColor = textColor
+                valueTextSize = 10f
+            }
+            chart.data = LineData(dataSet)
+            chart.description.isEnabled = false
+            chart.isScaleXEnabled = false
+            chart.isScaleYEnabled = false
+            chart.setPinchZoom(false)
+            chart.setDrawGridBackground(false)
+            chart.setExtraOffsets(8f, 8f, 8f, 8f)
+            val legend = chart.legend
+            legend.isEnabled = true
+            legend.textSize = 11f
+            legend.textColor = textColor
+
+            val xAxis = chart.xAxis
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.textSize = 11f
+            xAxis.textColor = textColor
+            xAxis.setDrawGridLines(false)
+            xAxis.granularity = 1f
+            xAxis.setLabelCount((state.dailyData.size).coerceAtMost(6), false)
+            xAxis.valueFormatter = IndexAxisValueFormatter(
+                state.dailyData.map { it.date.format(shortDateFormatter) }
             )
-            chart.setData(state.dailyData, currencyFormat)
+
+            val left = chart.axisLeft
+            left.textSize = 11f
+            left.textColor = textColor
+            left.setDrawGridLines(true)
+            left.gridColor = divider
+            left.axisMinimum = 0f
+            left.valueFormatter = currencyAxisFormatter()
+            chart.axisRight.isEnabled = false
+
             inner.addView(chart)
         }
         binding.chartSection.addView(card)
@@ -163,16 +239,61 @@ class ChartsFragment : Fragment() {
         if (state.categoryData.isEmpty()) {
             inner.addView(noDataText())
         } else {
-            val scroll = android.widget.HorizontalScrollView(requireContext())
-            scroll.layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
+            val scroll = HorizontalScrollView(requireContext()).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            }
             val widthDp = (state.categoryData.size * 64).coerceAtLeast(320)
-            val chart = CategoryBarChartView(requireContext())
-            chart.layoutParams = ViewGroup.LayoutParams(dp(widthDp), dp(320))
-            chart.setData(state.categoryData, currencyFormat)
+            val chart = BarChart(requireContext()).apply {
+                layoutParams = ViewGroup.LayoutParams(dp(widthDp), dp(320))
+            }
+            val textColor = ContextCompat.getColor(requireContext(), R.color.text_primary)
+            val divider = ContextCompat.getColor(requireContext(), R.color.divider)
+
+            val entries = state.categoryData.mapIndexed { i, c -> BarEntry(i.toFloat(), c.amount.toFloat()) }
+            val dataSet = BarDataSet(entries, getString(R.string.category_breakdown)).apply {
+                colors = state.categoryData.mapIndexed { i, _ ->
+                    ContextCompat.getColor(requireContext(), seriesColorRes[i % seriesColorRes.size])
+                }
+                valueTextColor = textColor
+                valueTextSize = 10f
+                setDrawValues(true)
+                barShadowColor = divider
+            }
+            val barData = BarData(dataSet).apply { barWidth = 0.6f }
+            chart.data = barData
+            chart.description.isEnabled = false
+            chart.legend.isEnabled = false
+            chart.isScaleXEnabled = false
+            chart.isScaleYEnabled = false
+            chart.setPinchZoom(false)
+            chart.setFitBars(true)
+            chart.setExtraOffsets(8f, 8f, 8f, 8f)
+
+            val xAxis = chart.xAxis
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.textSize = 11f
+            xAxis.textColor = textColor
+            xAxis.setDrawGridLines(false)
+            xAxis.granularity = 1f
+            xAxis.setCenterAxisLabels(true)
+            xAxis.labelRotationAngle = -45f
+            xAxis.valueFormatter = IndexAxisValueFormatter(
+                state.categoryData.map { ExpenseTypeLocalizer.getLocalizedTypeName(requireContext(), it.type) }
+            )
+
+            val left = chart.axisLeft
+            left.textSize = 11f
+            left.textColor = textColor
+            left.axisMinimum = 0f
+            left.valueFormatter = currencyAxisFormatter()
+            chart.axisRight.isEnabled = false
+
             scroll.addView(chart)
+            // 动态创建后显式触发首帧绘制（post 确保视图已 attach 并完成布局，否则部分机型下数据已设置却不渲染）
+            chart.post { chart.invalidate() }
             inner.addView(scroll)
 
             val list = buildCategoryList(state.categoryData)
@@ -187,26 +308,55 @@ class ChartsFragment : Fragment() {
         if (!hasData) {
             inner.addView(noDataText())
         } else {
-            val radar = WeekdayRadarChartView(requireContext())
-            radar.layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                dp(400)
-            )
-            radar.setData(state.weekdayData)
-            radar.onWeekdayClick = { wd ->
-                findNavController().navigate(
-                    R.id.weekdayDetailFragment,
-                    bundleOf(
-                        "dayOfWeek" to wd.dayOfWeek,
-                        "amount" to wd.amount.toFloat(),
-                        "count" to wd.count,
-                        "percentage" to wd.percentage,
-                        "startDate" to currentStartStr,
-                        "endDate" to currentEndStr
-                    )
-                )
+            val chart = RadarChart(requireContext()).apply {
+                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(400))
             }
-            inner.addView(radar)
+            val primary = ContextCompat.getColor(requireContext(), R.color.brand_primary)
+            val textColor = ContextCompat.getColor(requireContext(), R.color.text_primary)
+            val divider = ContextCompat.getColor(requireContext(), R.color.divider)
+
+            val entries = state.weekdayData.map { RadarEntry(it.amount.toFloat()) }
+            val dataSet = RadarDataSet(entries, getString(R.string.weekday_analysis)).apply {
+                color = primary
+                fillColor = primary
+                setFillAlpha(70)
+                lineWidth = 2f
+                valueTextColor = textColor
+                valueTextSize = 10f
+            }
+            chart.data = RadarData(dataSet)
+            chart.description.isEnabled = false
+            chart.legend.isEnabled = false
+            chart.setRotationEnabled(false)
+            chart.webLineWidth = 1f
+            chart.webColor = divider
+            chart.webColorInner = divider
+            chart.setExtraOffsets(8f, 8f, 8f, 8f)
+
+            val xAxis = chart.xAxis
+            xAxis.textSize = 12f
+            xAxis.textColor = textColor
+            xAxis.valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String =
+                    getWeekdayName(requireContext(), value.toInt())
+            }
+
+            val yAxis = chart.yAxis
+            yAxis.textSize = 10f
+            yAxis.textColor = textColor
+            yAxis.axisMinimum = 0f
+
+            chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+                override fun onValueSelected(e: Entry?, h: Highlight?) {
+                    val idx = e?.x?.toInt() ?: return
+                    val wd = state.weekdayData.getOrNull(idx) ?: return
+                    navigateToWeekdayDetail(wd)
+                }
+
+                override fun onNothingSelected() {}
+            })
+
+            inner.addView(chart)
 
             val list = buildWeekdayList(state.weekdayData)
             inner.addView(list)
@@ -226,17 +376,17 @@ class ChartsFragment : Fragment() {
         val inner = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
         ).let { lp ->
-            android.widget.LinearLayout(requireContext()).apply {
+            LinearLayout(requireContext()).apply {
                 layoutParams = lp
-                orientation = android.widget.LinearLayout.VERTICAL
+                orientation = LinearLayout.VERTICAL
                 setPadding(dp(16), dp(16), dp(16), dp(16))
             }
         }
         val title = TextView(requireContext())
         title.text = getString(titleRes)
         title.textSize = 16f
-        title.setTypeface(null, android.graphics.Typeface.BOLD)
-        title.setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_primary))
+        title.setTypeface(null, Typeface.BOLD)
+        title.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary))
         inner.addView(title)
 
         val spacer = View(requireContext())
@@ -248,8 +398,8 @@ class ChartsFragment : Fragment() {
     }
 
     private fun buildCategoryList(data: List<CategoryChartData>): View {
-        val container = android.widget.LinearLayout(requireContext()).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
             )
@@ -269,8 +419,8 @@ class ChartsFragment : Fragment() {
     }
 
     private fun buildWeekdayList(data: List<WeekdayChartData>): View {
-        val container = android.widget.LinearLayout(requireContext()).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
             layoutParams = ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
             )
@@ -281,6 +431,9 @@ class ChartsFragment : Fragment() {
                 itemBinding.wdName.text = getWeekdayName(requireContext(), wd.dayOfWeek)
                 itemBinding.wdPct.text = String.format("%.1f%%", wd.percentage)
                 itemBinding.wdAmount.text = currencyFormat.format(wd.amount)
+                // 点击整行进入星期详情
+                itemBinding.root.setOnClickListener { navigateToWeekdayDetail(wd) }
+                itemBinding.root.isClickable = true
                 container.addView(itemBinding.root)
             }
         }
@@ -291,9 +444,9 @@ class ChartsFragment : Fragment() {
         return TextView(requireContext()).apply {
             text = getString(R.string.no_data)
             textSize = 14f
-            setTextColor(androidx.core.content.ContextCompat.getColor(requireContext(), R.color.text_secondary))
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary))
             setPadding(0, dp(32), 0, dp(32))
-            gravity = android.view.Gravity.CENTER
+            gravity = Gravity.CENTER
         }
     }
 
@@ -351,6 +504,10 @@ class ChartsFragment : Fragment() {
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
 
+    private fun currencyAxisFormatter(): ValueFormatter = object : ValueFormatter() {
+        override fun getFormattedValue(value: Float): String = currencyFormat.format(value.toDouble())
+    }
+
     private fun getTimeRangeText(context: android.content.Context, timeRange: TimeRange): String {
         return when (timeRange) {
             TimeRange.THIS_WEEK -> context.getString(R.string.this_week)
@@ -373,6 +530,20 @@ class ChartsFragment : Fragment() {
             6 -> context.getString(R.string.saturday)
             else -> ""
         }
+    }
+
+    private fun navigateToWeekdayDetail(wd: WeekdayChartData) {
+        findNavController().navigate(
+            R.id.weekdayDetailFragment,
+            bundleOf(
+                "dayOfWeek" to wd.dayOfWeek,
+                "amount" to wd.amount.toFloat(),
+                "count" to wd.count,
+                "percentage" to wd.percentage,
+                "startDate" to currentStartStr,
+                "endDate" to currentEndStr
+            )
+        )
     }
 
     private enum class ChartType(val stringRes: Int) {

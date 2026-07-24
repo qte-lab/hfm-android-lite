@@ -5,6 +5,7 @@ import com.chronie.homemoneylite.data.local.entity.ExpenseEntity
 import com.chronie.homemoneylite.data.remote.dto.ExpenseDto
 import com.chronie.homemoneylite.domain.model.Expense
 import com.chronie.homemoneylite.domain.model.ExpenseType
+import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.util.UUID
 
@@ -115,8 +116,9 @@ object ExpenseMapper {
      * 备注在（迁移前的）历史数据中以 Base64 形式落库，旧 Compose 版在读取时解码；
      * 迁移到 XML 后这层“读取即解码”丢失，导致离线从数据库读出的备注显示为原始 Base64。
      *
-     * 这里在唯一的本地读取关口还原：仅当字符串为合法 Base64 且能解码为有效 UTF-8 文本时才解码；
-     * 否则（明文、或 Base64-of-binary 等已损坏数据）原样返回，绝不抛异常、不破坏数据。
+     * 这里在唯一的本地读取关口还原：先尝试 UTF-8，再尝试 GBK（旧中文环境常见），
+     * 任一能解码为合法可读文本即采用；否则（明文、或 Base64-of-二进制等已损坏数据）
+     * 原样返回 / 清空，绝不抛异常、不破坏数据。
      */
     private fun decodeRemarkIfBase64(raw: String?): String? {
         if (raw.isNullOrBlank()) return null
@@ -124,10 +126,13 @@ object ExpenseMapper {
         if (!isBase64(candidate)) return raw
         return try {
             val decoded = Base64.decode(candidate, Base64.NO_WRAP)
-            val text = String(decoded, StandardCharsets.UTF_8)
-            // 校验确为可读文本：把解码结果重新编码回 UTF-8 应与原始字节一致（无替换字符）
-            val roundTrip = text.toByteArray(StandardCharsets.UTF_8)
-            if (roundTrip.contentEquals(decoded) && text.isNotBlank()) text else raw
+            // 历史数据多为 base64-of-UTF-8 或 base64-of-GBK，逐一尝试
+            for (charset in listOf(StandardCharsets.UTF_8, Charset.forName("GBK"))) {
+                val text = String(decoded, charset)
+                if (text.isNotBlank() && !text.contains('\uFFFD')) return text
+            }
+            // 解码结果非可读文本（疑似 base64-of-二进制等已损坏数据）→ 清空，避免回显乱码
+            null
         } catch (e: Exception) {
             raw
         }
