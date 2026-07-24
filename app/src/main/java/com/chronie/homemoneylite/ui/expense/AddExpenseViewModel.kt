@@ -107,7 +107,7 @@ class AddExpenseViewModel @Inject constructor(
                     type = state.selectedType!!,
                     amount = state.amount.toDouble(),
                     date = dateStr,
-                    remark = state.remark.ifBlank { null },
+                    remark = sanitizeRemark(state.remark),
                     isSynced = false
                 )
                 
@@ -172,6 +172,16 @@ class AddExpenseViewModel @Inject constructor(
     fun resetState() {
         _uiState.value = AddExpenseUiState()
     }
+}
+
+/**
+ * 清理备注文本：去除不可见控制字符（保留换行/制表），首尾去空格。
+ * 防止异常字符导致编辑/导出时显示为乱码。
+ */
+private fun sanitizeRemark(raw: String?): String? {
+    if (raw.isNullOrBlank()) return null
+    val cleaned = raw.replace(Regex("[\\u0000-\\u001F\\u007F]"), "").trim()
+    return if (cleaned.isBlank()) null else cleaned
 }
 
 data class AddExpenseUiState(

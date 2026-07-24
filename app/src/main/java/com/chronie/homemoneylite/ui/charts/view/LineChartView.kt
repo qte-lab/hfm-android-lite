@@ -85,8 +85,8 @@ class LineChartView @JvmOverloads constructor(
             paint.style = Paint.Style.FILL
             paint.color = text
             paint.textAlign = Paint.Align.RIGHT
-            paint.textSize = 28f
-            canvas.drawText(label, paddingLeft - 10f, y + 10f, paint)
+            paint.textSize = 13f
+            canvas.drawText(label, paddingLeft - 10f, y + 6f, paint)
         }
 
         // 坐标轴
@@ -124,8 +124,8 @@ class LineChartView @JvmOverloads constructor(
                 val valueLabel = String.format("%.0f", daily.amount)
                 paint.color = primary
                 paint.textAlign = Paint.Align.CENTER
-                paint.textSize = 22f
-                canvas.drawText(valueLabel, x, y - 20f, paint)
+                paint.textSize = 11f
+                canvas.drawText(valueLabel, x, y - 16f, paint)
             }
         }
 
@@ -133,7 +133,7 @@ class LineChartView @JvmOverloads constructor(
         val xLabelStep = (data.size / 7).coerceAtLeast(1)
         paint.color = text
         paint.textAlign = Paint.Align.CENTER
-        paint.textSize = 26f
+        paint.textSize = 13f
         data.forEachIndexed { index, daily ->
             if (index % xLabelStep == 0 || index == data.size - 1) {
                 val (x, _) = pointList[index]

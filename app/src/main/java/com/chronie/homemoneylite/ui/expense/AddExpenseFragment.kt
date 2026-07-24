@@ -1,7 +1,5 @@
 package com.chronie.homemoneylite.ui.expense
 
-import android.app.DatePickerDialog
-import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,11 +13,11 @@ import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.databinding.FragmentAddExpenseBinding
 import com.chronie.homemoneylite.domain.model.ExpenseType
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
+import com.chronie.homemoneylite.ui.components.showWheelDatePicker
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 
 @AndroidEntryPoint
 class AddExpenseFragment : Fragment() {
@@ -156,23 +154,14 @@ class AddExpenseFragment : Fragment() {
         } catch (e: Exception) {
             LocalDate.now()
         }
-        val cal = Calendar.getInstance().apply {
-            set(initial.year, initial.monthValue - 1, initial.dayOfMonth)
-        }
-        val isNight = (resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-        val theme = if (isNight) R.style.DatePickerDialogDark else R.style.DatePickerDialogLight
-        val dialog = DatePickerDialog(
+        showWheelDatePicker(
             requireContext(),
-            theme,
-            { _, year, month, dayOfMonth ->
-                viewModel.setDate(LocalDate.of(year, month + 1, dayOfMonth))
-            },
-            cal.get(Calendar.YEAR),
-            cal.get(Calendar.MONTH),
-            cal.get(Calendar.DAY_OF_MONTH)
-        )
-        dialog.show()
+            initial = initial,
+            minDate = LocalDate.of(2000, 1, 1),
+            maxDate = LocalDate.now()
+        ) { date ->
+            viewModel.setDate(date)
+        }
     }
 
     private fun onSave() {

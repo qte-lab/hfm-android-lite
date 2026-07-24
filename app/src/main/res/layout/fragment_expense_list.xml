@@ -13,38 +13,46 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:background="?attr/colorSurface"
-        android:paddingHorizontal="8dp"
+        android:paddingHorizontal="16dp"
         android:paddingVertical="8dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingStart="8dp"
             android:text="@string/expense_list_title"
             android:textAppearance="?attr/textAppearanceTitleLarge" />
 
         <ImageButton
             android:id="@+id/btnSort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_exp_sort"
             android:contentDescription="@string/expense_list_sort" />
 
         <ImageButton
             android:id="@+id/btnAdd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_exp_add"
             android:contentDescription="@string/add_expense_title" />
 
         <ImageButton
             android:id="@+id/btnMore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_exp_more_vert"
             android:contentDescription="@string/common_more_functions" />
     </LinearLayout>
@@ -59,20 +67,21 @@
         android:id="@+id/headerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="8dp">
 
         <com.chronie.homemoneylite.ui.budget.BudgetCardView
             android:id="@+id/budgetCardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp" />
+            android:layout_marginVertical="8dp" />
 
         <include
             android:id="@+id/statsCard"
             layout="@layout/view_stats_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp" />
+            android:layout_marginBottom="8dp" />
     </LinearLayout>
 
     <!-- 列表区域 -->

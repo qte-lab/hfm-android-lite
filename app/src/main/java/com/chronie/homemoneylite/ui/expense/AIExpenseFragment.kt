@@ -1,10 +1,8 @@
 package com.chronie.homemoneylite.ui.expense
 
 import android.app.Activity
-import android.app.DatePickerDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.res.Configuration
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -27,6 +25,7 @@ import com.chronie.homemoneylite.databinding.DialogAddRecordEditBinding
 import com.chronie.homemoneylite.domain.model.AIExpenseRecord
 import com.chronie.homemoneylite.domain.model.ExpenseType
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
+import com.chronie.homemoneylite.ui.components.showWheelDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yalantis.ucrop.UCrop
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +34,6 @@ import java.io.IOException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 
 @AndroidEntryPoint
 class AIExpenseFragment : Fragment() {
@@ -68,7 +66,12 @@ class AIExpenseFragment : Fragment() {
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.GetMultipleContents()
     ) { uris ->
-        uris.forEach { startCrop(it) }
+        uris.forEach { uri ->
+            // 相册返回的 content:// URI 可能受限，先拷贝到应用私有目录，
+            // 既保证 UCrop 能读取源图，也保证裁剪后的预览（同为本应用 FileProvider URI）能被 Coil 稳定加载。
+            val local = copyUriToAppFile(requireContext(), uri) ?: uri
+            startCrop(local)
+        }
     }
 
     private val cameraLauncher = registerForActivityResult(
@@ -289,6 +292,34 @@ class AIExpenseFragment : Fragment() {
             null
         }
     }
+
+    /**
+     * 将相册等来源的 content:// URI 拷贝到应用私有 Pictures 目录，
+     * 返回对应的 FileProvider URI。这样裁剪源与最终预览都使用本应用可稳定读写的 URI，
+     * 避免某些 content:// 因权限/跨进程限制导致 Coil 加载空白。
+     */
+    private fun copyUriToAppFile(context: Context, uri: Uri): Uri? {
+        return try {
+            val timeStamp = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
+                .format(LocalDateTime.now())
+            val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                ?: return null
+            storageDir.mkdirs()
+            val file = File(storageDir, "AI_SRC_${timeStamp}_${System.currentTimeMillis()}.jpg")
+            if (file.exists()) file.delete()
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                file.outputStream().use { output -> input.copyTo(output) }
+            }
+            FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                file
+            )
+        } catch (e: Exception) {
+            android.util.Log.e("AIExpenseFragment", "copyUriToAppFile failed", e)
+            null
+        }
+    }
     // endregion
 
     // region 记录编辑对话框
@@ -318,22 +349,15 @@ class AIExpenseFragment : Fragment() {
         updateEditDateButton(dialogBinding, selectedDate)
 
         dialogBinding.editDateButton.setOnClickListener {
-            val cal = Calendar.getInstance().apply {
-                set(selectedDate.year, selectedDate.monthValue - 1, selectedDate.dayOfMonth)
-            }
-            val isNight = (resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-            val theme = if (isNight) R.style.DatePickerDialogDark else R.style.DatePickerDialogLight
-            val dialog = DatePickerDialog(
+            showWheelDatePicker(
                 requireContext(),
-                theme,
-                { _, y, m, d -> selectedDate = LocalDate.of(y, m + 1, d)
-                    updateEditDateButton(dialogBinding, selectedDate) },
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH)
-            )
-            dialog.show()
+                initial = selectedDate,
+                minDate = LocalDate.of(2000, 1, 1),
+                maxDate = LocalDate.now()
+            ) { date ->
+                selectedDate = date
+                updateEditDateButton(dialogBinding, selectedDate)
+            }
         }
 
         val dialog = MaterialAlertDialogBuilder(requireContext())

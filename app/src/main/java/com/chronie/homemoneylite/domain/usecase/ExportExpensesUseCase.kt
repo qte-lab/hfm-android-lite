@@ -121,7 +121,7 @@ class ExportExpensesUseCase @Inject constructor(
                         android.util.Log.v("ExportExpensesUseCase", "Row $row - Writing amount: $amountValue")
                         sheet.value(row, 2, amountValue)
 
-                        val remarkValue = expense.remark?.ifBlank { "" } ?: ""
+                        val remarkValue = sanitizeRemark(expense.remark)
                         android.util.Log.v("ExportExpensesUseCase", "Row $row - Writing remark: '$remarkValue'")
                         sheet.value(row, 3, remarkValue)
                     } catch (e: Exception) {
@@ -167,5 +167,13 @@ class ExportExpensesUseCase @Inject constructor(
         } else {
             type.name
         }
+    }
+
+    /**
+     * 清理备注：去除控制字符、首尾空格；空则返回空串。
+     */
+    private fun sanitizeRemark(raw: String?): String {
+        if (raw.isNullOrBlank()) return ""
+        return raw.replace(Regex("[\\u0000-\\u001F\\u007F]"), "").trim()
     }
 }

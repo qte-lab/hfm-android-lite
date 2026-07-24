@@ -36,7 +36,8 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        selectedTabId = savedInstanceState?.getInt(KEY_SELECTED_TAB) ?: R.id.tab_expense
+        // 仅在有保存状态时恢复；否则保留当前选中的 Tab（避免从二级页返回时强制跳回“支出”）
+        selectedTabId = savedInstanceState?.getInt(KEY_SELECTED_TAB) ?: selectedTabId
 
         binding.bottomNav.setOnItemSelectedListener { item ->
             selectedTabId = item.itemId

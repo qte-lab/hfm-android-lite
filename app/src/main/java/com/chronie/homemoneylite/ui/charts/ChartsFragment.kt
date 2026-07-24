@@ -1,6 +1,5 @@
 package com.chronie.homemoneylite.ui.charts
 
-import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,6 +21,7 @@ import com.chronie.homemoneylite.ui.charts.view.CategoryBarChartView
 import com.chronie.homemoneylite.ui.charts.view.LineChartView
 import com.chronie.homemoneylite.ui.charts.view.WeekdayRadarChartView
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
+import com.chronie.homemoneylite.ui.components.showWheelDateRangePicker
 import com.chronie.homemoneylite.ui.expense.ExpenseTypeLocalizer
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
 import dagger.hilt.android.AndroidEntryPoint
@@ -336,24 +336,15 @@ class ChartsFragment : Fragment() {
     private fun showCustomRangePicker() {
         val start = viewModel.customStartDate.value ?: LocalDate.now().minusMonths(1)
         val end = viewModel.customEndDate.value ?: LocalDate.now()
-        val startPicker = DatePickerDialog(
+        showWheelDateRangePicker(
             requireContext(),
-            { _, y, m, d -> showCustomEndPicker(LocalDate.of(y, m + 1, d)) },
-            start.year, start.monthValue - 1, start.dayOfMonth
-        )
-        startPicker.show()
-    }
-
-    private fun showCustomEndPicker(startDate: LocalDate) {
-        val end = viewModel.customEndDate.value ?: LocalDate.now()
-        val endPicker = DatePickerDialog(
-            requireContext(),
-            { _, y, m, d ->
-                viewModel.setCustomDateRange(startDate, LocalDate.of(y, m + 1, d))
-            },
-            end.year, end.monthValue - 1, end.dayOfMonth
-        )
-        endPicker.show()
+            initialStart = start,
+            initialEnd = end,
+            minDate = LocalDate.of(2000, 1, 1),
+            maxDate = LocalDate.now()
+        ) { s, e ->
+            viewModel.setCustomDateRange(s, e)
+        }
     }
 
     // ---------- 工具 ----------

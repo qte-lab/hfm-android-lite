@@ -89,8 +89,8 @@ class WeekdayRadarChartView @JvmOverloads constructor(
             paint.style = Paint.Style.FILL
             paint.color = ColorUtils.setAlphaComponent(grid, 204)
             paint.textAlign = Paint.Align.LEFT
-            paint.textSize = 24f
-            canvas.drawText(amountText, centerX + levelRadius + 10f, centerY + 8f, paint)
+            paint.textSize = 13f
+            canvas.drawText(amountText, centerX + levelRadius + 8f, centerY + 6f, paint)
         }
 
         // 7 个顶点（星期日..星期六，从正上方顺时针）
@@ -171,7 +171,7 @@ class WeekdayRadarChartView @JvmOverloads constructor(
             paint.style = Paint.Style.FILL
             paint.color = text
             paint.textAlign = Paint.Align.CENTER
-            paint.textSize = 36f
+            paint.textSize = 18f
             paint.isFakeBoldText = true
             canvas.drawText(weekdayLabels[i], x, y + 12f, paint)
             paint.isFakeBoldText = false

@@ -104,21 +104,21 @@ class CategoryBarChartView @JvmOverloads constructor(
             val valueText = String.format("%.0f", category.amount)
             paint.style = Paint.Style.FILL
             paint.color = barColor
-            paint.textSize = 24f
-            canvas.drawText(valueText, slotCenterX, topY - 14f, paint)
+            paint.textSize = 12f
+            canvas.drawText(valueText, slotCenterX, topY - 12f, paint)
 
             // 类别名（超长截断）
             val name = ExpenseTypeLocalizer.getLocalizedTypeName(context, category.type)
             val shortName = if (name.length > 6) name.take(6) else name
             paint.color = text
-            paint.textSize = 26f
-            canvas.drawText(shortName, slotCenterX, h - paddingBottom + 40f, paint)
+            paint.textSize = 13f
+            canvas.drawText(shortName, slotCenterX, h - paddingBottom + 38f, paint)
 
             // 占比
             val pctText = String.format("%.0f%%", category.percentage)
             paint.color = ColorUtils.setAlphaComponent(text, 179)
-            paint.textSize = 22f
-            canvas.drawText(pctText, slotCenterX, h - paddingBottom + 66f, paint)
+            paint.textSize = 11f
+            canvas.drawText(pctText, slotCenterX, h - paddingBottom + 62f, paint)
         }
 
         canvas.restore()
