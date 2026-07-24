@@ -66,7 +66,8 @@ class WeekdayRadarChartView @JvmOverloads constructor(
 
         val centerX = w / 2
         val centerY = h / 2
-        val radius = minOf(w, h) / 2 - 120f
+        // 留出边距，让雷达尽量占满图表区域（之前 -120f 会让雷达缩成很小一团）
+        val radius = minOf(w, h) / 2 - 56f
 
         canvas.save()
         canvas.scale(d, d)
@@ -89,8 +90,8 @@ class WeekdayRadarChartView @JvmOverloads constructor(
             paint.style = Paint.Style.FILL
             paint.color = ColorUtils.setAlphaComponent(grid, 204)
             paint.textAlign = Paint.Align.LEFT
-            paint.textSize = 13f
-            canvas.drawText(amountText, centerX + levelRadius + 8f, centerY + 6f, paint)
+            paint.textSize = 12f
+            canvas.drawText(amountText, centerX + levelRadius + 6f, centerY + 4f, paint)
         }
 
         // 7 个顶点（星期日..星期六，从正上方顺时针）
@@ -128,7 +129,7 @@ class WeekdayRadarChartView @JvmOverloads constructor(
         paint.color = ColorUtils.setAlphaComponent(primary, 76)
         canvas.drawPath(path, paint)
         paint.style = Paint.Style.STROKE
-        paint.strokeWidth = 3f
+        paint.strokeWidth = 2.5f
         paint.color = primary
         canvas.drawPath(path, paint)
 
@@ -136,9 +137,9 @@ class WeekdayRadarChartView @JvmOverloads constructor(
         paint.style = Paint.Style.FILL
         points.forEach { (x, y) ->
             paint.color = primary
-            canvas.drawCircle(x, y, 6f, paint)
+            canvas.drawCircle(x, y, 4f, paint)
             paint.color = Color.WHITE
-            canvas.drawCircle(x, y, 3f, paint)
+            canvas.drawCircle(x, y, 2f, paint)
         }
 
         // 星期标签（可点击）
@@ -154,7 +155,7 @@ class WeekdayRadarChartView @JvmOverloads constructor(
 
         for (i in 0 until vertices) {
             val angle = startAngle + angleStep * i
-            val labelRadius = radius + 60f
+            val labelRadius = radius + 30f
             val x = centerX + labelRadius * cos(angle).toFloat()
             val y = centerY + labelRadius * sin(angle).toFloat()
 
@@ -163,17 +164,17 @@ class WeekdayRadarChartView @JvmOverloads constructor(
             labelHit[i][1] = y * d
             labelHit[i][2] = 40f * d
 
-            // 背景圆圈（提示可点击）
+            // 背景圆圈（提示可点击，缩小避免喧宾夺主）
             paint.style = Paint.Style.FILL
             paint.color = ColorUtils.setAlphaComponent(primary, 26)
-            canvas.drawCircle(x, y, 35f, paint)
+            canvas.drawCircle(x, y, 20f, paint)
 
             paint.style = Paint.Style.FILL
             paint.color = text
             paint.textAlign = Paint.Align.CENTER
-            paint.textSize = 18f
+            paint.textSize = 13f
             paint.isFakeBoldText = true
-            canvas.drawText(weekdayLabels[i], x, y + 12f, paint)
+            canvas.drawText(weekdayLabels[i], x, y + 8f, paint)
             paint.isFakeBoldText = false
         }
 

@@ -1,9 +1,11 @@
 package com.chronie.homemoneylite.data.mapper
 
+import android.util.Base64
 import com.chronie.homemoneylite.data.local.entity.ExpenseEntity
 import com.chronie.homemoneylite.data.remote.dto.ExpenseDto
 import com.chronie.homemoneylite.domain.model.Expense
 import com.chronie.homemoneylite.domain.model.ExpenseType
+import java.nio.charset.StandardCharsets
 import java.util.UUID
 
 object ExpenseMapper {
@@ -12,7 +14,7 @@ object ExpenseMapper {
         return Expense(
             id = entity.id,
             type = ExpenseType.fromString(entity.type),
-            remark = entity.remark,
+            remark = decodeRemarkIfBase64(entity.remark),
             amount = entity.amount,
             date = entity.date,
             version = entity.version,
@@ -107,5 +109,32 @@ object ExpenseMapper {
             ExpenseType.HARDWARE -> "五金"
             ExpenseType.CLOTHING -> "服装"
         }
+    }
+
+    /**
+     * 备注在（迁移前的）历史数据中以 Base64 形式落库，旧 Compose 版在读取时解码；
+     * 迁移到 XML 后这层“读取即解码”丢失，导致离线从数据库读出的备注显示为原始 Base64。
+     *
+     * 这里在唯一的本地读取关口还原：仅当字符串为合法 Base64 且能解码为有效 UTF-8 文本时才解码；
+     * 否则（明文、或 Base64-of-binary 等已损坏数据）原样返回，绝不抛异常、不破坏数据。
+     */
+    private fun decodeRemarkIfBase64(raw: String?): String? {
+        if (raw.isNullOrBlank()) return null
+        val candidate = raw.trim()
+        if (!isBase64(candidate)) return raw
+        return try {
+            val decoded = Base64.decode(candidate, Base64.NO_WRAP)
+            val text = String(decoded, StandardCharsets.UTF_8)
+            // 校验确为可读文本：把解码结果重新编码回 UTF-8 应与原始字节一致（无替换字符）
+            val roundTrip = text.toByteArray(StandardCharsets.UTF_8)
+            if (roundTrip.contentEquals(decoded) && text.isNotBlank()) text else raw
+        } catch (e: Exception) {
+            raw
+        }
+    }
+
+    private fun isBase64(s: String): Boolean {
+        if (s.length % 4 != 0) return false
+        return s.all { it.isLetterOrDigit() || it == '+' || it == '/' || it == '=' }
     }
 }

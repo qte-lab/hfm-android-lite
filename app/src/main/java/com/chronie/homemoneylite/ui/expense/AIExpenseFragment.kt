@@ -57,9 +57,10 @@ class AIExpenseFragment : Fragment() {
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val outputUri = UCrop.getOutput(result.data ?: return@registerForActivityResult)
+            // 注意：此处不要删除 lastCropOutputFile —— outputUri 指向的正是该文件，
+            // 一旦删除，预览（Coil 加载该 URI）会显示空白。裁剪产物为应用私有小图，
+            // 保留即可（卸载时随应用数据一起清除），无需在此删除。
             outputUri?.let { viewModel.addImages(listOf(it)) }
-            lastCropOutputFile?.delete()
-            lastCropOutputFile = null
         }
     }
 

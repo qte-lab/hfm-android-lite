@@ -18,7 +18,7 @@ import java.util.Locale
  * 趋势折线图（原 Compose HighQualityLineChart / ChartsScreen 行 393–540 的机械移植）。
  *
  * 绘制坐标系：Compose DrawScope 以 dp 为单位，本 View 在 onDraw 中对 canvas 套用 density 缩放，
- * 使所有 dp 常量（paddingLeft=80f 等、textSize=28f 等）与原实现完全一致。
+ * 使所有 dp 常量（paddingLeft=80f、paddingRight=40f、paddingTop=60f、paddingBottom=80f、textSize=13f 等）与原实现一致。
  * Paint/Path 全部为字段，onDraw 内不 new 对象。
  */
 class LineChartView @JvmOverloads constructor(

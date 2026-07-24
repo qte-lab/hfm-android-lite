@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.chronie.homemoneylite.ui.components.showWheelDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.domain.model.ExpenseFilters
@@ -154,24 +154,16 @@ class ExpenseFilterDialogFragment : DialogFragment() {
 
     private fun showDatePicker(isStart: Boolean) {
         val context = requireContext()
-        val initial = if (isStart) startDate else endDate
-        val selection = initial
-            ?.atStartOfDay(ZoneId.systemDefault())
-            ?.toInstant()
-            ?.toEpochMilli()
-            ?: MaterialDatePicker.todayInUtcMilliseconds()
-
-        val picker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText(if (isStart) R.string.expense_list_filter_start_date else R.string.expense_list_filter_end_date)
-            .setSelection(selection)
-            .build()
-        picker.addOnPositiveButtonClickListener { millis ->
-            if (millis == null) return@addOnPositiveButtonClickListener
-            val date = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+        val initial = (if (isStart) startDate else endDate) ?: LocalDate.now()
+        showWheelDatePicker(
+            context,
+            initial = initial,
+            minDate = LocalDate.of(2000, 1, 1),
+            maxDate = LocalDate.now()
+        ) { date ->
             if (isStart) startDate = date else endDate = date
             updateDateButtons()
         }
-        picker.show(childFragmentManager, if (isStart) "filter_start" else "filter_end")
     }
 
     companion object {
