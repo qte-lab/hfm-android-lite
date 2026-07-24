@@ -14,11 +14,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.color.MaterialColors
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.R as MaterialR
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.databinding.DialogSettingsApiKeyBinding
 import com.chronie.homemoneylite.databinding.DialogSettingsBudgetBinding
@@ -137,15 +135,15 @@ class SettingsFragment : Fragment() {
         }
 
         collectWithLifecycle(viewModel.syncStatus) { status ->
-            val (textRes, colorAttr) = when (status) {
-                SyncStatus.IDLE -> R.string.sync_status_idle to MaterialR.attr.colorOnSurface
-                SyncStatus.SYNCING -> R.string.sync_status_syncing to MaterialR.attr.colorPrimary
-                SyncStatus.SUCCESS -> R.string.sync_status_success to MaterialR.attr.colorPrimary
-                SyncStatus.FAILED -> R.string.sync_status_failed to MaterialR.attr.colorError
-                SyncStatus.CONFLICT -> R.string.sync_status_conflict to MaterialR.attr.colorError
+            val (textRes, colorRes) = when (status) {
+                SyncStatus.IDLE -> R.string.sync_status_idle to R.color.text_primary
+                SyncStatus.SYNCING -> R.string.sync_status_syncing to R.color.brand_primary
+                SyncStatus.SUCCESS -> R.string.sync_status_success to R.color.brand_primary
+                SyncStatus.FAILED -> R.string.sync_status_failed to R.color.app_error
+                SyncStatus.CONFLICT -> R.string.sync_status_conflict to R.color.app_error
             }
             binding.tvSyncStatus.setText(textRes)
-            binding.tvSyncStatus.setTextColor(themeColor(colorAttr))
+            binding.tvSyncStatus.setTextColor(themeColor(colorRes))
             val syncing = status == SyncStatus.SYNCING
             binding.btnManualSync.isEnabled = !syncing
             binding.btnManualSync.setText(
@@ -160,7 +158,7 @@ class SettingsFragment : Fragment() {
         collectWithLifecycle(viewModel.pendingSyncCount) { count ->
             binding.tvSyncPending.text = count.toString()
             binding.tvSyncPending.setTextColor(
-                themeColor(if (count > 0) MaterialR.attr.colorPrimary else MaterialR.attr.colorOnSurface)
+                themeColor(if (count > 0) R.color.brand_primary else R.color.text_primary)
             )
         }
 
@@ -181,10 +179,10 @@ class SettingsFragment : Fragment() {
                 val symbol = getString(R.string.currency_symbol)
                 binding.tvBudgetStatus.text = getString(R.string.budget_enable_feature) + ": " +
                     getString(R.string.currency_format, symbol, budget.monthlyLimit)
-                binding.tvBudgetStatus.setTextColor(themeColor(MaterialR.attr.colorPrimary))
+                binding.tvBudgetStatus.setTextColor(themeColor(R.color.brand_primary))
             } else {
                 binding.tvBudgetStatus.text = getString(R.string.budget_enable_title)
-                binding.tvBudgetStatus.setTextColor(themeColor(MaterialR.attr.colorOnSurface))
+                binding.tvBudgetStatus.setTextColor(themeColor(R.color.text_primary))
             }
         }
     }
@@ -431,8 +429,8 @@ class SettingsFragment : Fragment() {
 
     private fun localeTag(): String = Locale.getDefault().toLanguageTag()
 
-    private fun themeColor(@androidx.annotation.AttrRes attr: Int): Int =
-        MaterialColors.getColor(requireContext(), attr, 0)
+    private fun themeColor(@androidx.annotation.ColorRes colorRes: Int): Int =
+        ContextCompat.getColor(requireContext(), colorRes)
 
     companion object {
         /** 开源库信息（传统 XML View 版，按许可证分组展示）。 */
