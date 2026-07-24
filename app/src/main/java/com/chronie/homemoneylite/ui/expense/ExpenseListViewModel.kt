@@ -12,7 +12,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.launch
 
 import javax.inject.Inject
@@ -95,7 +97,9 @@ class ExpenseListViewModel @Inject constructor(
                         currentState.expenses + expenses
                     }
                     
-                    val grouped = groupExpensesByDate(newExpenses, filters.sortBy)
+                    val grouped = withContext(Dispatchers.Default) {
+                        groupExpensesByDate(newExpenses, filters.sortBy)
+                    }
                     
                     _uiState.update {
                         it.copy(
@@ -138,7 +142,9 @@ class ExpenseListViewModel @Inject constructor(
                         // Use distinctBy to prevent duplicate IDs causing key conflicts in LazyColumn
                         val newExpenses = (currentState.expenses + expenses)
                             .distinctBy { it.id }
-                        val grouped = groupExpensesByDate(newExpenses, currentState.filters.sortBy)
+                        val grouped = withContext(Dispatchers.Default) {
+                            groupExpensesByDate(newExpenses, currentState.filters.sortBy)
+                        }
                         
                         _uiState.update {
                             it.copy(
@@ -256,7 +262,9 @@ class ExpenseListViewModel @Inject constructor(
                 onSuccess = {
                     // 从当前列表中移除删除的支出
                     val updatedExpenses = _uiState.value.expenses.filter { it.id != expense.id }
-                    val grouped = groupExpensesByDate(updatedExpenses, _uiState.value.filters.sortBy)
+                    val grouped = withContext(Dispatchers.Default) {
+                        groupExpensesByDate(updatedExpenses, _uiState.value.filters.sortBy)
+                    }
                     
                     _uiState.update {
                         it.copy(

@@ -91,10 +91,16 @@ class AIExpenseViewModel @Inject constructor(
                         .onFailure { throw it }
                 }
                 
+                // 为每条识别结果分配稳定唯一 id，供 LazyColumn 作为 key 复用，
+                // 避免按索引定位导致编辑/删除时整列表重组（低端机滚动更顺滑）
+                val recordsWithIds = records.map {
+                    if (it.id.isBlank()) it.copy(id = java.util.UUID.randomUUID().toString()) else it
+                }
+                
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        recognizedRecords = records,
+                        recognizedRecords = recordsWithIds,
                         errorMessage = if (records.isEmpty()) context.getString(R.string.ai_expense_no_records) else null
                     )
                 }

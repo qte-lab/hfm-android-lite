@@ -7,21 +7,12 @@ import android.content.pm.ResolveInfo
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropActivity
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ContentTransform
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.background
@@ -56,14 +47,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.compose.animation.ExperimentalAnimationApi
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.ui.components.ExpressiveLoadingIndicator
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
 import kotlin.time.Duration.Companion.milliseconds
-
-private val EaseOutCubic = CubicBezierEasing(0.33f, 1f, 0.68f, 1f)
-private val EaseInCubic = CubicBezierEasing(0.32f, 0f, 0.67f, 0f)
 
 private enum class SettingsCategoryPage {
     FUNCTION,
@@ -85,7 +72,6 @@ private fun SettingsCategoryPage.icon(): ImageVector = when (this) {
     SettingsCategoryPage.DATA_SYNC -> Icons.Default.Storage
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun SettingsScreen(
     context: Context,
@@ -101,167 +87,118 @@ fun SettingsScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        AnimatedContent(
-            targetState = selectedCategory,
-            transitionSpec = {
-                ContentTransform(
-                    targetContentEnter = fadeIn(animationSpec = tween(durationMillis = 200, easing = EaseOutCubic)),
-                    initialContentExit = fadeOut(animationSpec = tween(durationMillis = 150, easing = EaseInCubic))
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) { category ->
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                color = MaterialTheme.colors.background
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colors.background
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (category != null) {
-                        IconButton(onClick = { selectedCategoryName = null }) {
-                            Icon(Icons.Default.ArrowBack, contentDescription = null)
-                        }
-                        Spacer(modifier = Modifier.width(8.dp))
+                if (selectedCategory != null) {
+                    IconButton(onClick = { selectedCategoryName = null }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = null)
                     }
-                    Text(
-                        text = category?.title(context) ?: context.getString(R.string.settings),
-                        style = MaterialTheme.typography.titleLarge
-                    )
+                    Spacer(modifier = Modifier.width(8.dp))
                 }
+                Text(
+                    text = selectedCategory?.title(context) ?: context.getString(R.string.settings),
+                    style = MaterialTheme.typography.titleLarge
+                )
             }
         }
 
-        AnimatedContent(
-            targetState = selectedCategory,
-            transitionSpec = {
-                if (targetState != null && initialState == null) {
-                    // 进入二级页面：从右侧滑入 + 淡入
-                    ContentTransform(
-                        targetContentEnter = slideInHorizontally(
-                            initialOffsetX = { fullWidth -> fullWidth / 4 },
-                            animationSpec = tween(durationMillis = 300, easing = EaseOutCubic)
-                        ) + fadeIn(animationSpec = tween(durationMillis = 200, easing = EaseOutCubic)),
-                        initialContentExit = fadeOut(animationSpec = tween(durationMillis = 150, easing = EaseInCubic))
-                    )
-                } else if (targetState == null && initialState != null) {
-                    // 返回主页面：从左侧滑入 + 淡入
-                    ContentTransform(
-                        targetContentEnter = slideInHorizontally(
-                            initialOffsetX = { fullWidth -> -fullWidth / 4 },
-                            animationSpec = tween(durationMillis = 300, easing = EaseOutCubic)
-                        ) + fadeIn(animationSpec = tween(durationMillis = 200, easing = EaseOutCubic)),
-                        initialContentExit = slideOutHorizontally(
-                            targetOffsetX = { fullWidth -> fullWidth / 4 },
-                            animationSpec = tween(durationMillis = 300, easing = EaseInCubic)
-                        ) + fadeOut(animationSpec = tween(durationMillis = 150, easing = EaseInCubic))
-                    )
-                } else {
-                    // 二级页面之间切换
-                    ContentTransform(
-                        targetContentEnter = slideInHorizontally(
-                            initialOffsetX = { fullWidth -> fullWidth / 4 },
-                            animationSpec = tween(durationMillis = 300, easing = EaseOutCubic)
-                        ) + fadeIn(animationSpec = tween(durationMillis = 200, easing = EaseOutCubic)),
-                        initialContentExit = fadeOut(animationSpec = tween(durationMillis = 150, easing = EaseInCubic))
-                    )
-                }
-            },
-            modifier = Modifier.fillMaxSize()
-        ) { category ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(16.dp)
-                    .padding(bottom = 80.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                if (category == null) {
-                    Text(
-                        text = context.getString(R.string.settings_choose_category),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colors.onSurfaceVariant
-                    )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(16.dp)
+                .padding(bottom = 80.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            if (selectedCategory == null) {
+                Text(
+                    text = context.getString(R.string.settings_choose_category),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colors.onSurfaceVariant
+                )
 
-                    listOf(
-                        SettingsCategoryPage.FUNCTION,
-                        SettingsCategoryPage.DATA_SYNC
-                    ).forEach { categoryItem ->
-                        Surface(
+                listOf(
+                    SettingsCategoryPage.FUNCTION,
+                    SettingsCategoryPage.DATA_SYNC
+                ).forEach { categoryItem ->
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { selectedCategoryName = categoryItem.name },
+                        color = MaterialTheme.colors.surfaceContainerLow,
+                        shape = MaterialTheme.shapes.large,
+                        border = BorderStroke(
+                            width = 1.dp,
+                            color = MaterialTheme.colors.outlineVariant.copy(alpha = 0.35f)
+                        )
+                    ) {
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clickable { selectedCategoryName = categoryItem.name },
-                            color = MaterialTheme.colors.surfaceContainerLow,
-                            shape = MaterialTheme.shapes.large,
-                            border = BorderStroke(
-                                width = 1.dp,
-                                color = MaterialTheme.colors.outlineVariant.copy(alpha = 0.35f)
-                            )
+                                .padding(16.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                            Surface(
+                                shape = CircleShape,
+                                color = MaterialTheme.colors.primaryContainer,
+                                modifier = Modifier.size(44.dp)
                             ) {
-                                Surface(
-                                    shape = CircleShape,
-                                    color = MaterialTheme.colors.primaryContainer,
-                                    modifier = Modifier.size(44.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = categoryItem.icon(),
-                                        contentDescription = null,
-                                        modifier = Modifier.padding(10.dp),
-                                        tint = MaterialTheme.colors.onPrimaryContainer
-                                    )
-                                }
-
-                                Spacer(modifier = Modifier.width(12.dp))
-
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(
-                                        text = categoryItem.title(context),
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-                                    Text(
-                                        text = categoryItem.description(context),
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colors.onSurfaceVariant
-                                    )
-                                }
-
-                                Text(
-                                    text = ">",
-                                    style = MaterialTheme.typography.titleLarge
+                                Icon(
+                                    imageVector = categoryItem.icon(),
+                                    contentDescription = null,
+                                    modifier = Modifier.padding(10.dp),
+                                    tint = MaterialTheme.colors.onPrimaryContainer
                                 )
                             }
+
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = categoryItem.title(context),
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(
+                                    text = categoryItem.description(context),
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colors.onSurfaceVariant
+                                )
+                            }
+
+                            Text(
+                                text = ">",
+                                style = MaterialTheme.typography.titleLarge
+                            )
                         }
                     }
+                }
 
-                    Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                    // 开源许可（显示在版本信息上方，可点击）
-                    OpenSourceLicensesInline(context = context)
+                // 开源许可（显示在版本信息上方，可点击）
+                OpenSourceLicensesInline(context = context)
 
-                    Spacer(modifier = Modifier.height(8.dp))
-                    AppVersionInfo(context = context)
-                } else {
-                    when (category) {
-                        SettingsCategoryPage.FUNCTION -> FunctionSettingsContent(
-                            viewModel = viewModel,
-                            context = context
-                        )
-                        SettingsCategoryPage.DATA_SYNC -> DataSyncSettingsContent(
-                            viewModel = viewModel,
-                            context = context,
-                            onNavigateToLanSync = onNavigateToLanSync
-                        )
-                    }
+                Spacer(modifier = Modifier.height(8.dp))
+                AppVersionInfo(context = context)
+            } else {
+                when (selectedCategory) {
+                    SettingsCategoryPage.FUNCTION -> FunctionSettingsContent(
+                        viewModel = viewModel,
+                        context = context
+                    )
+                    SettingsCategoryPage.DATA_SYNC -> DataSyncSettingsContent(
+                        viewModel = viewModel,
+                        context = context,
+                        onNavigateToLanSync = onNavigateToLanSync
+                    )
                 }
             }
         }

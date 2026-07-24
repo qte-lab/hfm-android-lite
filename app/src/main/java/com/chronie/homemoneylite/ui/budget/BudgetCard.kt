@@ -2,6 +2,9 @@ package com.chronie.homemoneylite.ui.budget
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBalance
@@ -233,8 +236,13 @@ fun BudgetUsageCard(
                 }
             }
             
-            // 详细内容（可展开/收起）
-            AnimatedVisibility(visible = isExpanded) {
+            // 详细内容（可展开/收起）：仅用短时淡入淡出，去掉默认 expand/shrink 的尺寸动画，
+            // 避免低端机在展开/收起时连续重布局而卡顿
+            AnimatedVisibility(
+                visible = isExpanded,
+                enter = fadeIn(animationSpec = tween(durationMillis = 150)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 150))
+            ) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {

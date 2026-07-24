@@ -466,11 +466,11 @@ private fun ImageSelectionSection(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                items(selectedImages.size) { index ->
+                itemsIndexed(selectedImages, key = { _, uri -> uri }) { index, uri ->
                     ImagePreviewCard(
-                        imageUri = selectedImages[index],
-                        onRemove = { onRemoveImage(selectedImages[index]) },
-                        onCrop = { onCropImage(selectedImages[index]) }
+                        imageUri = uri,
+                        onRemove = { onRemoveImage(uri) },
+                        onCrop = { onCropImage(uri) }
                     )
                 }
             }
@@ -617,7 +617,7 @@ private fun RecognizedRecordsSection(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.weight(1f)
         ) {
-            itemsIndexed(records) { index, record ->
+            itemsIndexed(records, key = { _, record -> record.id }) { index, record ->
                 RecordEditCard(
                     context = context,
                     record = record,
@@ -908,8 +908,7 @@ private fun ExpenseTypePickerDialog(
                     LazyColumn(
                         modifier = Modifier.heightIn(max = 400.dp)
                     ) {
-                        items(filteredTypes.size) { index ->
-                            val type = filteredTypes[index]
+                        itemsIndexed(filteredTypes, key = { _, type -> type.name }) { index, type ->
                             TextButton(
                                 onClick = { onTypeSelected(type) },
                                 modifier = Modifier.fillMaxWidth()
