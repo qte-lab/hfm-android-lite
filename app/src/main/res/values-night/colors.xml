@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 深色模式配色覆盖，对应原 Compose DarkColorPalette -->
+<resources>
+    <color name="brand_primary">#FF81C784</color>
+    <color name="brand_primary_variant">#FF66BB6A</color>
+    <color name="brand_secondary">#FF81C784</color>
+    <color name="brand_secondary_variant">#FF66BB6A</color>
+
+    <color name="app_background">#FF121212</color>
+    <color name="app_surface">#FF1E1E1E</color>
+    <color name="app_error">#FFCF6679</color>
+
+    <color name="on_primary">#FF000000</color>
+    <color name="on_secondary">#FF000000</color>
+    <color name="on_error">#FF000000</color>
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_secondary">#B3FFFFFF</color>
+    <color name="divider">#1FFFFFFF</color>
+</resources>

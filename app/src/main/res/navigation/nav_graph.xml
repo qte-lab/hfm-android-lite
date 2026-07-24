@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.chronie.homemoneylite.ui.main.MainFragment"
+        android:label="main" />
+
+    <fragment
+        android:id="@+id/addExpenseFragment"
+        android:name="com.chronie.homemoneylite.ui.expense.AddExpenseFragment"
+        android:label="add_expense">
+        <argument
+            android:name="expenseId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/aiExpenseFragment"
+        android:name="com.chronie.homemoneylite.ui.expense.AIExpenseFragment"
+        android:label="ai_expense" />
+
+    <fragment
+        android:id="@+id/weekdayDetailFragment"
+        android:name="com.chronie.homemoneylite.ui.charts.WeekdayDetailFragment"
+        android:label="weekday_detail">
+        <argument
+            android:name="dayOfWeek"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="amount"
+            app:argType="float"
+            android:defaultValue="0.0" />
+        <argument
+            android:name="count"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="percentage"
+            app:argType="float"
+            android:defaultValue="0.0" />
+        <argument
+            android:name="startDate"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="endDate"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+</navigation>

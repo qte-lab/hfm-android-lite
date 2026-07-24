@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 支出/预算模块专用配色（深色）。 -->
+<resources>
+    <color name="budget_enable_bg">#1B2E1F</color>
+    <color name="budget_alert_normal_bg">#1B2E1F</color>
+    <color name="budget_alert_warning_bg">#33280F</color>
+    <color name="budget_alert_over_bg">#3B1717</color>
+    <color name="budget_warning">#FFB74D</color>
+</resources>

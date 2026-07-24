@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 图表系列色（浅色）。深色模式覆盖见 values-night/colors_charts.xml。
+     对应原 Compose barChartPalette。 -->
+<resources>
+    <color name="chart_series_1">#FF4F8DFD</color>
+    <color name="chart_series_2">#FF54C8A8</color>
+    <color name="chart_series_3">#FFF4B400</color>
+    <color name="chart_series_4">#FFE0607E</color>
+    <color name="chart_series_5">#FF9B6DFF</color>
+    <color name="chart_series_6">#FF3FC1D8</color>
+    <color name="chart_series_7">#FFFF8A5B</color>
+    <color name="chart_series_8">#FF7CCF5A</color>
+    <color name="chart_series_9">#FF5C6BC0</color>
+    <color name="chart_series_10">#FFEC6F9C</color>
+</resources>

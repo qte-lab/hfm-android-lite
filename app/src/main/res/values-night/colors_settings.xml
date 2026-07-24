@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 设置页专属颜色（深色模式）。 -->
+<resources>
+    <!-- 许可证分组/版本 chip 的浅绿底（深色下略提亮） -->
+    <color name="licence_chip_bg">#3381C784</color>
+</resources>

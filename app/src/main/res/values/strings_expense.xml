@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 支出列表页 / 筛选 / 预算 相关新增字符串（不修改 strings.xml） -->
+<resources>
+    <string name="expense_load_more">加载更多</string>
+    <string name="expense_budget_loading">预算加载中…</string>
+    <string name="expense_filter_type_selector_title">选择分类</string>
+</resources>

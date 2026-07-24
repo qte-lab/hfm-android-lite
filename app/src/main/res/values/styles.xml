@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- Base application theme.（迁移到传统 View 体系：Material Components DayNight） -->
 
-    <style name="AppTheme.NoActionBar" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
+
+        <!-- 品牌配色（颜色值随 values-night 自动切换深浅） -->
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorPrimaryVariant">@color/brand_primary_variant</item>
+        <item name="colorSecondary">@color/brand_secondary</item>
+        <item name="colorSecondaryVariant">@color/brand_secondary_variant</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorError">@color/app_error</item>
+        <item name="colorOnError">@color/on_error</item>
+        <item name="colorSurface">@color/app_surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:colorBackground">@color/app_background</item>
+        <item name="colorOnBackground">@color/text_primary</item>
+
+        <!-- MD3 颜色属性桥接：布局里用 ?attr/colorOutline 作分割线，MD2 主题未定义该属性，
+             运行时解析失败会导致 InflateException 崩溃。此处映射到 divider 颜色（随深浅切换）。 -->
+        <item name="colorOutline">@color/divider</item>
+
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:statusBarColor">@color/app_surface</item>
+        <item name="android:navigationBarColor">@color/app_surface</item>
+        <item name="android:windowLightStatusBar">@bool/light_system_bars</item>
+
+        <!-- MD3 排版属性桥接到 MD2 文本样式：布局里用 ?attr/textAppearanceTitleMedium 等
+             MD3 命名，但本工程主题是 MD2（Theme.MaterialComponents），MD3 排版属性在
+             MD2 主题下默认未赋值，会导致字号/字重不生效。此处按 MD3→MD2 映射补齐，
+             使既有布局无需逐个改写即可正确显示（映射同 migrate_md2.py）。 -->
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.MaterialComponents.Headline6</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.MaterialComponents.Subtitle1</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.MaterialComponents.Subtitle2</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.MaterialComponents.Body1</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.MaterialComponents.Body2</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.MaterialComponents.Caption</item>
     </style>
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">

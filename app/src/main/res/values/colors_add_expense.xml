@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AI 识别结果中“无效记录”卡片的背景（浅红半透明） -->
+    <color name="ai_record_invalid_bg">#1AB00020</color>
+    <!-- 图片选择占位卡片的边框色 -->
+    <color name="add_image_placeholder_stroke">@color/divider</color>
+</resources>

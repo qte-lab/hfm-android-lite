@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 图表系列色（深色）。在深色背景上略微调亮以提升对比度。 -->
+<resources>
+    <color name="chart_series_1">#FF7FB0FF</color>
+    <color name="chart_series_2">#FF7FE0C4</color>
+    <color name="chart_series_3">#FFFFD15C</color>
+    <color name="chart_series_4">#FFFF8AA8</color>
+    <color name="chart_series_5">#FFBBA0FF</color>
+    <color name="chart_series_6">#FF73E0F2</color>
+    <color name="chart_series_7">#FFFFB085</color>
+    <color name="chart_series_8">#FFA6E58A</color>
+    <color name="chart_series_9">#FF8C99E0</color>
+    <color name="chart_series_10">#FFFFA8CE</color>
+</resources>
