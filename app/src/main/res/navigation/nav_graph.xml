@@ -7,12 +7,18 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.chronie.homemoneylite.ui.main.MainFragment"
-        android:label="main" />
+        android:label="main"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
 
     <fragment
         android:id="@+id/addExpenseFragment"
         android:name="com.chronie.homemoneylite.ui.expense.AddExpenseFragment"
-        android:label="add_expense">
+        android:label="add_expense"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right">
         <argument
             android:name="expenseId"
             app:argType="string"
@@ -23,12 +29,20 @@
     <fragment
         android:id="@+id/aiExpenseFragment"
         android:name="com.chronie.homemoneylite.ui.expense.AIExpenseFragment"
-        android:label="ai_expense" />
+        android:label="ai_expense"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
 
     <fragment
         android:id="@+id/weekdayDetailFragment"
         android:name="com.chronie.homemoneylite.ui.charts.WeekdayDetailFragment"
-        android:label="weekday_detail">
+        android:label="weekday_detail"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right">
         <argument
             android:name="dayOfWeek"
             app:argType="integer"

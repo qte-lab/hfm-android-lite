@@ -44,6 +44,8 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
     private var latestFilters: ExpenseFilters = ExpenseFilters()
     private var latestBudget: BudgetUiState = BudgetUiState()
     private var lastLoadMoreTime = 0L
+    // 记录上一次渲染所用的筛选条件；仅当筛选/排序变化（而非加载更多）时把列表滚回顶部
+    private var lastRenderedFilters: ExpenseFilters? = null
 
     private val locale: String
         get() = LocaleListCompat.getDefault().get(0)?.toLanguageTag() ?: "zh-CN"
@@ -135,6 +137,8 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
 
     private fun observeState() {
         collectWithLifecycle(viewModel.uiState) { state ->
+            val filtersChanged = lastRenderedFilters != state.filters
+            lastRenderedFilters = state.filters
             latestFilters = state.filters
 
             val items = mutableListOf<ExpenseListAdapter.ListItem>()
@@ -154,6 +158,9 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
             adapter.bindLoadMoreState(state.isLoading)
 
             binding.swipeRefresh.isRefreshing = state.isLoading && state.currentPage == 1
+
+            // 排序/筛选条件变化时回到列表顶部（加载更多不改变筛选，不触发滚动）
+            if (filtersChanged) binding.recyclerView.scrollToPosition(0)
 
             updateStatus(state)
             bindStats(state)

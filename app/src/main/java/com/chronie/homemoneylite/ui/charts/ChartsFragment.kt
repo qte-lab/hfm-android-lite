@@ -7,7 +7,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.HorizontalScrollView
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupMenu
@@ -239,18 +238,12 @@ class ChartsFragment : Fragment() {
         if (state.categoryData.isEmpty()) {
             inner.addView(noDataText())
         } else {
-            val scroll = HorizontalScrollView(requireContext()).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-            }
-            val widthDp = (state.categoryData.size * 64).coerceAtLeast(320)
+            // 注意：MPAndroidChart 的 BarChart 放入 HorizontalScrollView 时首帧测量宽度异常，
+            // 会导致整张图白屏。这里直接 MATCH_PARENT 宽度，与趋势图/雷达图一致，保证稳定渲染。
             val chart = BarChart(requireContext()).apply {
-                layoutParams = ViewGroup.LayoutParams(dp(widthDp), dp(320))
+                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(300))
             }
             val textColor = ContextCompat.getColor(requireContext(), R.color.text_primary)
-            val divider = ContextCompat.getColor(requireContext(), R.color.divider)
 
             val entries = state.categoryData.mapIndexed { i, c -> BarEntry(i.toFloat(), c.amount.toFloat()) }
             val dataSet = BarDataSet(entries, getString(R.string.category_breakdown)).apply {
@@ -260,7 +253,6 @@ class ChartsFragment : Fragment() {
                 valueTextColor = textColor
                 valueTextSize = 10f
                 setDrawValues(true)
-                barShadowColor = divider
             }
             val barData = BarData(dataSet).apply { barWidth = 0.6f }
             chart.data = barData
@@ -291,10 +283,7 @@ class ChartsFragment : Fragment() {
             left.valueFormatter = currencyAxisFormatter()
             chart.axisRight.isEnabled = false
 
-            scroll.addView(chart)
-            // 动态创建后显式触发首帧绘制（post 确保视图已 attach 并完成布局，否则部分机型下数据已设置却不渲染）
-            chart.post { chart.invalidate() }
-            inner.addView(scroll)
+            inner.addView(chart)
 
             val list = buildCategoryList(state.categoryData)
             inner.addView(list)
