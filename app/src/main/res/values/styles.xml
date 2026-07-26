@@ -8,7 +8,10 @@
          “浅色内容 + 深色(蓝)操作栏”的经典 Holo 观感；Holo 蓝 #33B5E5 作为强调色。
          所有变体（浅色、API 分级）都继承此 Base。 -->
 
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+    <!-- 改用 DayNight：浅色模式渲染等价于 Light（观感不变）；系统开启深色模式时，
+         AppCompat 自动深色化 EditText/Spinner/AlertDialog/Checkbox 等基础控件，
+         与 values-night/* 资源（colors/styles）协同生效。 -->
+    <style name="AppTheme.Base" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
 
@@ -37,6 +40,9 @@
         <item name="colorOnError">@color/on_error</item>
         <item name="colorSurface">@color/app_surface</item>
         <item name="colorOnSurface">@color/text_primary</item>
+        <!-- 全局默认 CardView 样式：未显式设置 cardBackgroundColor 的卡片统一跟随表面色，
+             修掉深色模式下的“白卡”。已显式设背景（如品牌蓝）的卡片不受影响。 -->
+        <item name="cardViewStyle">@style/HoloCardView</item>
         <item name="android:colorBackground">@color/app_background</item>
         <item name="colorOnBackground">@color/text_primary</item>
         <item name="colorOutline">@color/divider</item>
@@ -48,11 +54,25 @@
         <item name="textAppearanceBodyLarge">@style/TextAppearance.AppCompat.Medium</item>
         <item name="textAppearanceBodyMedium">@style/TextAppearance.AppCompat.Small</item>
         <item name="textAppearanceBodySmall">@style/TextAppearance.AppCompat.Small</item>
+
+        <!-- 移除 Material 后本地声明的描边按钮属性（见 attrs.xml），映射到等价样式 -->
+        <item name="materialButtonOutlinedStyle">@style/Widget.Holo.OutlinedButton</item>
     </style>
 
     <!-- Holo 蓝 ActionBar -->
     <style name="HoloActionBar" parent="Widget.AppCompat.ActionBar.Solid">
         <item name="android:background">@color/brand_primary</item>
+    </style>
+
+    <!-- 描边按钮（替代 Material 的 materialButtonOutlinedStyle）：透明底 + 品牌色描边 + 品牌色文字 -->
+    <style name="Widget.Holo.OutlinedButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/btn_outline_background</item>
+        <item name="android:textColor">@color/brand_primary</item>
+    </style>
+
+    <!-- 全局默认卡片：背景跟随表面色（浅色白 / 深色深灰），修掉深色模式“白卡” -->
+    <style name="HoloCardView">
+        <item name="cardBackgroundColor">@color/app_surface</item>
     </style>
 
     <!-- 默认（< API 27）使用的主题：直接继承 AppTheme.Base。

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AI 识别“无效记录”卡片背景：深色模式下改用深红半透明，避免浅红在深背景上过淡 -->
+    <color name="ai_record_invalid_bg">#33B71C1C</color>
+    <!-- 图片选择占位卡片边框：引用 divider，夜间自动翻转为浅色细线 -->
+    <color name="add_image_placeholder_stroke">@color/divider</color>
+</resources>

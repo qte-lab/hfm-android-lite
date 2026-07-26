@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 浅色 Holo 仅一种配色：夜间限定符与日间保持一致，保证任何系统模式下都呈现浅色 Holo。 -->
+<!-- 深色模式配色：覆盖浅色 colors.xml 中的背景/表面/前景色，使深色模式真正变暗。
+     强调色 brand_primary（Holo 蓝 #33B5E5）予以保留，在深色背景上对比度足够；
+     on_*/app_error 等同样沿用浅色定义，无需在此重复。 -->
 <resources>
-    <color name="brand_primary">#FF33B5E5</color>
-    <color name="brand_primary_variant">#FF0099CC</color>
-    <color name="brand_secondary">#FF33B5E5</color>
-    <color name="brand_secondary_variant">#FF0099CC</color>
+    <!-- 背景 / 表面：深色 -->
+    <color name="app_background">#FF121212</color>
+    <color name="app_surface">#FF1E1E1E</color>
 
-    <color name="app_background">#FFF3F3F3</color>
-    <color name="app_surface">#FFFFFFFF</color>
-    <color name="app_error">#FFCC0000</color>
+    <!-- 前景：浅色 -->
+    <color name="text_primary">#FFE1E1E1</color>
+    <color name="text_secondary">#FFB0B0B0</color>
 
-    <color name="on_primary">#FFFFFFFF</color>
-    <color name="on_secondary">#FF000000</color>
-    <color name="on_error">#FFFFFFFF</color>
-    <color name="text_primary">#FF000000</color>
-    <color name="text_secondary">#FF666666</color>
-    <color name="divider">#1F000000</color>
+    <!-- 分隔线：白色低透明度（在深色背景上显现为浅色细线） -->
+    <color name="divider">#1FFFFFFF</color>
 </resources>
