@@ -22,7 +22,7 @@ import com.chronie.homemoneylite.ui.budget.BudgetUiState
 import com.chronie.homemoneylite.ui.budget.BudgetViewModel
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.common.slideNavOptions
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import android.app.AlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.appcompat.widget.PopupMenu
 
@@ -279,7 +279,7 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
             if (!expense.remark.isNullOrBlank()) append(expense.remark).append("\n")
             append(dateStr).append("\n").append(amountStr)
         }
-        MaterialAlertDialogBuilder(ctx)
+        AlertDialog.Builder(ctx)
             .setTitle(typeName)
             .setMessage(message)
             .setPositiveButton(R.string.edit) { _, _ -> navigateEdit(expense.id) }
@@ -288,7 +288,7 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
     }
 
     private fun showDeleteConfirm1(expense: Expense) {
-        MaterialAlertDialogBuilder(requireContext())
+        AlertDialog.Builder(requireContext())
             .setTitle(R.string.delete_confirm_title)
             .setMessage(R.string.delete_confirm_message)
             .setPositiveButton(R.string.confirm) { _, _ -> showDeleteConfirm2(expense) }
@@ -297,7 +297,7 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
     }
 
     private fun showDeleteConfirm2(expense: Expense) {
-        MaterialAlertDialogBuilder(requireContext())
+        AlertDialog.Builder(requireContext())
             .setTitle(R.string.delete_second_confirm_title)
             .setMessage(R.string.delete_second_confirm_message)
             .setPositiveButton(R.string.delete) { _, _ -> viewModel.deleteExpense(expense) }

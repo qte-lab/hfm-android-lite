@@ -14,7 +14,7 @@ import com.chronie.homemoneylite.databinding.FragmentAddExpenseBinding
 import com.chronie.homemoneylite.domain.model.ExpenseType
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.components.showWheelDatePicker
-import com.google.android.material.snackbar.Snackbar
+import android.widget.Toast
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -78,13 +78,11 @@ class AddExpenseFragment : Fragment() {
             if (typeName != null && binding.typeInput.text.toString() != typeName) {
                 binding.typeInput.setText(typeName)
             }
-            binding.typeLayout.error = state.typeError?.let { mapTypeError(it) }
 
             // 金额
             if (binding.amountInput.text.toString() != state.amount) {
                 binding.amountInput.setText(state.amount)
             }
-            binding.amountLayout.error = state.amountError?.let { mapAmountError(it) }
 
             // 日期
             binding.dateText.text = state.selectedDate.format(dateFormatter)
@@ -105,10 +103,10 @@ class AddExpenseFragment : Fragment() {
             // 保存错误：仅展示一次
             if (state.saveError != null && state.saveError != lastShownSaveError) {
                 lastShownSaveError = state.saveError
-                Snackbar.make(
-                    binding.root,
+                Toast.makeText(
+                    requireContext(),
                     getString(R.string.add_expense_save_failed, state.saveError),
-                    Snackbar.LENGTH_LONG
+                    Toast.LENGTH_LONG
                 ).show()
             } else if (state.saveError == null) {
                 lastShownSaveError = null
@@ -167,19 +165,8 @@ class AddExpenseFragment : Fragment() {
     private fun onSave() {
         viewModel.saveExpense(
             onSuccess = { findNavController().popBackStack() },
-            onError = { /* 错误通过 Snackbar 展示 */ }
+            onError = { /* 错误通过 Toast 展示 */ }
         )
-    }
-
-    private fun mapTypeError(error: String): String? = when (error) {
-        "TYPE_REQUIRED" -> getString(R.string.add_expense_validation_type_required)
-        else -> error
-    }
-
-    private fun mapAmountError(error: String): String? = when (error) {
-        "AMOUNT_REQUIRED" -> getString(R.string.add_expense_validation_amount_required)
-        "AMOUNT_INVALID" -> getString(R.string.add_expense_validation_amount_invalid)
-        else -> error
     }
 
     override fun onDestroyView() {

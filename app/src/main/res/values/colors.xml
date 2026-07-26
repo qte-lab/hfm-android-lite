@@ -1,23 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 全局配色（浅色模式）。深色模式覆盖见 values-night/colors.xml。
-     与原 Compose ui/theme/Theme.kt 中绿色主题一一对应。 -->
+<!-- 全局配色（浅色 Holo）。Holo 蓝 #33B5E5 作为强调色，背景/表面为浅灰+白。 -->
 <resources>
-    <!-- 品牌绿 -->
-    <color name="brand_primary">#FF66BB6A</color>
-    <color name="brand_primary_variant">#FF43A047</color>
-    <color name="brand_secondary">#FF81C784</color>
-    <color name="brand_secondary_variant">#FF519657</color>
+    <!-- Holo 蓝（强调色） -->
+    <color name="brand_primary">#FF33B5E5</color>
+    <color name="brand_primary_variant">#FF0099CC</color>
+    <color name="brand_secondary">#FF33B5E5</color>
+    <color name="brand_secondary_variant">#FF0099CC</color>
 
     <!-- 背景 / 表面 -->
-    <color name="app_background">#FFF2F7F3</color>
+    <color name="app_background">#FFF3F3F3</color>
     <color name="app_surface">#FFFFFFFF</color>
-    <color name="app_error">#FFB00020</color>
+    <color name="app_error">#FFCC0000</color>
 
     <!-- 前景 -->
     <color name="on_primary">#FFFFFFFF</color>
     <color name="on_secondary">#FF000000</color>
     <color name="on_error">#FFFFFFFF</color>
     <color name="text_primary">#FF000000</color>
-    <color name="text_secondary">#99000000</color>
+    <color name="text_secondary">#FF666666</color>
     <color name="divider">#1F000000</color>
+
+    <!-- Holo 调色板备用 -->
+    <color name="holo_blue">#FF33B5E5</color>
+    <color name="holo_blue_dark">#FF0099CC</color>
+    <color name="holo_green">#FF99CC00</color>
+    <color name="holo_red">#FFCC0000</color>
 </resources>

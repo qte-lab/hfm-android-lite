@@ -6,7 +6,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.chronie.homemoneylite.R
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import android.app.AlertDialog
 import java.time.LocalDate
 
 /**
@@ -29,7 +29,7 @@ fun showWheelDatePicker(
         setMaxDate(maxDate)
         setDate(initial)
     }
-    MaterialAlertDialogBuilder(context)
+    AlertDialog.Builder(context)
         .setTitle(R.string.select_date)
         .setView(picker)
         .setPositiveButton(R.string.confirm) { _, _ -> onConfirm(picker.getDate()) }
@@ -91,7 +91,7 @@ fun showWheelDateRangePicker(
         addView(endPicker)
     }
 
-    MaterialAlertDialogBuilder(context)
+    AlertDialog.Builder(context)
         .setTitle(R.string.custom_range)
         .setView(container)
         .setPositiveButton(R.string.confirm) { _, _ ->

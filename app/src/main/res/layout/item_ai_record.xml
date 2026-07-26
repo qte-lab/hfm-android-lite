@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/recordCard"
     android:layout_width="match_parent"
@@ -7,9 +7,7 @@
     android:layout_marginBottom="8dp"
     app:cardBackgroundColor="?attr/colorSurface"
     app:cardCornerRadius="8dp"
-    app:cardElevation="0dp"
-    app:strokeColor="@color/divider"
-    app:strokeWidth="1dp">
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,14 +23,14 @@
 
             <TextView
                 android:id="@+id/typeText"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_primary" />
 
             <TextView
                 android:id="@+id/amountText"
-                style="@style/TextAppearance.MaterialComponents.Headline6"
+                style="?android:attr/textAppearanceLarge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -40,7 +38,7 @@
 
             <TextView
                 android:id="@+id/dateText"
-                style="@style/TextAppearance.MaterialComponents.Body2"
+                style="?android:attr/textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -48,7 +46,7 @@
 
             <TextView
                 android:id="@+id/remarkText"
-                style="@style/TextAppearance.MaterialComponents.Body1"
+                style="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -57,7 +55,7 @@
 
             <TextView
                 android:id="@+id/editedBadge"
-                style="@style/TextAppearance.MaterialComponents.Caption"
+                style="?android:attr/textAppearanceSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -78,7 +76,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/ai_expense_edit_record"
                 android:src="@drawable/ic_add_edit"
-                app:tint="?attr/colorPrimary" />
+                android:tint="?attr/colorPrimary" />
 
             <ImageButton
                 android:id="@+id/deleteButton"
@@ -87,7 +85,7 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/ai_expense_delete_record"
                 android:src="@drawable/ic_add_delete"
-                app:tint="?attr/colorError" />
+                android:tint="?attr/colorError" />
         </LinearLayout>
     </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
+</androidx.cardview.widget.CardView>

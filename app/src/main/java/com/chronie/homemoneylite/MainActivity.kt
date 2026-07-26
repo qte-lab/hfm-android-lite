@@ -2,7 +2,7 @@ package com.chronie.homemoneylite
 
 import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.chronie.homemoneylite.core.common.LanguageManager
 import com.chronie.homemoneylite.service.HealthCheckService
@@ -15,7 +15,7 @@ import javax.inject.Inject
  * 页面结构见 res/navigation/nav_graph.xml。
  */
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : FragmentActivity() {
 
     @Inject
     lateinit var languageManager: LanguageManager

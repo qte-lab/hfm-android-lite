@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.databinding.FragmentMainBinding
@@ -39,17 +41,43 @@ class MainFragment : Fragment() {
         // 仅在有保存状态时恢复；否则保留当前选中的 Tab（避免从二级页返回时强制跳回“支出”）
         selectedTabId = savedInstanceState?.getInt(KEY_SELECTED_TAB) ?: selectedTabId
 
-        binding.bottomNav.setOnItemSelectedListener { item ->
-            selectedTabId = item.itemId
-            showTab(item.itemId)
-            true
-        }
-        // 避免重选时重复触发
-        binding.bottomNav.setOnItemReselectedListener { /* no-op */ }
+        binding.tabExpense.setOnClickListener { selectTab(R.id.tab_expense) }
+        binding.tabCharts.setOnClickListener { selectTab(R.id.tab_charts) }
+        binding.tabSettings.setOnClickListener { selectTab(R.id.tab_settings) }
 
-        binding.bottomNav.selectedItemId = selectedTabId
-        showTab(selectedTabId)
+        selectTab(selectedTabId)
     }
+
+    private fun selectTab(tabId: Int) {
+        selectedTabId = tabId
+        updateTabVisual()
+        showTab(tabId)
+    }
+
+    private fun updateTabVisual() {
+        val ctx = requireContext()
+        listOf(
+            R.id.tab_expense to TabItem(binding.tabExpense, binding.tabExpenseText, binding.tabExpenseIndicator),
+            R.id.tab_charts to TabItem(binding.tabCharts, binding.tabChartsText, binding.tabChartsIndicator),
+            R.id.tab_settings to TabItem(binding.tabSettings, binding.tabSettingsText, binding.tabSettingsIndicator)
+        ).forEach { (id, item) ->
+            val selected = id == selectedTabId
+            item.container.isSelected = selected
+            item.textView.setTextColor(
+                ContextCompat.getColor(
+                    ctx,
+                    if (selected) R.color.holo_blue else R.color.text_secondary
+                )
+            )
+            item.indicator.visibility = if (selected) View.VISIBLE else View.GONE
+        }
+    }
+
+    private data class TabItem(
+        val container: View,
+        val textView: TextView,
+        val indicator: View
+    )
 
     private fun showTab(tabId: Int) {
         val fm = childFragmentManager

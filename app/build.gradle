@@ -37,8 +37,8 @@ android {
             abiFilters 'arm64-v8a', 'armeabi-v7a'
         }
         
-        versionCode = 4000
-        versionName = "4.0.0"
+        versionCode = 5000
+        versionName = "5.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
         aaptOptions {
@@ -104,8 +104,13 @@ dependencies {
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     
-    // ===== 传统 View 体系（XML 迁移目标，compileSdk 31 约束：material 只能用 1.5.x，1.6+ 需要 compileSdk 32）=====
+    // ===== 传统 View 体系（XML 迁移目标）=====
+    // Material Components 仍保留：仅用于提供 colorPrimary/colorSurface/textAppearance* 等
+    // 桥接属性声明（见 styles.xml）。所有 Material 控件已在布局中替换为框架原生控件，
+    // 运行时不会实例化任何 Material 视图，故不会因 Holo 主题而崩溃。后续若新增 attrs.xml
+    // 自行声明这些属性，可移除本依赖进一步瘦身。
     implementation 'com.google.android.material:material:1.14.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
 

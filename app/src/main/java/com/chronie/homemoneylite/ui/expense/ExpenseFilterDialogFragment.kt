@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import android.app.AlertDialog
+import android.widget.Button
+import android.widget.EditText
 import com.chronie.homemoneylite.ui.components.showWheelDatePicker
-import com.google.android.material.textfield.TextInputEditText
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.domain.model.ExpenseFilters
 import com.chronie.homemoneylite.domain.model.ExpenseType
@@ -29,12 +29,12 @@ class ExpenseFilterDialogFragment : DialogFragment() {
     private var argKeyword: String? = null
     private var argSortBy: SortOption = SortOption.DATE_DESC
 
-    private lateinit var editKeyword: TextInputEditText
-    private lateinit var editMin: TextInputEditText
-    private lateinit var editMax: TextInputEditText
-    private lateinit var btnSelectType: MaterialButton
-    private lateinit var btnStartDate: MaterialButton
-    private lateinit var btnEndDate: MaterialButton
+    private lateinit var editKeyword: EditText
+    private lateinit var editMin: EditText
+    private lateinit var editMax: EditText
+    private lateinit var btnSelectType: Button
+    private lateinit var btnStartDate: Button
+    private lateinit var btnEndDate: Button
 
     private val selectedTypes = mutableSetOf<ExpenseType>()
     private var startDate: LocalDate? = null
@@ -107,7 +107,7 @@ class ExpenseFilterDialogFragment : DialogFragment() {
             dismiss()
         }
 
-        val dialog = MaterialAlertDialogBuilder(context)
+        val dialog = AlertDialog.Builder(context)
             .setView(view)
             .create()
         return dialog
@@ -142,7 +142,7 @@ class ExpenseFilterDialogFragment : DialogFragment() {
         val names = allTypes.map { ExpenseTypeLocalizer.getLocalizedName(context, it) }.toTypedArray()
         val checked = allTypes.map { selectedTypes.contains(it) }.toBooleanArray()
 
-        MaterialAlertDialogBuilder(context)
+        AlertDialog.Builder(context)
             .setTitle(R.string.expense_filter_type_selector_title)
             .setMultiChoiceItems(names, checked) { _, which, isChecked ->
                 if (isChecked) selectedTypes.add(allTypes[which]) else selectedTypes.remove(allTypes[which])

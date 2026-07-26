@@ -20,7 +20,7 @@
             android:textAppearance="?attr/textAppearanceBodyLarge"
             android:textColor="@color/text_primary" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <Switch
             android:id="@+id/switchBudgetEnabled"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -41,7 +41,7 @@
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="@color/text_primary" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btnBudgetMinus"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="40dp"
@@ -56,23 +56,18 @@
             android:text="-"
             android:textSize="18sp" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <EditText
+            android:id="@+id/etBudgetLimit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
             android:layout_weight="1"
-            android:hint="0.00">
+            android:gravity="center"
+            android:hint="0.00"
+            android:inputType="numberDecimal"
+            android:singleLine="true" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etBudgetLimit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:inputType="numberDecimal"
-                android:singleLine="true" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btnBudgetPlus"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="40dp"
@@ -103,7 +98,7 @@
             android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="@color/text_primary" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btnThresholdMinus"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="40dp"
@@ -118,23 +113,18 @@
             android:text="-"
             android:textSize="18sp" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <EditText
+            android:id="@+id/etBudgetThreshold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
             android:layout_weight="1"
-            android:hint="80">
+            android:gravity="center"
+            android:hint="80"
+            android:inputType="numberDecimal"
+            android:singleLine="true" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etBudgetThreshold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:inputType="numberDecimal"
-                android:singleLine="true" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btnThresholdPlus"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="40dp"

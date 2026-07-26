@@ -26,7 +26,7 @@ import com.chronie.homemoneylite.domain.model.AIExpenseRecord
 import com.chronie.homemoneylite.domain.model.ExpenseType
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.components.showWheelDatePicker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import android.app.AlertDialog
 import com.yalantis.ucrop.UCrop
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -194,7 +194,7 @@ class AIExpenseFragment : Fragment() {
             getString(R.string.ai_expense_take_photo),
             getString(R.string.ai_expense_choose_from_gallery)
         )
-        MaterialAlertDialogBuilder(requireContext())
+        AlertDialog.Builder(requireContext())
             .setTitle(R.string.ai_expense_add_images)
             .setItems(items) { _, which ->
                 if (which == 0) handleCameraClick() else handleGalleryClick()
@@ -361,7 +361,7 @@ class AIExpenseFragment : Fragment() {
             }
         }
 
-        val dialog = MaterialAlertDialogBuilder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.ai_expense_edit_record)
             .setView(dialogBinding.root)
             .setPositiveButton(R.string.confirm, null)

@@ -14,9 +14,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.tabs.TabLayout
+import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.widget.Button
+import android.widget.EditText
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.databinding.DialogSettingsApiKeyBinding
 import com.chronie.homemoneylite.databinding.DialogSettingsBudgetBinding
@@ -28,9 +29,7 @@ import com.chronie.homemoneylite.ui.budget.BudgetViewModel
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -84,19 +83,14 @@ class SettingsFragment : Fragment() {
         _binding = null
     }
 
-    // region 分类切换（无动画，直接切换内容）
+    // region 分类切换（无动画，直接切换内容；Holo 用 LinearLayout + 两个 Button 替代 TabLayout）
     private fun setupTabs() {
-        binding.tabsCategory.addTab(
-            binding.tabsCategory.newTab().setText(R.string.settings_category_function)
-        )
-        binding.tabsCategory.addTab(
-            binding.tabsCategory.newTab().setText(R.string.settings_category_data_sync)
-        )
-        binding.tabsCategory.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) = switchCategory(tab.position)
-            override fun onTabUnselected(tab: TabLayout.Tab) = Unit
-            override fun onTabReselected(tab: TabLayout.Tab) = Unit
-        })
+        val tab0 = binding.tabsCategory.findViewById<Button>(R.id.tab_category_0)
+        val tab1 = binding.tabsCategory.findViewById<Button>(R.id.tab_category_1)
+        tab0.text = getString(R.string.settings_category_function)
+        tab1.text = getString(R.string.settings_category_data_sync)
+        tab0.setOnClickListener { switchCategory(0) }
+        tab1.setOnClickListener { switchCategory(1) }
         switchCategory(0)
     }
 
@@ -104,6 +98,25 @@ class SettingsFragment : Fragment() {
         val isFunction = position == 0
         binding.functionContent.visibility = if (isFunction) View.VISIBLE else View.GONE
         binding.dataSyncContent.visibility = if (isFunction) View.GONE else View.VISIBLE
+        updateCategoryTabSelected(position)
+    }
+
+    private fun updateCategoryTabSelected(position: Int) {
+        val ctx = requireContext()
+        val tabs = listOf(
+            binding.tabsCategory.findViewById<Button>(R.id.tab_category_0),
+            binding.tabsCategory.findViewById<Button>(R.id.tab_category_1)
+        )
+        tabs.forEachIndexed { index, btn ->
+            val selected = index == position
+            btn.isSelected = selected
+            btn.setTextColor(
+                ContextCompat.getColor(
+                    ctx,
+                    if (selected) R.color.holo_blue else R.color.text_secondary
+                )
+            )
+        }
     }
     // endregion
 
@@ -223,7 +236,7 @@ class SettingsFragment : Fragment() {
     private fun showApiKeyDialog() {
         val dialogBinding = DialogSettingsApiKeyBinding.inflate(layoutInflater)
         dialogBinding.etApiKey.setText(viewModel.aiApiKey.value)
-        val dialog = MaterialAlertDialogBuilder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.settings_ai_api_key)
             .setView(dialogBinding.root)
             .setPositiveButton(R.string.save) { _, _ ->
@@ -266,7 +279,7 @@ class SettingsFragment : Fragment() {
             dialogBinding.tvBudgetError.visibility = View.GONE
         }
 
-        val dialog = MaterialAlertDialogBuilder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
             .setTitle(R.string.budget_settings_title)
             .setView(dialogBinding.root)
             .setPositiveButton(R.string.common_save, null)
@@ -295,7 +308,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun adjust(
-        edit: com.google.android.material.textfield.TextInputEditText,
+        edit: EditText,
         delta: Double,
         min: Double?,
         max: Double?
@@ -320,7 +333,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun showExportChoice() {
-        MaterialAlertDialogBuilder(requireContext())
+        AlertDialog.Builder(requireContext())
             .setTitle(R.string.export_data)
             .setItems(
                 arrayOf(
@@ -339,21 +352,27 @@ class SettingsFragment : Fragment() {
     }
 
     private fun pickExportRange() {
-        val startPicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText(R.string.export_start_date)
-            .build()
-        startPicker.addOnPositiveButtonClickListener { millis ->
-            val start = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
-            val endPicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText(R.string.export_end_date)
-                .build()
-            endPicker.addOnPositiveButtonClickListener { endMillis ->
-                val end = Instant.ofEpochMilli(endMillis).atZone(ZoneId.systemDefault()).toLocalDate()
-                viewModel.exportExpenses(start, end)
-            }
-            endPicker.show(childFragmentManager, "export_end")
+        // Holo 原生日期选择器（框架 DatePickerDialog）做起止区间选择
+        val startListener = android.app.DatePickerDialog.OnDateSetListener { _, y, m, d ->
+            val start = LocalDate.of(y, m + 1, d)
+            val endPicker = android.app.DatePickerDialog(
+                requireContext(),
+                { _, ey, em, ed ->
+                    val end = LocalDate.of(ey, em + 1, ed)
+                    viewModel.exportExpenses(start, end)
+                },
+                y, m, d
+            )
+            endPicker.setTitle(R.string.export_end_date)
+            endPicker.show()
         }
-        startPicker.show(childFragmentManager, "export_start")
+        val startPicker = android.app.DatePickerDialog(
+            requireContext(),
+            startListener,
+            2000, 0, 1
+        )
+        startPicker.setTitle(R.string.export_start_date)
+        startPicker.show()
     }
     // endregion
 
@@ -435,39 +454,46 @@ class SettingsFragment : Fragment() {
     companion object {
         /** 开源库信息（传统 XML View 版，按许可证分组展示）。 */
         private val libraries = listOf(
-            LibraryInfo("Kotlin Coroutines Android", "1.6.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/Kotlin/kotlinx.coroutines"),
-            LibraryInfo("Kotlin Coroutines Test", "1.6.1", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/Kotlin/kotlinx.coroutines"),
-            LibraryInfo("AndroidX Desugar JDK Libs", "1.1.9", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/google/desugar_jdk_libs"),
-            LibraryInfo("AndroidX Core KTX", "1.7.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/core"),
-            LibraryInfo("AndroidX AppCompat", "1.4.2", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/appcompat"),
-            LibraryInfo("Material Components", "1.5.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/material"),
-            LibraryInfo("AndroidX ConstraintLayout", "2.1.4", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/constraintlayout"),
-            LibraryInfo("AndroidX CoordinatorLayout", "1.2.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/coordinatorlayout"),
-            LibraryInfo("AndroidX RecyclerView", "1.2.1", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/recyclerview"),
-            LibraryInfo("AndroidX Core Splashscreen", "1.0.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/core"),
-            LibraryInfo("Dagger Hilt Android", "2.41", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://dagger.dev/hilt/"),
-            LibraryInfo("AndroidX Hilt Work", "1.0.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/hilt"),
-            LibraryInfo("AndroidX Room Runtime", "2.4.3", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/room"),
-            LibraryInfo("AndroidX Room KTX", "2.4.3", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/room"),
-            LibraryInfo("Retrofit", "2.9.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/square/retrofit"),
-            LibraryInfo("Retrofit Gson Converter", "2.9.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/square/retrofit/tree/master/retrofit-converters/gson"),
-            LibraryInfo("OkHttp Logging Interceptor", "4.10.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/square/okhttp"),
-            LibraryInfo("AndroidX Paging Runtime KTX", "3.1.1", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/paging"),
-            LibraryInfo("AndroidX Navigation Fragment", "2.4.2", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/navigation"),
-            LibraryInfo("Coil", "1.4.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/coil-kt/coil"),
-            LibraryInfo("AndroidX Security Crypto", "1.0.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/security"),
-            LibraryInfo("SQLCipher Android", "4.5.7", "BSD 3-Clause License", "https://opensource.org/licenses/BSD-3-Clause", "https://www.zetetic.net/sqlcipher/"),
-            LibraryInfo("AndroidX SQLite", "2.2.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/sqlite"),
-            LibraryInfo("AndroidX Work Runtime KTX", "2.7.1", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/work"),
-            LibraryInfo("FastExcel", "0.12.15", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/dhatim/fastexcel"),
-            LibraryInfo("FastExcel Reader", "0.12.15", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/dhatim/fastexcel"),
-            LibraryInfo("Aalto XML", "1.3.2", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/FasterXML/aalto-xml"),
-            LibraryInfo("XZ", "1.9", "Public Domain", "https://tukaani.org/xz/legal.html", "https://tukaani.org/xz/"),
-            LibraryInfo("UCrop", "2.2.8", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/Yalantis/uCrop"),
+            LibraryInfo("Kotlin Coroutines Android", "1.11.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/Kotlin/kotlinx.coroutines"),
+            LibraryInfo("Kotlin Coroutines Test", "1.11.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/Kotlin/kotlinx.coroutines"),
+            LibraryInfo("AndroidX Desugar JDK Libs", "2.1.5", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/google/desugar_jdk_libs"),
+            LibraryInfo("AndroidX Core KTX", "1.19.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/core"),
+            LibraryInfo("AndroidX AppCompat", "1.7.1", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/appcompat"),
+            LibraryInfo("AndroidX CoordinatorLayout", "1.3.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/coordinatorlayout"),
+            LibraryInfo("AndroidX Core Splashscreen", "1.2.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/splashscreen"),
+            LibraryInfo("Material Components", "1.14.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/material"),
+            LibraryInfo("AndroidX CardView", "1.0.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/cardview"),
+            LibraryInfo("AndroidX ConstraintLayout", "2.2.1", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/constraintlayout"),
+            LibraryInfo("AndroidX RecyclerView", "1.4.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/recyclerview"),
+            LibraryInfo("MPAndroidChart", "3.1.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/PhilJay/MPAndroidChart"),
+            LibraryInfo("AndroidX Fragment KTX", "1.8.9", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/fragment"),
+            LibraryInfo("AndroidX SwipeRefreshLayout", "1.2.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout"),
+            LibraryInfo("AndroidX Navigation Fragment KTX", "2.9.8", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/navigation"),
+            LibraryInfo("AndroidX Navigation UI KTX", "2.9.8", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/navigation"),
+            LibraryInfo("AndroidX Lifecycle Runtime KTX", "2.11.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/lifecycle"),
+            LibraryInfo("AndroidX Lifecycle ViewModel KTX", "2.11.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/lifecycle"),
+            LibraryInfo("Coil", "2.7.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/coil-kt/coil"),
+            LibraryInfo("Dagger Hilt Android", "2.60.1", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://dagger.dev/hilt/"),
+            LibraryInfo("AndroidX Hilt Work", "1.4.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/hilt"),
+            LibraryInfo("AndroidX Room Runtime", "2.8.4", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/room"),
+            LibraryInfo("AndroidX Room KTX", "2.8.4", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/room"),
+            LibraryInfo("Retrofit", "3.0.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/square/retrofit"),
+            LibraryInfo("Retrofit Gson Converter", "3.0.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/square/retrofit/tree/master/retrofit-converters/gson"),
+            LibraryInfo("OkHttp Logging Interceptor", "5.4.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/square/okhttp"),
+            LibraryInfo("AndroidX Paging Runtime KTX", "3.5.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/paging"),
+            LibraryInfo("AndroidX Security Crypto", "1.1.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/security"),
+            LibraryInfo("SQLCipher Android", "4.17.0", "BSD 3-Clause License", "https://opensource.org/licenses/BSD-3-Clause", "https://www.zetetic.net/sqlcipher/"),
+            LibraryInfo("AndroidX SQLite", "2.7.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/sqlite"),
+            LibraryInfo("AndroidX Work Runtime KTX", "2.11.2", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/work"),
+            LibraryInfo("FastExcel", "0.20.2", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/dhatim/fastexcel"),
+            LibraryInfo("FastExcel Reader", "0.20.2", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/dhatim/fastexcel"),
+            LibraryInfo("Aalto XML", "1.4.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/FasterXML/aalto-xml"),
+            LibraryInfo("XZ", "1.12", "Public Domain", "https://tukaani.org/xz/legal.html", "https://tukaani.org/xz/"),
+            LibraryInfo("UCrop", "2.2.11", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/Yalantis/uCrop"),
             LibraryInfo("JUnit", "4.13.2", "Eclipse Public License 1.0", "https://www.eclipse.org/legal/epl-v10.html", "https://junit.org/junit4/"),
-            LibraryInfo("AndroidX Test JUnit", "1.1.3", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/test"),
-            LibraryInfo("AndroidX Test Espresso", "3.4.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/test"),
-            LibraryInfo("MockK", "1.12.4", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://mockk.io/")
+            LibraryInfo("AndroidX Test JUnit", "1.3.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/test"),
+            LibraryInfo("AndroidX Test Espresso", "3.7.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/test"),
+            LibraryInfo("MockK", "1.14.11", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://mockk.io/")
         )
     }
 }

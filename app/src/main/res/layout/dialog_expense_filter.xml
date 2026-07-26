@@ -48,20 +48,15 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <com.google.android.material.textfield.TextInputLayout
+            <EditText
+                android:id="@+id/editKeyword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/common_search">
+                android:hint="@string/common_search"
+                android:inputType="text"
+                android:singleLine="true" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/editKeyword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:singleLine="true" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButton
+            <Button
                 android:id="@+id/btnSelectType"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="match_parent"
@@ -82,7 +77,7 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="8dp">
 
-                <com.google.android.material.button.MaterialButton
+                <Button
                     android:id="@+id/btnStartDate"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
@@ -90,7 +85,7 @@
                     android:layout_weight="1"
                     android:text="@string/expense_list_filter_start_date" />
 
-                <com.google.android.material.button.MaterialButton
+                <Button
                     android:id="@+id/btnEndDate"
                     style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="0dp"
@@ -113,34 +108,24 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="8dp">
 
-                <com.google.android.material.textfield.TextInputLayout
+                <EditText
+                    android:id="@+id/editMinAmount"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="@string/expense_list_filter_min_amount">
+                    android:hint="@string/expense_list_filter_min_amount"
+                    android:inputType="numberDecimal"
+                    android:singleLine="true" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editMinAmount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
+                <EditText
+                    android:id="@+id/editMaxAmount"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
-                    android:hint="@string/expense_list_filter_max_amount">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editMaxAmount"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="@string/expense_list_filter_max_amount"
+                    android:inputType="numberDecimal"
+                    android:singleLine="true" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -157,7 +142,7 @@
         android:orientation="horizontal"
         android:padding="16dp">
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btnClear"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="0dp"
@@ -165,7 +150,7 @@
             android:layout_weight="1"
             android:text="@string/expense_list_clear_filters" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/btnApply"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

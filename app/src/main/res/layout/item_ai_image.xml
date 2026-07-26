@@ -5,7 +5,7 @@
     android:layout_height="100dp"
     android:layout_marginEnd="8dp">
 
-    <com.google.android.material.card.MaterialCardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/imageCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:contentDescription="@null" />
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.cardview.widget.CardView>
 
     <ImageButton
         android:id="@+id/removeButton"
@@ -29,5 +29,5 @@
         android:padding="2dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_add_close"
-        app:tint="?attr/colorError" />
+        android:tint="?attr/colorError" />
 </FrameLayout>

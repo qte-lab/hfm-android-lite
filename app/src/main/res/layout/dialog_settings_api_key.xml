@@ -13,18 +13,13 @@
         android:textAppearance="?attr/textAppearanceBodyMedium"
         android:textColor="@color/text_secondary" />
 
-    <com.google.android.material.textfield.TextInputLayout
+    <EditText
+        android:id="@+id/etApiKey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/settings_ai_api_key_hint">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etApiKey"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:singleLine="true" />
-    </com.google.android.material.textfield.TextInputLayout>
+        android:hint="@string/settings_ai_api_key_hint"
+        android:inputType="text"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/tvGetApiKey"

@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -354,8 +355,8 @@ class ChartsFragment : Fragment() {
         binding.chartSection.addView(card)
     }
 
-    private fun buildChartCard(titleRes: Int): Pair<com.google.android.material.card.MaterialCardView, ViewGroup> {
-        val card = com.google.android.material.card.MaterialCardView(requireContext())
+    private fun buildChartCard(titleRes: Int): Pair<CardView, ViewGroup> {
+        val card = CardView(requireContext())
         card.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
@@ -398,7 +399,7 @@ class ChartsFragment : Fragment() {
             val itemBinding = ItemChartCategoryBinding.inflate(layoutInflater)
             itemBinding.catName.text = ExpenseTypeLocalizer.getLocalizedTypeName(requireContext(), category.type)
             itemBinding.catPct.text = String.format("%.1f%%", category.percentage)
-            itemBinding.catProgress.setProgressCompat(category.percentage.toInt(), false)
+            itemBinding.catProgress.setProgress(category.percentage.toInt())
             itemBinding.catDetail.text = "${currencyFormat.format(category.amount)} (${category.count} ${getString(R.string.records)})"
             container.addView(itemBinding.root)
             val spacer = View(requireContext())

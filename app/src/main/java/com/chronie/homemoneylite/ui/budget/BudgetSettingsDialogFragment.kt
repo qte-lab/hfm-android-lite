@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import android.app.AlertDialog
+import android.widget.EditText
+import android.widget.Switch
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.switchmaterial.SwitchMaterial
-import com.google.android.material.textfield.TextInputEditText
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.domain.model.Budget
 
@@ -38,9 +38,9 @@ class BudgetSettingsDialogFragment : DialogFragment() {
         val context = requireContext()
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_budget_settings, null)
 
-        val switchEnabled = view.findViewById<SwitchMaterial>(R.id.switchEnabled)
-        val editLimit = view.findViewById<TextInputEditText>(R.id.editMonthlyLimit)
-        val editThreshold = view.findViewById<TextInputEditText>(R.id.editWarningThreshold)
+        val switchEnabled = view.findViewById<Switch>(R.id.switchEnabled)
+        val editLimit = view.findViewById<EditText>(R.id.editMonthlyLimit)
+        val editThreshold = view.findViewById<EditText>(R.id.editWarningThreshold)
         val btnLimitMinus = view.findViewById<ImageButton>(R.id.btnLimitMinus)
         val btnLimitPlus = view.findViewById<ImageButton>(R.id.btnLimitPlus)
         val btnThresholdMinus = view.findViewById<ImageButton>(R.id.btnThresholdMinus)
@@ -63,7 +63,7 @@ class BudgetSettingsDialogFragment : DialogFragment() {
         syncEnabled()
         switchEnabled.setOnCheckedChangeListener { _, _ -> syncEnabled() }
 
-        fun adjust(edit: TextInputEditText, delta: Double, min: Double, max: Double, curr: Double) {
+        fun adjust(edit: EditText, delta: Double, min: Double, max: Double, curr: Double) {
             val next = (curr + delta).coerceIn(min, max)
             edit.setText(next.toString())
             textError.visibility = View.GONE
@@ -89,7 +89,7 @@ class BudgetSettingsDialogFragment : DialogFragment() {
         editLimit.doAfterTextChanged { textError.visibility = View.GONE }
         editThreshold.doAfterTextChanged { textError.visibility = View.GONE }
 
-        val dialog = MaterialAlertDialogBuilder(context)
+        val dialog = AlertDialog.Builder(context)
             .setTitle(R.string.budget_settings_title)
             .setView(view)
             .setPositiveButton(R.string.common_save, null)

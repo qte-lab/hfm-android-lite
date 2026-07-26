@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="?attr/colorSurface">
 
-    <com.google.android.material.appbar.MaterialToolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -26,7 +26,7 @@
 
             <!-- 分类选择 -->
             <TextView
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/add_expense_type_label"
@@ -36,22 +36,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="8dp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/typeLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <AutoCompleteTextView
+                android:id="@+id/typeInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textColor="@color/text_primary"
                 android:hint="@string/add_expense_type_hint"
-                app:startIconDrawable="@drawable/ic_add_search"
-                app:startIconTint="?attr/colorPrimary">
-
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    android:id="@+id/typeInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:textColor="@color/text_primary" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:drawableStart="@drawable/ic_add_search" />
 
             <Space
                 android:layout_width="match_parent"
@@ -59,7 +51,7 @@
 
             <!-- 金额 -->
             <TextView
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/add_expense_amount_label"
@@ -69,21 +61,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="8dp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/amountLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <EditText
+                android:id="@+id/amountInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/add_expense_amount_hint"
-                app:prefixText="@string/currency_symbol">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/amountInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:textColor="@color/text_primary" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:inputType="numberDecimal"
+                android:textColor="@color/text_primary"
+                android:hint="@string/add_expense_amount_hint" />
 
             <Space
                 android:layout_width="match_parent"
@@ -91,7 +75,7 @@
 
             <!-- 日期 -->
             <TextView
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/add_expense_date_label"
@@ -101,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="8dp" />
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/dateCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -109,8 +93,7 @@
                 android:focusable="true"
                 app:cardBackgroundColor="?attr/colorSurface"
                 app:cardElevation="0dp"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp">
+                app:cardUseCompatPadding="false">
 
                 <TextView
                     android:id="@+id/dateText"
@@ -119,7 +102,7 @@
                     android:padding="16dp"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp" />
-            </com.google.android.material.card.MaterialCardView>
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/dateError"
@@ -137,7 +120,7 @@
 
             <!-- 备注 -->
             <TextView
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                style="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/add_expense_remark_label"
@@ -147,21 +130,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="8dp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <EditText
+                android:id="@+id/remarkInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/add_expense_remark_hint">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/remarkInput"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top"
-                    android:inputType="textMultiLine"
-                    android:minLines="3"
-                    android:textColor="@color/text_primary" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:minLines="3"
+                android:textColor="@color/text_primary"
+                android:hint="@string/add_expense_remark_hint" />
 
             <Space
                 android:layout_width="match_parent"

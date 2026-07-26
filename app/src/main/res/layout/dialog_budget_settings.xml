@@ -20,7 +20,7 @@
             android:text="@string/budget_enable_feature"
             android:textAppearance="?attr/textAppearanceBodyLarge" />
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <Switch
             android:id="@+id/switchEnabled"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -41,20 +41,15 @@
             android:src="@drawable/ic_exp_remove"
             android:contentDescription="@null" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <EditText
+            android:id="@+id/editMonthlyLimit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginHorizontal="8dp"
-            android:hint="@string/budget_monthly_limit">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editMonthlyLimit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:enabled="false" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:hint="@string/budget_monthly_limit"
+            android:inputType="numberDecimal"
+            android:enabled="false" />
 
         <ImageButton
             android:id="@+id/btnLimitPlus"
@@ -80,20 +75,15 @@
             android:src="@drawable/ic_exp_remove"
             android:contentDescription="@null" />
 
-        <com.google.android.material.textfield.TextInputLayout
+        <EditText
+            android:id="@+id/editWarningThreshold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginHorizontal="8dp"
-            android:hint="@string/budget_warning_threshold">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editWarningThreshold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:enabled="false" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:hint="@string/budget_warning_threshold"
+            android:inputType="numberDecimal"
+            android:enabled="false" />
 
         <ImageButton
             android:id="@+id/btnThresholdPlus"

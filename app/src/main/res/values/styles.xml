@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- 基础应用主题（迁移到传统 View 体系：Material Components DayNight）。
-         所有变体（浅色/深色、API 分级）都继承此 Base，避免在各限定符目录重复定义
-         导致桥接属性（colorOutline / textAppearanceTitle*）丢失而崩溃（见第七轮事故）。 -->
+    <!-- 基础应用主题（浅色 + Holo 蓝强调色）。
+         说明：本项目 compileSdk=37，而框架 Theme.Holo.* / Widget.Holo.* 在新版
+         Android 平台的 android.jar 中已被移除，无法作为主题 parent 链接。
+         因此改用 Theme.AppCompat.Light.*（AppCompat 库主题，可正常链接）来复刻
+         “浅色内容 + 深色(蓝)操作栏”的经典 Holo 观感；Holo 蓝 #33B5E5 作为强调色。
+         所有变体（浅色、API 分级）都继承此 Base。 -->
 
-    <style name="AppTheme.Base" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
 
-        <!-- 品牌配色（颜色值随 values-night 自动切换深浅） -->
+        <!-- Holo 框架原生属性 -->
+        <item name="android:colorAccent">@color/brand_primary</item>
+        <item name="android:colorBackground">@color/app_background</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:actionBarStyle">@style/HoloActionBar</item>
+        <item name="android:statusBarColor">@color/app_surface</item>
+        <!-- 状态栏图标深浅跟随深浅模式：浅色模式用深色图标、深色模式用浅色图标。
+             @bool/light_system_bars 在 values/bools.xml=true、values-night/bools.xml=false。 -->
+        <item name="android:windowLightStatusBar">@bool/light_system_bars</item>
+        <!-- 老旧设备（API < 27）导航栏固定黑色，保证白色系统按钮可见 -->
+        <item name="android:navigationBarColor">@android:color/black</item>
+
+        <!-- 兼容桥接：Material/AppCompat 属性，供 ?attr/ 引用解析（映射到 Holo 色板） -->
         <item name="colorPrimary">@color/brand_primary</item>
         <item name="colorPrimaryVariant">@color/brand_primary_variant</item>
         <item name="colorSecondary">@color/brand_secondary</item>
@@ -22,34 +39,24 @@
         <item name="colorOnSurface">@color/text_primary</item>
         <item name="android:colorBackground">@color/app_background</item>
         <item name="colorOnBackground">@color/text_primary</item>
-
-        <!-- MD3 颜色属性桥接：布局里用 ?attr/colorOutline 作分割线，MD2 主题未定义该属性，
-             运行时解析失败会导致 InflateException 崩溃。此处映射到 divider 颜色（随深浅切换）。 -->
         <item name="colorOutline">@color/divider</item>
 
-        <item name="android:windowBackground">@color/app_background</item>
-        <item name="android:statusBarColor">@color/app_surface</item>
-        <!-- 导航栏默认黑色：保证老旧设备（API < 27，不支持 windowLightNavigationBar，
-             系统按钮固定白色）在浅色主题下白色按钮依然可见。API 27+ 在 values-v27
-             中改回浅色并开启 windowLightNavigationBar 使用深色按钮。 -->
-        <item name="android:navigationBarColor">@android:color/black</item>
-        <item name="android:windowLightStatusBar">@bool/light_system_bars</item>
+        <!-- 排版桥接：映射到 AppCompat 文本样式（复刻 Holo 字号层级） -->
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.AppCompat.Large</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.AppCompat.Small</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.AppCompat.Small</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.AppCompat.Small</item>
+    </style>
 
-        <!-- MD3 排版属性桥接到 MD2 文本样式：布局里用 ?attr/textAppearanceTitleMedium 等
-             MD3 命名，但本工程主题是 MD2（Theme.MaterialComponents），MD3 排版属性在
-             MD2 主题下默认未赋值，会导致字号/字重不生效。此处按 MD3→MD2 映射补齐，
-             使既有布局无需逐个改写即可正确显示（映射同 migrate_md2.py）。 -->
-        <item name="textAppearanceTitleLarge">@style/TextAppearance.MaterialComponents.Headline6</item>
-        <item name="textAppearanceTitleMedium">@style/TextAppearance.MaterialComponents.Subtitle1</item>
-        <item name="textAppearanceTitleSmall">@style/TextAppearance.MaterialComponents.Subtitle2</item>
-        <item name="textAppearanceBodyLarge">@style/TextAppearance.MaterialComponents.Body1</item>
-        <item name="textAppearanceBodyMedium">@style/TextAppearance.MaterialComponents.Body2</item>
-        <item name="textAppearanceBodySmall">@style/TextAppearance.MaterialComponents.Caption</item>
+    <!-- Holo 蓝 ActionBar -->
+    <style name="HoloActionBar" parent="Widget.AppCompat.ActionBar.Solid">
+        <item name="android:background">@color/brand_primary</item>
     </style>
 
     <!-- 默认（< API 27）使用的主题：直接继承 AppTheme.Base。
-         API 27+ 在 values-v27 / values-night-v27 中以同名样式覆盖，仅追加导航栏相关项，
-         因为同名样式在更具体限定符目录会整体替换而非合并，所以必须由 AppTheme.Base 继承。 -->
+         API 27+ 在 values-v27 中以同名样式覆盖，仅追加导航栏相关项。 -->
     <style name="AppTheme.NoActionBar" parent="AppTheme.Base" />
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
@@ -60,20 +67,20 @@
         <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
     </style>
 
-    <!-- 日期选择器主题（适配浅色/深色模式） -->
-    <style name="DatePickerDialogLight" parent="android:Theme.Material.Light.Dialog">
-        <item name="android:colorAccent">#FF66BB6A</item>
+    <!-- 日期选择器主题（浅色，蓝色强调） -->
+    <style name="DatePickerDialogLight" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:colorAccent">@color/brand_primary</item>
     </style>
 
-    <style name="DatePickerDialogDark" parent="android:Theme.Material.Dialog">
-        <item name="android:colorAccent">#FF66BB6A</item>
+    <style name="DatePickerDialogDark" parent="Theme.AppCompat.Dialog">
+        <item name="android:colorAccent">@color/brand_primary</item>
         <item name="android:textColorPrimary">#FFFFFFFF</item>
         <item name="android:textColorSecondary">#FFB0B0B0</item>
         <item name="android:windowBackground">#FF1E1E1E</item>
         <item name="android:colorBackground">#FF1E1E1E</item>
     </style>
 
-    <!-- UCrop Theme - 确保不占用状态栏空间 -->
+    <!-- UCrop Theme - 确保不占用状态栏空间（uCrop 自带 Activity，沿用 AppCompat 主题） -->
     <style name="UCropTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>

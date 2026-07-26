@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/app_background">
 
-    <com.google.android.material.appbar.MaterialToolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -48,7 +48,7 @@
                 android:tint="@color/text_primary"
                 android:contentDescription="@string/select_time_range" />
         </LinearLayout>
-    </com.google.android.material.appbar.MaterialToolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
         android:id="@+id/rootContainer"
@@ -67,7 +67,7 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <com.google.android.material.card.MaterialCardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/timeRangeCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -96,9 +96,9 @@
                             android:textSize="14sp"
                             android:textColor="@color/text_secondary" />
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </androidx.cardview.widget.CardView>
 
-                <com.google.android.material.card.MaterialCardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/summaryCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -227,7 +227,7 @@
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
+                </androidx.cardview.widget.CardView>
 
                 <LinearLayout
                     android:id="@+id/chartSection"

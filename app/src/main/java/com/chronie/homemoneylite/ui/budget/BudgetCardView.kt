@@ -8,14 +8,14 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
+import android.widget.Button
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.domain.model.BudgetStatus
 import com.chronie.homemoneylite.domain.model.BudgetUsage
 import com.chronie.homemoneylite.ui.expense.formatMonthLabelByLocale
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.card.MaterialCardView
 
 /**
  * 预算卡（传统 View 版本），对应 Compose 的 BudgetCard / BudgetUsageCard。
@@ -34,8 +34,8 @@ class BudgetCardView @JvmOverloads constructor(
         get() = LocaleListCompat.getDefault().get(0)?.toLanguageTag() ?: "zh-CN"
 
     private val enablePrompt: LinearLayout
-    private val usageCard: MaterialCardView
-    private val btnEnable: MaterialButton
+    private val usageCard: CardView
+    private val btnEnable: Button
     private val btnExpand: ImageButton
     private val btnSettings: ImageButton
     private val collapsedGroup: LinearLayout
