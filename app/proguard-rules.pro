@@ -129,6 +129,38 @@
 }
 
 # ============================================================
+# ML Kit 文本识别（端上中文 OCR）keep 规则 —— 修复 NPE 根因
+# ------------------------------------------------------------
+# 现象：release 构建（minifyEnabled + shrinkResources，仅收缩不混淆）下，
+# 调用 TextRecognition.getClient(ChineseTextRecognizerOptions) 后 process()
+# 抛 "getClass() on a null object reference" NPE，OCR 识别失败。
+#
+# 根因：ML Kit 的 TextRecognizer 实现类与 ComponentRegistrar（TextRegistrar /
+# VisionCommonRegistrar / CommonComponentRegistrar）是通过 AndroidManifest.xml
+# 的 <meta-data> 字符串 + 运行时 PackageManager 服务发现机制注册的，编译期
+# 没有代码引用。R8 在 tree-shaking 阶段认为这些类“未被使用”而删除，运行时
+# MlKitComponentDiscoveryService 按清单类名 Class.forName 得到 null，导致
+# getClient 返回的 TextRecognizer 内部委托为 null，首次 process() 即对 null
+# 调 getClass() 抛 NPE。
+#
+# 修复：显式 keep 整个 ML Kit 包与 gms 内部识别器实现，禁止 R8 收缩它们。
+# 注意：本应用仅收缩不混淆（-dontobfuscate），所以这里用 -keep 防收缩即可。
+# ============================================================
+-keep class com.google.mlkit.vision.text.** { *; }
+-keep class com.google.mlkit.vision.common.** { *; }
+-keep class com.google.mlkit.common.** { *; }
+-keep class com.google.android.gms.internal.mlkit_vision_text_recognition.** { *; }
+-keep class com.google.android.gms.internal.mlkit_vision_text.** { *; }
+# 保住组件发现服务与其读取的注册器（清单元数据反射加载，R8 看不到引用）
+-keep class com.google.mlkit.common.internal.MlKitComponentDiscoveryService { *; }
+-keep class * extends com.google.mlkit.common.sdkinternal.ComponentRegistrar
+# 保留注解/签名/内部类信息，避免反射实例化时因元数据缺失失败
+-keepattributes *Annotation*, Signature, EnclosingMethod, InnerClasses, Exceptions
+# 静音 ML Kit / gms 内部的缺失类告警（不影响运行）
+-dontwarn com.google.mlkit.**
+-dontwarn com.google.android.gms.internal.mlkit_**
+
+# ============================================================
 # R8 可选依赖告警静音（非错误，不影响运行）
 # 以下类均被 OkHttp 平台探测代码（BouncyCastlePlatform /
 # ConscryptPlatform / OpenJSSEPlatform）以反射方式"探测性引用"，
