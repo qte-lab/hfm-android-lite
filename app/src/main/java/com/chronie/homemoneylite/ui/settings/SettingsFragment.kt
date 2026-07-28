@@ -19,7 +19,7 @@ import android.app.DatePickerDialog
 import android.widget.Button
 import android.widget.EditText
 import com.chronie.homemoneylite.R
-import com.chronie.homemoneylite.databinding.DialogSettingsApiKeyBinding
+import com.chronie.homemoneylite.databinding.DialogSettingsAiServerBinding
 import com.chronie.homemoneylite.databinding.DialogSettingsBudgetBinding
 import com.chronie.homemoneylite.databinding.FragmentSettingsBinding
 import com.chronie.homemoneylite.databinding.ItemSettingsLicenseGroupBinding
@@ -138,12 +138,30 @@ class SettingsFragment : Fragment() {
 
     // region 数据观察
     private fun setupObservers() {
-        collectWithLifecycle(viewModel.aiApiKey) { key ->
-            if (key.isNotEmpty()) {
+        // Ollama 服务器地址
+        collectWithLifecycle(viewModel.aiServerUrl) { url ->
+            if (url.isNotEmpty()) {
                 binding.tvAiStatus.visibility = View.VISIBLE
-                binding.tvAiStatus.text = getString(R.string.api_key_set, key.take(8))
+                binding.tvAiStatus.text = url
             } else {
-                binding.tvAiStatus.visibility = View.GONE
+                binding.tvAiStatus.visibility = View.VISIBLE
+                binding.tvAiStatus.text = "默认: http://192.168.10.9:11434"
+            }
+        }
+
+        // 钱包余额
+        collectWithLifecycle(viewModel.walletBalance) { balance ->
+            val symbol = getString(R.string.currency_symbol)
+            binding.tvWalletBalance.text = getString(R.string.currency_format, symbol, balance)
+        }
+
+        // 封禁状态
+        collectWithLifecycle(viewModel.isBanned) { banned ->
+            if (banned) {
+                binding.tvWalletStatus.visibility = View.VISIBLE
+                binding.tvWalletStatus.text = getString(R.string.settings_ai_wallet_banned)
+            } else {
+                binding.tvWalletStatus.visibility = View.GONE
             }
         }
 
@@ -234,19 +252,19 @@ class SettingsFragment : Fragment() {
 
     // region 对话框
     private fun showApiKeyDialog() {
-        val dialogBinding = DialogSettingsApiKeyBinding.inflate(layoutInflater)
-        dialogBinding.etApiKey.setText(viewModel.aiApiKey.value)
+        val dialogBinding = DialogSettingsAiServerBinding.inflate(layoutInflater)
+        dialogBinding.etServerUrl.setText(viewModel.aiServerUrl.value.ifEmpty { "http://192.168.10.9:11434" })
         val dialog = AlertDialog.Builder(requireContext())
-            .setTitle(R.string.settings_ai_api_key)
+            .setTitle(R.string.settings_ai_server)
             .setView(dialogBinding.root)
             .setPositiveButton(R.string.save) { _, _ ->
-                viewModel.setAIApiKey(dialogBinding.etApiKey.text.toString().trim())
+                var url = dialogBinding.etServerUrl.text.toString().trim()
+                // 确保以 / 结尾
+                if (url.isNotEmpty() && !url.endsWith("/")) url += "/"
+                viewModel.setAIServerUrl(url)
             }
             .setNegativeButton(R.string.cancel, null)
             .show()
-        dialogBinding.tvGetApiKey.setOnClickListener {
-            openLink(requireContext(), getString(R.string.settings_ai_get_key_url))
-        }
     }
 
     private fun showBudgetDialog() {

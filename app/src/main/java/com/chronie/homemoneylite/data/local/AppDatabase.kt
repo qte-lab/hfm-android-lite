@@ -18,7 +18,7 @@ import com.chronie.homemoneylite.data.local.entity.SyncQueueEntity
         SyncQueueEntity::class,
         BudgetEntity::class
     ],
-    version = 6,
+    version = 8,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

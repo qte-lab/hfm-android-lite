@@ -1,0 +1,23 @@
+{
+  "test-dev-A": {
+    "deviceId": "test-dev-A",
+    "balance": 28.5,
+    "isBanned": true,
+    "createdAt": 1785232024493,
+    "updatedAt": 1785232135396
+  },
+  "test-dev-B": {
+    "deviceId": "test-dev-B",
+    "balance": 5,
+    "isBanned": true,
+    "createdAt": 1785232024755,
+    "updatedAt": 1785232144315
+  },
+  "7ffb79434ccc70d4_5835c2da": {
+    "deviceId": "7ffb79434ccc70d4_5835c2da",
+    "balance": 1,
+    "isBanned": false,
+    "createdAt": 1785232075806,
+    "updatedAt": 1785232169197
+  }
+}

@@ -25,6 +25,7 @@ import javax.inject.Singleton
 
 /**
  * AI 记录仓库实现
+ * 已集成钱包扣费系统：每次识别前检查余额，成功后扣 0.1 元
  */
 @Singleton
 class AIRecordRepositoryImpl @Inject constructor(
@@ -32,22 +33,31 @@ class AIRecordRepositoryImpl @Inject constructor(
     private val aiRecordApi: AIRecordApi,
     private val expenseDao: ExpenseDao,
     private val syncQueueDao: SyncQueueDao,
+    private val walletRepository: WalletRepository,
     private val gson: Gson
 ) : AIRecordRepository {
     
     companion object {
         private const val TAG = "AIRecordRepository"
-        private const val TEXT_MODEL = "Qwen/Qwen3-8B"
-        private const val IMAGE_MODEL = "Qwen/Qwen3.5-4B"
+        /** Ollama 本地模型名（文本与多模态共用，qwen3.5:2b 支持视觉识别） */
+        private const val MODEL_NAME = "qwen3.5:2b"
     }
     
     override suspend fun parseTextToRecords(text: String): Result<List<AIExpenseRecord>> {
         return try {
+            // ===== 钱包检查：余额不足或被封禁则拒绝 =====
+            val (canProceed, currentBalance, walletError) = walletRepository.canRecognize()
+            if (!canProceed) {
+                Log.w(TAG, "Wallet check failed: $walletError")
+                return Result.failure(Exception(walletError))
+            }
+            Log.d(TAG, "Wallet check passed. Balance: ¥$currentBalance")
+
             Log.d(TAG, "Parsing text to records")
             
             val prompt = buildTextPrompt(text)
             val request = AIRecordRequest(
-                model = TEXT_MODEL,
+                model = MODEL_NAME,
                 messages = listOf(
                     AIMessage(
                         role = "system",
@@ -86,7 +96,11 @@ class AIRecordRepositoryImpl @Inject constructor(
             
             val records = parseAIResponse(content)
             Log.d(TAG, "Parsed ${records.size} records from text")
-            
+
+            // ===== 扣费：识别成功后扣除费用 =====
+            val newBalance = walletRepository.deductRecognitionFee()
+            Log.d(TAG, "Fee deducted. New balance: ¥$newBalance")
+
             Result.success(records)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to parse text", e)
@@ -96,6 +110,14 @@ class AIRecordRepositoryImpl @Inject constructor(
     
     override suspend fun parseImagesToRecords(imageUris: List<Uri>): Result<List<AIExpenseRecord>> {
         return try {
+            // ===== 钱包检查：余额不足或被封禁则拒绝 =====
+            val (canProceed, currentBalance, walletError) = walletRepository.canRecognize()
+            if (!canProceed) {
+                Log.w(TAG, "Wallet check failed: $walletError")
+                return Result.failure(Exception(walletError))
+            }
+            Log.d(TAG, "Wallet check passed. Balance: ¥$currentBalance")
+
             Log.d(TAG, "Parsing ${imageUris.size} images to records")
             
             val base64Images = imageUris.map { uri ->
@@ -124,7 +146,7 @@ class AIRecordRepositoryImpl @Inject constructor(
             }
             
             val request = AIRecordRequest(
-                model = IMAGE_MODEL,
+                model = MODEL_NAME,
                 messages = listOf(
                     AIMessage(
                         role = "system",
@@ -163,7 +185,11 @@ class AIRecordRepositoryImpl @Inject constructor(
             
             val records = parseAIResponse(content)
             Log.d(TAG, "Parsed ${records.size} records from images")
-            
+
+            // ===== 扣费：识别成功后扣除费用 =====
+            val newBalance = walletRepository.deductRecognitionFee()
+            Log.d(TAG, "Fee deducted. New balance: ¥$newBalance")
+
             Result.success(records)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to parse images", e)

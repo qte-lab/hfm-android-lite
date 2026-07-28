@@ -21,6 +21,7 @@ import javax.inject.Singleton
 
 /**
  * AI 模块依赖注入
+ * 已从 SiliconFlow 云端 API 切换为本地 Ollama 服务（OpenAI 兼容接口）
  */
 @Module
 @InstallIn(SingletonComponent::class)
@@ -44,8 +45,16 @@ abstract class AIModule {
         @Retention(AnnotationRetention.BINARY)
         annotation class AIOkHttpClient
         
+        /** 默认 Ollama 服务地址（局域网） */
+        private const val DEFAULT_OLLAMA_BASE_URL = "http://192.168.10.9:11434/"
+        
+        /** SharedPreferences 键名 */
+        private const val PREFS_NAME = "ai_settings"
+        private const val KEY_OLLAMA_URL = "ollama_base_url"
+        
         /**
          * 提供 AI API 的 OkHttpClient
+         * Ollama 不需要 Authorization，仅设置 Content-Type 与超时
          */
         @Provides
         @Singleton
@@ -61,8 +70,8 @@ abstract class AIModule {
                 .addInterceptor { chain ->
                     val original = chain.request()
                     
-                    // 从 SharedPreferences 获取 API Key
-                    val prefs = context.getSharedPreferences("ai_settings", Context.MODE_PRIVATE)
+                    // Ollama 不需要 API Key，但保留读取逻辑以兼容未来切换回云端
+                    val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     val apiKey = prefs.getString("siliconflow_api_key", "") ?: ""
                     
                     val request = original.newBuilder()
@@ -86,16 +95,25 @@ abstract class AIModule {
         
         /**
          * 提供 AI API 的 Retrofit
+         * baseUrl 从 SharedPreferences 读取，默认指向本地 Ollama
          */
         @Provides
         @Singleton
         @AIRetrofit
         fun provideAIRetrofit(
             @AIOkHttpClient okHttpClient: OkHttpClient,
+            @ApplicationContext context: Context,
             gson: Gson
         ): Retrofit {
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val baseUrl = prefs.getString(KEY_OLLAMA_URL, DEFAULT_OLLAMA_BASE_URL)
+                ?: DEFAULT_OLLAMA_BASE_URL
+            
+            // 确保 baseUrl 以 / 结尾（Retrofit 要求）
+            val normalizedUrl = if (!baseUrl.endsWith("/")) "$baseUrl/" else baseUrl
+            
             return Retrofit.Builder()
-                .baseUrl("https://api.siliconflow.cn/")
+                .baseUrl(normalizedUrl)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()

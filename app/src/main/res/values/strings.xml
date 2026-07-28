@@ -166,13 +166,18 @@
     <string name="ai_expense_take_photo">拍照</string>
     <string name="ai_expense_choose_from_gallery">从相册选择</string>
     
-    <!-- AI 设置 -->
+    <!-- AI 设置（本地 Ollama 服务） -->
     <string name="settings_ai_title">AI设置</string>
-    <string name="settings_ai_api_key">硅基流动API密钥</string>
-    <string name="settings_ai_api_key_hint">输入API密钥</string>
-    <string name="settings_ai_api_key_description">用于智能识别功能</string>
-    <string name="settings_ai_get_api_key">没有密钥？获取一个</string>
-    <string name="settings_ai_api_key_saved">API密钥已保存</string>
+    <string name="settings_ai_server">Ollama 服务器地址</string>
+    <string name="settings_ai_server_description">本地 Ollama 服务地址，用于智能识别</string>
+    <string name="settings_ai_server_hint">例如：http://192.168.10.9:11434</string>
+    <string name="settings_ai_server_saved">服务器地址已保存</string>
+    <string name="settings_ai_wallet_balance">当前余额</string>
+    <string name="settings_ai_wallet_info">每次识别扣费 ¥0.1</string>
+    <string name="settings_ai_wallet_banned">账户已封禁</string>
+    <string name="settings_ai_wallet_normal">正常</string>
+    <string name="ai_error_insufficient_balance">余额不足，无法使用 AI 识别</string>
+    <string name="ai_error_account_banned">账户已被封禁，请联系管理员</string>
     <string name="ai_expense_entry_description">拍照或输入文字快速记账</string>
     
     <!-- 预算管理 -->

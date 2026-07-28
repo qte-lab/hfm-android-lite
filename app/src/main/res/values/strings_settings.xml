@@ -4,5 +4,4 @@
     <string name="settings_licenses_count">共 %d 个开源库</string>
     <string name="settings_export_all">导出全部数据</string>
     <string name="settings_export_range">导出日期范围</string>
-    <string name="settings_ai_get_key_url" translatable="false">https://cloud.siliconflow.cn/me/account/ak</string>
 </resources>

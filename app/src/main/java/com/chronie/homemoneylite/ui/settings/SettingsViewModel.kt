@@ -25,11 +25,20 @@ class SettingsViewModel @Inject constructor(
     private val syncScheduler: SyncScheduler,
     private val exportExpensesUseCase: ExportExpensesUseCase,
     private val importExpensesUseCase: ImportExpensesUseCase,
-    @param:dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context
+    @param:dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
+    private val walletRepository: com.chronie.homemoneylite.data.repository.WalletRepository
 ) : ViewModel() {
 
-    private val _aiApiKey = MutableStateFlow("")
-    val aiApiKey: StateFlow<String> = _aiApiKey.asStateFlow()
+    private val _aiServerUrl = MutableStateFlow("")
+    val aiServerUrl: StateFlow<String> = _aiServerUrl.asStateFlow()
+
+    /** 钱包余额 */
+    private val _walletBalance = MutableStateFlow(0.0)
+    val walletBalance: StateFlow<Double> = _walletBalance.asStateFlow()
+
+    /** 是否被封禁 */
+    private val _isBanned = MutableStateFlow(false)
+    val isBanned: StateFlow<Boolean> = _isBanned.asStateFlow()
 
     val syncStatus: StateFlow<SyncStatus> = syncManager.observeSyncStatus()
         .stateIn(
@@ -56,7 +65,8 @@ class SettingsViewModel @Inject constructor(
 
     init {
         loadSyncInfo()
-        loadAIApiKey()
+        loadAIServerUrl()
+        loadWalletInfo()
     }
 
     fun clearSyncMessage() {
@@ -79,19 +89,32 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun setAIApiKey(apiKey: String) {
+    fun setAIServerUrl(url: String) {
         viewModelScope.launch {
             val prefs = context.getSharedPreferences("ai_settings", android.content.Context.MODE_PRIVATE)
-            prefs.edit().putString("siliconflow_api_key", apiKey).apply()
-            _aiApiKey.value = apiKey
-            _syncMessage.value = context.getString(R.string.settings_ai_api_key_saved)
+            prefs.edit().putString("ollama_base_url", url).apply()
+            _aiServerUrl.value = url
+            _syncMessage.value = context.getString(R.string.settings_ai_server_saved)
         }
     }
 
-    private fun loadAIApiKey() {
+    private fun loadAIServerUrl() {
         viewModelScope.launch {
             val prefs = context.getSharedPreferences("ai_settings", android.content.Context.MODE_PRIVATE)
-            _aiApiKey.value = prefs.getString("siliconflow_api_key", "") ?: ""
+            _aiServerUrl.value = prefs.getString("ollama_base_url", "") ?: ""
+        }
+    }
+
+    private fun loadWalletInfo() {
+        viewModelScope.launch {
+            try {
+                val wallet = walletRepository.getWalletInfo()
+                _walletBalance.value = wallet.balance
+                _isBanned.value = wallet.isBanned
+            } catch (e: Exception) {
+                // 钱包服务未启动或网络不通时忽略，界面显示默认值
+                android.util.Log.w("SettingsViewModel", "Failed to load wallet info", e)
+            }
         }
     }
 
