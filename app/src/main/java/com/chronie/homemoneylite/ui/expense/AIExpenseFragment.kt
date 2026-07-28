@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.databinding.FragmentAiExpenseBinding
 import com.chronie.homemoneylite.databinding.DialogAddRecordEditBinding
+import com.chronie.homemoneylite.databinding.DialogOcrResultBinding
 import com.chronie.homemoneylite.domain.model.AIExpenseRecord
 import com.chronie.homemoneylite.domain.model.ExpenseType
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
@@ -48,6 +49,7 @@ class AIExpenseFragment : Fragment() {
 
     private var cameraImageUri: Uri? = null
     private var lastCropOutputFile: File? = null
+    private var ocrDialog: AlertDialog? = null
 
     private val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
@@ -185,7 +187,55 @@ class AIExpenseFragment : Fragment() {
             } else {
                 binding.errorText.visibility = View.GONE
             }
+
+            // OCR 结果确认弹窗：识别出的文字先给用户查看/修改，确认后才发给 AI
+            if (state.showOcrDialog) {
+                if (ocrDialog == null) {
+                    showOcrResultDialog(state.ocrText, state.ocrError)
+                }
+            } else {
+                ocrDialog?.dismiss()
+                ocrDialog = null
+            }
         }
+    }
+
+    /**
+     * 展示 OCR 文字确认弹窗。
+     * OCR 失败/为空时 hint 显示失败原因，用户仍可手动输入内容兜底。
+     */
+    private fun showOcrResultDialog(ocrText: String, ocrError: String?) {
+        val dialogBinding = DialogOcrResultBinding.inflate(layoutInflater)
+        dialogBinding.etOcrText.setText(ocrText)
+        dialogBinding.etOcrText.setSelection(ocrText.length)
+        dialogBinding.tvOcrHint.text = ocrError ?: getString(R.string.ai_expense_ocr_hint)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(R.string.ai_expense_ocr_dialog_title)
+            .setView(dialogBinding.root)
+            .setPositiveButton(R.string.ai_expense_ocr_send, null)
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+
+        dialog.setOnDismissListener {
+            ocrDialog = null
+            viewModel.dismissOcrDialog()
+        }
+        dialog.show()
+
+        // 覆盖 positive 按钮：校验非空后才发送并关闭
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
+            val text = dialogBinding.etOcrText.text?.toString().orEmpty().trim()
+            if (text.isBlank()) {
+                dialogBinding.etOcrText.error = getString(R.string.ai_expense_ocr_text_required)
+                return@setOnClickListener
+            }
+            // 先摘除 dismiss 监听，避免 dismiss 时重复触发 dismissOcrDialog 覆盖状态
+            dialog.setOnDismissListener { ocrDialog = null }
+            viewModel.confirmOcrText(text)
+            dialog.dismiss()
+        }
+        ocrDialog = dialog
     }
 
     // region 图片来源 / 拍摄 / 裁剪
@@ -246,7 +296,8 @@ class AIExpenseFragment : Fragment() {
             )
 
             val options = UCrop.Options()
-            options.setCompressionQuality(90)
+            // OCR 需要清晰文字：压缩质量提高，避免细节丢失
+            options.setCompressionQuality(95)
             options.setHideBottomControls(false)
             options.setFreeStyleCropEnabled(true)
             options.setToolbarColor(Color.parseColor("#6750A4"))
@@ -257,9 +308,10 @@ class AIExpenseFragment : Fragment() {
             options.setShowCropGrid(false)
             options.setShowCropFrame(true)
 
+            // 注意：不要强制 1:1 裁剪比例，账单/小票多为竖长图，
+            // 强制正方形+1080 压缩会把文字缩到 ML Kit OCR 无法识别的尺寸
             val uCrop = UCrop.of(uri, outputUri)
-                .withAspectRatio(1f, 1f)
-                .withMaxResultSize(1080, 1080)
+                .withMaxResultSize(2560, 4096)
                 .withOptions(options)
             cropLauncher.launch(uCrop.getIntent(requireContext()))
         } catch (e: Exception) {
@@ -394,6 +446,9 @@ class AIExpenseFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        ocrDialog?.setOnDismissListener(null)
+        ocrDialog?.dismiss()
+        ocrDialog = null
         _binding = null
     }
 }

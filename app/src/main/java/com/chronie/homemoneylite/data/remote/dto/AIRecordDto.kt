@@ -3,63 +3,52 @@ package com.chronie.homemoneylite.data.remote.dto
 import com.google.gson.annotations.SerializedName
 
 /**
- * AI 记录请求 DTO
+ * Ollama 原生 /api/chat 请求 DTO
+ *
+ * 注意：使用原生端点而非 OpenAI 兼容端点（/v1/chat/completions），
+ * 因为只有原生端点支持根级 think 参数——qwen3 系列默认开启 thinking，
+ * 会先输出大段推理过程导致等待时间过长，必须显式 think=false 关闭。
  */
 data class AIRecordRequest(
     @SerializedName("model")
     val model: String,
     @SerializedName("messages")
     val messages: List<AIMessage>,
-    @SerializedName("temperature")
-    val temperature: Double = 0.2,
     @SerializedName("stream")
-    val stream: Boolean = false
+    val stream: Boolean = false,
+    /** 关闭思考模式：直接输出答案，大幅缩短响应时间 */
+    @SerializedName("think")
+    val think: Boolean = false,
+    @SerializedName("options")
+    val options: AIOptions = AIOptions()
 )
 
 /**
- * AI 消息
+ * Ollama 运行时参数（对应 OpenAI 的顶级 temperature 等）
+ */
+data class AIOptions(
+    @SerializedName("temperature")
+    val temperature: Double = 0.2
+)
+
+/**
+ * AI 消息（原生 chat 端点 content 只支持字符串）
  */
 data class AIMessage(
     @SerializedName("role")
     val role: String,
     @SerializedName("content")
-    val content: Any // 可以是 String 或 List<AIMessageContent>
+    val content: String
 )
 
 /**
- * AI 消息内容（用于多模态）
- */
-data class AIMessageContent(
-    @SerializedName("type")
-    val type: String, // "text" 或 "image_url"
-    @SerializedName("text")
-    val text: String? = null,
-    @SerializedName("image_url")
-    val imageUrl: AIImageUrl? = null
-)
-
-/**
- * AI 图片 URL
- */
-data class AIImageUrl(
-    @SerializedName("url")
-    val url: String
-)
-
-/**
- * AI 记录响应 DTO
+ * Ollama 原生 /api/chat 响应 DTO（非流式）
  */
 data class AIRecordResponse(
-    @SerializedName("choices")
-    val choices: List<AIChoice>
-)
-
-/**
- * AI 选择
- */
-data class AIChoice(
     @SerializedName("message")
-    val message: AIResponseMessage
+    val message: AIResponseMessage?,
+    @SerializedName("done")
+    val done: Boolean = true
 )
 
 /**
@@ -67,7 +56,10 @@ data class AIChoice(
  */
 data class AIResponseMessage(
     @SerializedName("content")
-    val content: String
+    val content: String,
+    /** think=true 时的推理轨迹；已关闭 thinking，正常为 null */
+    @SerializedName("thinking")
+    val thinking: String? = null
 )
 
 /**

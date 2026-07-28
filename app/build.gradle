@@ -160,6 +160,13 @@ dependencies {
     
     // uCrop for image cropping
     implementation 'com.github.yalantis:ucrop:2.2.11'
+
+    // EXIF 方向读取（OCR 放大重试时手动解码 Bitmap 需处理旋转）
+    implementation 'androidx.exifinterface:exifinterface:1.4.2'
+
+    // ML Kit 中文文字识别（bundled 模型，端上离线 OCR，无需 Google Play Services）
+    // 用于智能记账：图片先本地 OCR 提取文字，再交给本地 LLM 做结构化解析，避免传大图导致等待过长
+    implementation 'com.google.mlkit:text-recognition-chinese:16.0.1'
     
     // Testing
     testImplementation "junit:junit:$junitVersion"

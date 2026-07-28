@@ -15,9 +15,30 @@
   },
   "7ffb79434ccc70d4_5835c2da": {
     "deviceId": "7ffb79434ccc70d4_5835c2da",
-    "balance": 1,
+    "balance": 10,
     "isBanned": false,
     "createdAt": 1785232075806,
-    "updatedAt": 1785232169197
+    "updatedAt": 1785257521974
+  },
+  "549020e4d157dbf0_c2045d4e": {
+    "deviceId": "549020e4d157dbf0_c2045d4e",
+    "balance": 9.9,
+    "isBanned": false,
+    "createdAt": 1785232428461,
+    "updatedAt": 1785259113920
+  },
+  "2b866a36fcf9af6c_be1ae12a": {
+    "deviceId": "2b866a36fcf9af6c_be1ae12a",
+    "balance": 0.53,
+    "isBanned": false,
+    "createdAt": 1785232556189,
+    "updatedAt": 1785232673302
+  },
+  "c84e8e4eedf5ac35_7cf76aa2": {
+    "deviceId": "c84e8e4eedf5ac35_7cf76aa2",
+    "balance": 0.66,
+    "isBanned": false,
+    "createdAt": 1785240875978,
+    "updatedAt": 1785241192676
   }
 }

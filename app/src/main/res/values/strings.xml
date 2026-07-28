@@ -165,6 +165,12 @@
     <string name="ai_expense_records_count">识别结果（%d条）</string>
     <string name="ai_expense_take_photo">拍照</string>
     <string name="ai_expense_choose_from_gallery">从相册选择</string>
+    <string name="ai_expense_ocr_dialog_title">确认识别文字</string>
+    <string name="ai_expense_ocr_hint">已从图片中提取以下文字，可修改后再发送给 AI 解析</string>
+    <string name="ai_expense_ocr_empty">未从图片中识别到文字，可在下方手动输入消费内容</string>
+    <string name="ai_expense_ocr_failed">文字识别失败（%s），可在下方手动输入消费内容</string>
+    <string name="ai_expense_ocr_send">发送给AI</string>
+    <string name="ai_expense_ocr_text_required">请输入文字内容</string>
     
     <!-- AI 设置（本地 Ollama 服务） -->
     <string name="settings_ai_title">AI设置</string>

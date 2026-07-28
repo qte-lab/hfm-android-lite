@@ -25,6 +25,7 @@ import javax.inject.Inject
 class AIExpenseViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val aiRecordRepository: AIRecordRepository,
+    private val ocrService: com.chronie.homemoneylite.data.ocr.MlKitOcrService,
     private val syncScheduler: com.chronie.homemoneylite.data.sync.SyncScheduler
 ) : ViewModel() {
     
@@ -62,6 +63,10 @@ class AIExpenseViewModel @Inject constructor(
     
     /**
      * 开始识别
+     *
+     * 有图片时：先在端上做 ML Kit OCR，把提取的文字放进「确认弹窗」让用户查看/修改，
+     * 用户点击"发送给AI"后才真正调用 LLM（此时才可能扣费）。
+     * OCR 失败或没有文字时也会弹窗（附失败原因），用户可手动输入兜底。
      */
     fun startRecognition() {
         val state = _uiState.value
@@ -71,25 +76,79 @@ class AIExpenseViewModel @Inject constructor(
             return
         }
         
+        if (state.selectedImages.isNotEmpty()) {
+            // 图片链路：OCR → 弹窗确认
+            viewModelScope.launch {
+                _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+                var ocrText = ""
+                var ocrError: String? = null
+                try {
+                    ocrText = ocrService.recognizeAll(state.selectedImages)
+                    if (ocrText.isBlank()) {
+                        ocrError = context.getString(R.string.ai_expense_ocr_empty)
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.e("AIExpenseViewModel", "OCR failed", e)
+                    ocrError = context.getString(
+                        R.string.ai_expense_ocr_failed,
+                        e.message ?: e.javaClass.simpleName
+                    )
+                }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        showOcrDialog = true,
+                        ocrText = ocrText,
+                        ocrError = ocrError
+                    )
+                }
+            }
+        } else {
+            // 纯文本链路：直接发给 AI
+            parseWithAI(state.textInput)
+        }
+    }
+    
+    /**
+     * 用户在 OCR 确认弹窗点击"发送给AI"
+     */
+    fun confirmOcrText(editedText: String) {
+        _uiState.update { it.copy(showOcrDialog = false, ocrText = "", ocrError = null) }
+        val extra = _uiState.value.textInput
+        val combined = buildString {
+            append(editedText.trim())
+            if (extra.isNotBlank()) {
+                append('\n')
+                append(extra.trim())
+            }
+        }.trim()
+        if (combined.isBlank()) {
+            _uiState.update { it.copy(errorMessage = context.getString(R.string.ai_expense_no_input)) }
+            return
+        }
+        parseWithAI(combined)
+    }
+    
+    /**
+     * 用户取消 OCR 确认弹窗
+     */
+    fun dismissOcrDialog() {
+        _uiState.update { it.copy(showOcrDialog = false, ocrText = "", ocrError = null) }
+    }
+    
+    /**
+     * 调用 LLM 解析文本为消费记录
+     */
+    private fun parseWithAI(text: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null) }
             
             try {
                 val records = mutableListOf<AIExpenseRecord>()
                 
-                // 处理图片
-                if (state.selectedImages.isNotEmpty()) {
-                    val imageResult = aiRecordRepository.parseImagesToRecords(state.selectedImages)
-                    imageResult.onSuccess { records.addAll(it) }
-                        .onFailure { throw it }
-                }
-                
-                // 处理文本
-                if (state.textInput.isNotBlank()) {
-                    val textResult = aiRecordRepository.parseTextToRecords(state.textInput)
-                    textResult.onSuccess { records.addAll(it) }
-                        .onFailure { throw it }
-                }
+                val textResult = aiRecordRepository.parseTextToRecords(text)
+                textResult.onSuccess { records.addAll(it) }
+                    .onFailure { throw it }
                 
                 // 为每条识别结果分配稳定唯一 id，供 LazyColumn 作为 key 复用，
                 // 避免按索引定位导致编辑/删除时整列表重组（低端机滚动更顺滑）
@@ -227,5 +286,11 @@ data class AIExpenseUiState(
     val isLoading: Boolean = false,
     val isSaving: Boolean = false,
     val recognizedRecords: List<AIExpenseRecord> = emptyList(),
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    /** 是否显示 OCR 结果确认弹窗 */
+    val showOcrDialog: Boolean = false,
+    /** OCR 提取的文字（可能为空，弹窗内可编辑） */
+    val ocrText: String = "",
+    /** OCR 失败/为空时的提示信息（显示在弹窗顶部） */
+    val ocrError: String? = null
 )
