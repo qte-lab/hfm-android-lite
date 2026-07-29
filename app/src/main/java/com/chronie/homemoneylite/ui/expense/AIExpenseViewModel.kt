@@ -25,7 +25,7 @@ import javax.inject.Inject
 class AIExpenseViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val aiRecordRepository: AIRecordRepository,
-    private val ocrService: com.chronie.homemoneylite.data.ocr.MlKitOcrService,
+    private val ocrRepository: com.chronie.homemoneylite.data.repository.OcrRepository,
     private val syncScheduler: com.chronie.homemoneylite.data.sync.SyncScheduler
 ) : ViewModel() {
     
@@ -64,9 +64,9 @@ class AIExpenseViewModel @Inject constructor(
     /**
      * 开始识别
      *
-     * 有图片时：先在端上做 ML Kit OCR，把提取的文字放进「确认弹窗」让用户查看/修改，
-     * 用户点击"发送给AI"后才真正调用 LLM（此时才可能扣费）。
-     * OCR 失败或没有文字时也会弹窗（附失败原因），用户可手动输入兜底。
+     * 有图片时：先把图片上传到服务端做 OCR（tesseract.js 中文识别），把提取的文字
+     * 放进「确认弹窗」让用户查看/修改，用户点击"发送给AI"后才真正调用 LLM
+     * （此时才可能扣费）。OCR 失败或没有文字时也会弹窗（附失败原因），用户可手动输入兜底。
      */
     fun startRecognition() {
         val state = _uiState.value
@@ -77,13 +77,13 @@ class AIExpenseViewModel @Inject constructor(
         }
         
         if (state.selectedImages.isNotEmpty()) {
-            // 图片链路：OCR → 弹窗确认
+            // 图片链路：服务端 OCR → 弹窗确认
             viewModelScope.launch {
                 _uiState.update { it.copy(isLoading = true, errorMessage = null) }
                 var ocrText = ""
                 var ocrError: String? = null
                 try {
-                    ocrText = ocrService.recognizeAll(state.selectedImages)
+                    ocrText = ocrRepository.recognize(state.selectedImages)
                     if (ocrText.isBlank()) {
                         ocrError = context.getString(R.string.ai_expense_ocr_empty)
                     }

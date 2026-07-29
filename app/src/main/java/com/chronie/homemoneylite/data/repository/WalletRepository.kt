@@ -60,18 +60,10 @@ class WalletRepository @Inject constructor(
         .build()
 
     /**
-     * 钱包服务 baseUrl：主机取自设置页的 Ollama 地址，端口固定 5010
+     * 钱包服务 baseUrl：主机硬编码（与 Ollama 同机），端口固定 5010
      */
     private fun walletBaseUrl(): String {
-        val prefs = context.getSharedPreferences("ai_settings", Context.MODE_PRIVATE)
-        val ollamaUrl = prefs.getString("ollama_base_url", "") ?: ""
-        val host = try {
-            val normalized = if (ollamaUrl.startsWith("http")) ollamaUrl else "http://$ollamaUrl"
-            java.net.URI(normalized).host ?: DEFAULT_HOST
-        } catch (e: Exception) {
-            DEFAULT_HOST
-        }
-        return "http://${if (host.isNullOrBlank()) DEFAULT_HOST else host}:$WALLET_PORT"
+        return "http://$DEFAULT_HOST:$WALLET_PORT"
     }
 
     /**

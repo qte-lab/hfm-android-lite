@@ -1,0 +1,13 @@
+{
+  "name": "hfm-wallet-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "家庭记账本极速版 - 钱包/扣费 + 服务端 OCR 后端服务",
+  "main": "wallet-server.js",
+  "scripts": {
+    "start": "node wallet-server.js"
+  },
+  "dependencies": {
+    "tesseract.js": "^5.1.1"
+  }
+}

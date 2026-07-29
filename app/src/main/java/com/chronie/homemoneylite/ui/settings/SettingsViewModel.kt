@@ -29,8 +29,9 @@ class SettingsViewModel @Inject constructor(
     private val walletRepository: com.chronie.homemoneylite.data.repository.WalletRepository
 ) : ViewModel() {
 
-    private val _aiServerUrl = MutableStateFlow("")
-    val aiServerUrl: StateFlow<String> = _aiServerUrl.asStateFlow()
+    /** AI 记录设备 ID（用于钱包账户与扣费） */
+    private val _deviceId = MutableStateFlow("")
+    val deviceId: StateFlow<String> = _deviceId.asStateFlow()
 
     /** 钱包余额 */
     private val _walletBalance = MutableStateFlow(0.0)
@@ -65,7 +66,6 @@ class SettingsViewModel @Inject constructor(
 
     init {
         loadSyncInfo()
-        loadAIServerUrl()
         loadWalletInfo()
     }
 
@@ -89,24 +89,13 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun setAIServerUrl(url: String) {
-        viewModelScope.launch {
-            val prefs = context.getSharedPreferences("ai_settings", android.content.Context.MODE_PRIVATE)
-            prefs.edit().putString("ollama_base_url", url).apply()
-            _aiServerUrl.value = url
-            _syncMessage.value = context.getString(R.string.settings_ai_server_saved)
-        }
-    }
-
-    private fun loadAIServerUrl() {
-        viewModelScope.launch {
-            val prefs = context.getSharedPreferences("ai_settings", android.content.Context.MODE_PRIVATE)
-            _aiServerUrl.value = prefs.getString("ollama_base_url", "") ?: ""
-        }
-    }
-
     private fun loadWalletInfo() {
         viewModelScope.launch {
+            try {
+                _deviceId.value = walletRepository.getDeviceId()
+            } catch (e: Exception) {
+                android.util.Log.w("SettingsViewModel", "Failed to load device id", e)
+            }
             try {
                 val wallet = walletRepository.getWalletInfo()
                 _walletBalance.value = wallet.balance

@@ -45,13 +45,12 @@ abstract class AIModule {
         @Retention(AnnotationRetention.BINARY)
         annotation class AIOkHttpClient
         
-        /** 默认 Ollama 服务地址（局域网） */
+        /** 默认 Ollama 服务地址（局域网，硬编码，不再由设置页配置） */
         private const val DEFAULT_OLLAMA_BASE_URL = "http://192.168.10.9:11434/"
         
-        /** SharedPreferences 键名 */
+        /** SharedPreferences 键名（仅用于兼容读取可选的 API Key） */
         private const val PREFS_NAME = "ai_settings"
-        private const val KEY_OLLAMA_URL = "ollama_base_url"
-        
+
         /**
          * 提供 AI API 的 OkHttpClient
          * Ollama 不需要 Authorization，仅设置 Content-Type 与超时
@@ -95,23 +94,22 @@ abstract class AIModule {
         
         /**
          * 提供 AI API 的 Retrofit
-         * baseUrl 从 SharedPreferences 读取，默认指向本地 Ollama
+         * baseUrl 硬编码为本地 Ollama 地址（设置页不再提供 AI 端点配置）
          */
         @Provides
         @Singleton
         @AIRetrofit
         fun provideAIRetrofit(
             @AIOkHttpClient okHttpClient: OkHttpClient,
-            @ApplicationContext context: Context,
             gson: Gson
         ): Retrofit {
-            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val baseUrl = prefs.getString(KEY_OLLAMA_URL, DEFAULT_OLLAMA_BASE_URL)
-                ?: DEFAULT_OLLAMA_BASE_URL
-            
             // 确保 baseUrl 以 / 结尾（Retrofit 要求）
-            val normalizedUrl = if (!baseUrl.endsWith("/")) "$baseUrl/" else baseUrl
-            
+            val normalizedUrl = if (!DEFAULT_OLLAMA_BASE_URL.endsWith("/")) {
+                "$DEFAULT_OLLAMA_BASE_URL/"
+            } else {
+                DEFAULT_OLLAMA_BASE_URL
+            }
+
             return Retrofit.Builder()
                 .baseUrl(normalizedUrl)
                 .client(okHttpClient)

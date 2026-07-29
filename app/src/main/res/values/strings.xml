@@ -172,12 +172,10 @@
     <string name="ai_expense_ocr_send">发送给AI</string>
     <string name="ai_expense_ocr_text_required">请输入文字内容</string>
     
-    <!-- AI 设置（本地 Ollama 服务） -->
+    <!-- AI 设置（本地 Ollama 服务，地址已硬编码不再可配置） -->
     <string name="settings_ai_title">AI设置</string>
-    <string name="settings_ai_server">Ollama 服务器地址</string>
-    <string name="settings_ai_server_description">本地 Ollama 服务地址，用于智能识别</string>
-    <string name="settings_ai_server_hint">例如：http://192.168.10.9:11434</string>
-    <string name="settings_ai_server_saved">服务器地址已保存</string>
+    <string name="ai_device_id_label">AI记录设备ID</string>
+    <string name="ai_account_status_label">账户状态</string>
     <string name="settings_ai_wallet_balance">当前余额</string>
     <string name="settings_ai_wallet_info">每次识别扣费 ¥0.1</string>
     <string name="settings_ai_wallet_banned">账户已封禁</string>
@@ -286,6 +284,5 @@
     <string name="date_yesterday">昨天</string>
     <string name="date_days_ago">%d天前</string>
     
-    <!-- 开源许可证 -->
-    <string name="open_source_licenses">开源许可证</string>
+    <!-- 开源许可证（设置页不再展示） -->
 </resources>

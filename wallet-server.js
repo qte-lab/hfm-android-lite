@@ -11,6 +11,10 @@
  *   POST /api/wallet/:deviceId/charge   扣除一次识别费用 ¥0.1
  *        成功: { ok:true, balance:2.9 }
  *        失败: { ok:false, code:"INSUFFICIENT"|"BANNED", balance:0, message:"..." }
+ *   POST /api/ocr                        服务端 OCR（tesseract.js，中文 chi_sim+英文 eng）
+ *        请求: { "image": "data:image/jpeg;base64,...." }  或纯 base64 字符串
+ *        成功: { ok:true, text:"识别出的文字" }
+ *        失败: { ok:false, message:"..." }
  *
  * ===== 管理接口（同样无密码，仅限局域网使用）=====
  *   GET  /admin/wallets                       列出所有钱包
@@ -91,6 +95,30 @@ function readBody(req) {
   });
 }
 
+// ---------- OCR（服务端中文识别，tesseract.js） ----------
+// 懒加载 tesseract.js：即使未安装 OCR 依赖，也不会影响钱包接口的启动。
+let ocrWorkerPromise = null;
+function getOcrWorker() {
+  if (!ocrWorkerPromise) {
+    ocrWorkerPromise = (async () => {
+      const tesseract = require('tesseract.js');
+      console.log('[ocr] 初始化 tesseract worker（chi_sim+eng），首次会下载语言包…');
+      const worker = await tesseract.createWorker('chi_sim+eng');
+      console.log('[ocr] worker 就绪');
+      return worker;
+    })();
+  }
+  return ocrWorkerPromise;
+}
+
+// 将请求里的 image 字段（可能带 data: 前缀）解码为 Buffer
+function decodeImage(body) {
+  const raw = typeof body.image === 'string' ? body.image : '';
+  const comma = raw.indexOf(',');
+  const b64 = comma >= 0 ? raw.substring(comma + 1) : raw;
+  return Buffer.from(b64, 'base64');
+}
+
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const parts = url.pathname.split('/').filter(Boolean); // 例: ['api','wallet','xxx','charge']
@@ -120,6 +148,24 @@ const server = http.createServer(async (req, res) => {
       save();
       console.log(`[wallet] 扣费 ¥${RECOGNITION_COST} <- ${w.deviceId}，余额 ¥${w.balance}`);
       return json(res, 200, { ok: true, balance: w.balance });
+    }
+
+    // ---- App: POST /api/ocr  （base64 图片 JSON，识别中文+英文）----
+    if (req.method === 'POST' && parts[0] === 'api' && parts[1] === 'ocr') {
+      const body = await readBody(req);
+      if (!body.image) {
+        return json(res, 400, { ok: false, message: '缺少 image 字段' });
+      }
+      try {
+        const worker = await getOcrWorker();
+        const { data } = await worker.recognize(decodeImage(body));
+        const text = (data.text || '').trim();
+        console.log(`[ocr] 识别完成，${text.length} 字符`);
+        return json(res, 200, { ok: true, text });
+      } catch (e) {
+        console.error('[ocr] 识别失败:', e.message);
+        return json(res, 500, { ok: false, message: 'OCR 识别失败：' + e.message });
+      }
     }
 
     // ---- Admin: GET /admin/wallets ----

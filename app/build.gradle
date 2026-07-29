@@ -37,8 +37,8 @@ android {
             abiFilters 'arm64-v8a', 'armeabi-v7a'
         }
         
-        versionCode = 5100
-        versionName = "5.1.0"
+        versionCode = 6000
+        versionName = "6.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
         aaptOptions {
@@ -161,12 +161,8 @@ dependencies {
     // uCrop for image cropping
     implementation 'com.github.yalantis:ucrop:2.2.11'
 
-    // EXIF 方向读取（OCR 放大重试时手动解码 Bitmap 需处理旋转）
-    implementation 'androidx.exifinterface:exifinterface:1.4.2'
-
-    // ML Kit 中文文字识别（bundled 模型，端上离线 OCR，无需 Google Play Services）
-    // 用于智能记账：图片先本地 OCR 提取文字，再交给本地 LLM 做结构化解析，避免传大图导致等待过长
-    implementation 'com.google.mlkit:text-recognition-chinese:16.0.1'
+    // 注：OCR 已迁移到服务端（wallet-server.js + tesseract.js），
+    // 端上不再依赖 ML Kit 与 exifinterface。
     
     // Testing
     testImplementation "junit:junit:$junitVersion"

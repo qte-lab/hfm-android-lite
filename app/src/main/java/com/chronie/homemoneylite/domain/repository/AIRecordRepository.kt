@@ -1,6 +1,5 @@
 package com.chronie.homemoneylite.domain.repository
 
-import android.net.Uri
 import com.chronie.homemoneylite.domain.model.AIExpenseRecord
 
 /**
@@ -9,14 +8,9 @@ import com.chronie.homemoneylite.domain.model.AIExpenseRecord
 interface AIRecordRepository {
     
     /**
-     * 解析文本为支出记录
+     * 解析文本为支出记录（OCR 已迁移到服务端，App 仅把识别出的文本交给 LLM）
      */
     suspend fun parseTextToRecords(text: String): Result<List<AIExpenseRecord>>
-    
-    /**
-     * 解析图片为支出记录
-     */
-    suspend fun parseImagesToRecords(imageUris: List<Uri>): Result<List<AIExpenseRecord>>
     
     /**
      * 批量保存 AI 识别的记录

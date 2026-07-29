@@ -1,6 +1,5 @@
 package com.chronie.homemoneylite.ui.settings
 
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -19,11 +18,8 @@ import android.app.DatePickerDialog
 import android.widget.Button
 import android.widget.EditText
 import com.chronie.homemoneylite.R
-import com.chronie.homemoneylite.databinding.DialogSettingsAiServerBinding
 import com.chronie.homemoneylite.databinding.DialogSettingsBudgetBinding
 import com.chronie.homemoneylite.databinding.FragmentSettingsBinding
-import com.chronie.homemoneylite.databinding.ItemSettingsLicenseGroupBinding
-import com.chronie.homemoneylite.databinding.ItemSettingsLicenseItemBinding
 import com.chronie.homemoneylite.domain.model.SyncStatus
 import com.chronie.homemoneylite.ui.budget.BudgetViewModel
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
@@ -74,7 +70,6 @@ class SettingsFragment : Fragment() {
         setupTabs()
         setupClickListeners()
         setupObservers()
-        buildLicenses()
         setupVersion()
     }
 
@@ -122,7 +117,6 @@ class SettingsFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.rowBudget.setOnClickListener { showBudgetDialog() }
-        binding.rowAi.setOnClickListener { showApiKeyDialog() }
         binding.btnManualSync.setOnClickListener { viewModel.manualSync() }
         binding.btnExport.setOnClickListener {
             checkAndRequestPermissions { showExportChoice() }
@@ -138,14 +132,29 @@ class SettingsFragment : Fragment() {
 
     // region 数据观察
     private fun setupObservers() {
-        // Ollama 服务器地址
-        collectWithLifecycle(viewModel.aiServerUrl) { url ->
-            if (url.isNotEmpty()) {
-                binding.tvAiStatus.visibility = View.VISIBLE
-                binding.tvAiStatus.text = url
+        // AI 记录设备 ID
+        collectWithLifecycle(viewModel.deviceId) { id ->
+            if (id.isNotEmpty()) {
+                binding.tvDeviceId.visibility = View.VISIBLE
+                binding.tvDeviceId.text = id
             } else {
-                binding.tvAiStatus.visibility = View.VISIBLE
-                binding.tvAiStatus.text = "默认: http://192.168.10.9:11434"
+                binding.tvDeviceId.visibility = View.GONE
+            }
+        }
+
+        // 账户状态（正常 / 已封禁）
+        collectWithLifecycle(viewModel.isBanned) { banned ->
+            if (banned) {
+                binding.tvAccountStatus.visibility = View.VISIBLE
+                binding.tvAccountStatus.text = getString(R.string.settings_ai_wallet_banned)
+                binding.tvAccountStatus.setTextColor(themeColor(R.color.app_error))
+                binding.tvWalletStatus.visibility = View.VISIBLE
+                binding.tvWalletStatus.text = getString(R.string.settings_ai_wallet_banned)
+            } else {
+                binding.tvAccountStatus.visibility = View.VISIBLE
+                binding.tvAccountStatus.text = getString(R.string.settings_ai_wallet_normal)
+                binding.tvAccountStatus.setTextColor(themeColor(R.color.brand_primary))
+                binding.tvWalletStatus.visibility = View.GONE
             }
         }
 
@@ -153,16 +162,6 @@ class SettingsFragment : Fragment() {
         collectWithLifecycle(viewModel.walletBalance) { balance ->
             val symbol = getString(R.string.currency_symbol)
             binding.tvWalletBalance.text = getString(R.string.currency_format, symbol, balance)
-        }
-
-        // 封禁状态
-        collectWithLifecycle(viewModel.isBanned) { banned ->
-            if (banned) {
-                binding.tvWalletStatus.visibility = View.VISIBLE
-                binding.tvWalletStatus.text = getString(R.string.settings_ai_wallet_banned)
-            } else {
-                binding.tvWalletStatus.visibility = View.GONE
-            }
         }
 
         collectWithLifecycle(viewModel.syncStatus) { status ->
@@ -251,22 +250,6 @@ class SettingsFragment : Fragment() {
     // endregion
 
     // region 对话框
-    private fun showApiKeyDialog() {
-        val dialogBinding = DialogSettingsAiServerBinding.inflate(layoutInflater)
-        dialogBinding.etServerUrl.setText(viewModel.aiServerUrl.value.ifEmpty { "http://192.168.10.9:11434" })
-        val dialog = AlertDialog.Builder(requireContext())
-            .setTitle(R.string.settings_ai_server)
-            .setView(dialogBinding.root)
-            .setPositiveButton(R.string.save) { _, _ ->
-                var url = dialogBinding.etServerUrl.text.toString().trim()
-                // 确保以 / 结尾
-                if (url.isNotEmpty() && !url.endsWith("/")) url += "/"
-                viewModel.setAIServerUrl(url)
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
-    }
-
     private fun showBudgetDialog() {
         val budget = budgetViewModel.uiState.value.budget
         val dialogBinding = DialogSettingsBudgetBinding.inflate(layoutInflater)
@@ -416,40 +399,7 @@ class SettingsFragment : Fragment() {
     }
     // endregion
 
-    // region 开源许可证（内联，按许可证分组，可点击跳转浏览器）
-    private fun buildLicenses() {
-        binding.tvLicensesCount.text = getString(R.string.settings_licenses_count, libraries.size)
-        val grouped = libraries.groupBy { it.license }
-        val ctx = requireContext()
-        grouped.forEach { (license, libs) ->
-            val groupBinding = ItemSettingsLicenseGroupBinding.inflate(layoutInflater)
-            groupBinding.tvLicenseName.text = license
-            groupBinding.root.setOnClickListener { openLink(ctx, libs.first().licenseUrl) }
-            binding.licensesContainer.addView(groupBinding.root)
-
-            libs.forEach { lib ->
-                val itemBinding = ItemSettingsLicenseItemBinding.inflate(layoutInflater)
-                itemBinding.tvLibName.text = lib.name
-                itemBinding.tvLibUrl.text = lib.projectUrl
-                itemBinding.tvLibVersion.text = lib.version
-                itemBinding.root.setOnClickListener { openLink(ctx, lib.projectUrl) }
-                binding.licensesContainer.addView(itemBinding.root)
-            }
-        }
-    }
-
-    private fun openLink(context: Context, url: String) {
-        try {
-            context.startActivity(
-                Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
-            )
-        } catch (_: Exception) {
-            // 忽略无法打开链接的异常
-        }
-    }
-    // endregion
+    // region 开源许可证（已移除：不再在设置页展示许可证声明）
 
     private fun setupVersion() {
         val ctx = requireContext()
@@ -468,58 +418,4 @@ class SettingsFragment : Fragment() {
 
     private fun themeColor(@androidx.annotation.ColorRes colorRes: Int): Int =
         ContextCompat.getColor(requireContext(), colorRes)
-
-    companion object {
-        /** 开源库信息（传统 XML View 版，按许可证分组展示）。 */
-        private val libraries = listOf(
-            LibraryInfo("Kotlin Coroutines Android", "1.11.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/Kotlin/kotlinx.coroutines"),
-            LibraryInfo("Kotlin Coroutines Test", "1.11.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/Kotlin/kotlinx.coroutines"),
-            LibraryInfo("AndroidX Desugar JDK Libs", "2.1.5", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/google/desugar_jdk_libs"),
-            LibraryInfo("AndroidX Core KTX", "1.19.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/core"),
-            LibraryInfo("AndroidX AppCompat", "1.7.1", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/appcompat"),
-            LibraryInfo("AndroidX CoordinatorLayout", "1.3.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/coordinatorlayout"),
-            LibraryInfo("AndroidX Core Splashscreen", "1.2.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/splashscreen"),
-            LibraryInfo("Material Components", "1.14.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/material"),
-            LibraryInfo("AndroidX CardView", "1.0.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/cardview"),
-            LibraryInfo("AndroidX ConstraintLayout", "2.2.1", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/constraintlayout"),
-            LibraryInfo("AndroidX RecyclerView", "1.4.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/recyclerview"),
-            LibraryInfo("MPAndroidChart", "3.1.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/PhilJay/MPAndroidChart"),
-            LibraryInfo("AndroidX Fragment KTX", "1.8.9", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/fragment"),
-            LibraryInfo("AndroidX SwipeRefreshLayout", "1.2.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout"),
-            LibraryInfo("AndroidX Navigation Fragment KTX", "2.9.8", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/navigation"),
-            LibraryInfo("AndroidX Navigation UI KTX", "2.9.8", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/navigation"),
-            LibraryInfo("AndroidX Lifecycle Runtime KTX", "2.11.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/lifecycle"),
-            LibraryInfo("AndroidX Lifecycle ViewModel KTX", "2.11.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/lifecycle"),
-            LibraryInfo("Coil", "2.7.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/coil-kt/coil"),
-            LibraryInfo("Dagger Hilt Android", "2.60.1", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://dagger.dev/hilt/"),
-            LibraryInfo("AndroidX Hilt Work", "1.4.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/hilt"),
-            LibraryInfo("AndroidX Room Runtime", "2.8.4", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/room"),
-            LibraryInfo("AndroidX Room KTX", "2.8.4", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/room"),
-            LibraryInfo("Retrofit", "3.0.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/square/retrofit"),
-            LibraryInfo("Retrofit Gson Converter", "3.0.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/square/retrofit/tree/master/retrofit-converters/gson"),
-            LibraryInfo("OkHttp Logging Interceptor", "5.4.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/square/okhttp"),
-            LibraryInfo("AndroidX Paging Runtime KTX", "3.5.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/paging"),
-            LibraryInfo("AndroidX Security Crypto", "1.1.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/security"),
-            LibraryInfo("SQLCipher Android", "4.17.0", "BSD 3-Clause License", "https://opensource.org/licenses/BSD-3-Clause", "https://www.zetetic.net/sqlcipher/"),
-            LibraryInfo("AndroidX SQLite", "2.7.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/sqlite"),
-            LibraryInfo("AndroidX Work Runtime KTX", "2.11.2", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/work"),
-            LibraryInfo("FastExcel", "0.20.2", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/dhatim/fastexcel"),
-            LibraryInfo("FastExcel Reader", "0.20.2", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/dhatim/fastexcel"),
-            LibraryInfo("Aalto XML", "1.4.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/FasterXML/aalto-xml"),
-            LibraryInfo("XZ", "1.12", "Public Domain", "https://tukaani.org/xz/legal.html", "https://tukaani.org/xz/"),
-            LibraryInfo("UCrop", "2.2.11", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://github.com/Yalantis/uCrop"),
-            LibraryInfo("JUnit", "4.13.2", "Eclipse Public License 1.0", "https://www.eclipse.org/legal/epl-v10.html", "https://junit.org/junit4/"),
-            LibraryInfo("AndroidX Test JUnit", "1.3.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/test"),
-            LibraryInfo("AndroidX Test Espresso", "3.7.0", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://developer.android.com/jetpack/androidx/releases/test"),
-            LibraryInfo("MockK", "1.14.11", "Apache License 2.0", "https://www.apache.org/licenses/LICENSE-2.0", "https://mockk.io/")
-        )
-    }
 }
-
-private data class LibraryInfo(
-    val name: String,
-    val version: String,
-    val license: String,
-    val licenseUrl: String,
-    val projectUrl: String
-)
