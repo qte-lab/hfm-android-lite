@@ -27,15 +27,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/aiExpenseFragment"
-        android:name="com.chronie.homemoneylite.ui.expense.AIExpenseFragment"
-        android:label="ai_expense"
-        app:enterAnim="@anim/slide_in_right"
-        app:exitAnim="@anim/slide_out_left"
-        app:popEnterAnim="@anim/slide_in_left"
-        app:popExitAnim="@anim/slide_out_right" />
-
-    <fragment
         android:id="@+id/weekdayDetailFragment"
         android:name="com.chronie.homemoneylite.ui.charts.WeekdayDetailFragment"
         android:label="weekday_detail"
