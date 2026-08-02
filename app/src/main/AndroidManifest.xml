@@ -50,23 +50,6 @@
                 android:name="androidx.work.WorkManagerInitializer"
                 tools:node="remove" />
         </provider>
-
-        <!-- uCrop Activity -->
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/UCropTheme"
-            android:windowSoftInputMode="adjustResize"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation" />
-        <activity
-            android:name="com.yalantis.ucrop.UCropImageActivity"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/UCropTheme"
-            android:windowSoftInputMode="adjustResize"
-            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation"
-            tools:ignore="MissingClass" />
-    </application>
-
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET"

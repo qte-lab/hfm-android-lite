@@ -130,39 +130,8 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    // region 数据观察
+        // region 数据观察
     private fun setupObservers() {
-        // AI 记录设备 ID
-        collectWithLifecycle(viewModel.deviceId) { id ->
-            if (id.isNotEmpty()) {
-                binding.tvDeviceId.visibility = View.VISIBLE
-                binding.tvDeviceId.text = id
-            } else {
-                binding.tvDeviceId.visibility = View.GONE
-            }
-        }
-
-        // 账户状态（正常 / 已封禁）
-        collectWithLifecycle(viewModel.isBanned) { banned ->
-            if (banned) {
-                binding.tvAccountStatus.visibility = View.VISIBLE
-                binding.tvAccountStatus.text = getString(R.string.settings_ai_wallet_banned)
-                binding.tvAccountStatus.setTextColor(themeColor(R.color.app_error))
-                binding.tvWalletStatus.visibility = View.VISIBLE
-                binding.tvWalletStatus.text = getString(R.string.settings_ai_wallet_banned)
-            } else {
-                binding.tvAccountStatus.visibility = View.VISIBLE
-                binding.tvAccountStatus.text = getString(R.string.settings_ai_wallet_normal)
-                binding.tvAccountStatus.setTextColor(themeColor(R.color.brand_primary))
-                binding.tvWalletStatus.visibility = View.GONE
-            }
-        }
-
-        // 钱包余额
-        collectWithLifecycle(viewModel.walletBalance) { balance ->
-            val symbol = getString(R.string.currency_symbol)
-            binding.tvWalletBalance.text = getString(R.string.currency_format, symbol, balance)
-        }
 
         collectWithLifecycle(viewModel.syncStatus) { status ->
             val (textRes, colorRes) = when (status) {

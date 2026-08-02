@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 设置页专属字符串（不修改共享的 strings.xml） -->
 <resources>
-    <string name="settings_licenses_count">共 %d 个开源库</string>
     <string name="settings_export_all">导出全部数据</string>
     <string name="settings_export_range">导出日期范围</string>
 </resources>

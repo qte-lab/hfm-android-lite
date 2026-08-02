@@ -26,20 +26,7 @@ class SettingsViewModel @Inject constructor(
     private val exportExpensesUseCase: ExportExpensesUseCase,
     private val importExpensesUseCase: ImportExpensesUseCase,
     @param:dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
-    private val walletRepository: com.chronie.homemoneylite.data.repository.WalletRepository
 ) : ViewModel() {
-
-    /** AI 记录设备 ID（用于钱包账户与扣费） */
-    private val _deviceId = MutableStateFlow("")
-    val deviceId: StateFlow<String> = _deviceId.asStateFlow()
-
-    /** 钱包余额 */
-    private val _walletBalance = MutableStateFlow(0.0)
-    val walletBalance: StateFlow<Double> = _walletBalance.asStateFlow()
-
-    /** 是否被封禁 */
-    private val _isBanned = MutableStateFlow(false)
-    val isBanned: StateFlow<Boolean> = _isBanned.asStateFlow()
 
     val syncStatus: StateFlow<SyncStatus> = syncManager.observeSyncStatus()
         .stateIn(
@@ -66,7 +53,6 @@ class SettingsViewModel @Inject constructor(
 
     init {
         loadSyncInfo()
-        loadWalletInfo()
     }
 
     fun clearSyncMessage() {
@@ -85,24 +71,6 @@ class SettingsViewModel @Inject constructor(
                 loadSyncInfo()
             } catch (e: Exception) {
                 _syncMessage.value = context.getString(R.string.sync_status_failed) + ": " + e.message
-            }
-        }
-    }
-
-    private fun loadWalletInfo() {
-        viewModelScope.launch {
-            try {
-                _deviceId.value = walletRepository.getDeviceId()
-            } catch (e: Exception) {
-                android.util.Log.w("SettingsViewModel", "Failed to load device id", e)
-            }
-            try {
-                val wallet = walletRepository.getWalletInfo()
-                _walletBalance.value = wallet.balance
-                _isBanned.value = wallet.isBanned
-            } catch (e: Exception) {
-                // 钱包服务未启动或网络不通时忽略，界面显示默认值
-                android.util.Log.w("SettingsViewModel", "Failed to load wallet info", e)
             }
         }
     }

@@ -3,9 +3,6 @@ package com.chronie.homemoneylite
 import android.app.Application
 import android.graphics.Bitmap
 import android.util.Log
-import coil.Coil
-import coil.ImageLoader
-import coil.memory.MemoryCache
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.chronie.homemoneylite.core.error.ErrorReporter
@@ -23,22 +20,6 @@ class HomeMoneyApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-
-        // 低端机图片加载优化（Coil 2.x API）：
-        // - memoryCache maxSizePercent(0.10)：收紧内存缓存占比，低内存设备降低 OOM 风险
-        // - bitmapConfig(RGB_565)：图片内存占用减半（缩略图无透明通道，肉眼几乎无差异）
-        // - crossfade(false)：关闭淡入动画，减少每帧绘制开销
-        Coil.setImageLoader(
-            ImageLoader.Builder(this)
-                .memoryCache {
-                    MemoryCache.Builder(this)
-                        .maxSizePercent(0.10)
-                        .build()
-                }
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .crossfade(false)
-                .build()
-        )
 
         // 初始化错误收集系统
         try {

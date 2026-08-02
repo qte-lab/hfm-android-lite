@@ -89,7 +89,6 @@ android {
         viewBinding true
     }
 
-
 }
 
 dependencies {
@@ -120,8 +119,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.9.8'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.11.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.11.0'
-    // Coil 基础库（ImageView.load 扩展）
-    implementation 'io.coil-kt:coil:2.7.0'
 
     // Hilt（版本须与根 build.gradle 的 hilt 插件版本一致）
     implementation 'com.google.dagger:hilt-android:2.60.1'
@@ -157,12 +154,6 @@ dependencies {
     implementation 'com.fasterxml:aalto-xml:1.4.0'
     // XZ compression library for commons-compress
     implementation 'org.tukaani:xz:1.12'
-    
-    // uCrop for image cropping
-    implementation 'com.github.yalantis:ucrop:2.2.11'
-
-    // 注：OCR 已迁移到服务端（wallet-server.js + tesseract.js），
-    // 端上不再依赖 ML Kit 与 exifinterface。
     
     // Testing
     testImplementation "junit:junit:$junitVersion"
