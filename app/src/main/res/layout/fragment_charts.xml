@@ -37,7 +37,7 @@
                         android:padding="16dp">
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="260dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
@@ -45,7 +45,7 @@
                             <TextView
                                 android:id="@+id/timeRangeTitle"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="23dp"
                                 android:textColor="@color/text_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -134,9 +134,10 @@
 
                                 <TextView
                                     android:id="@+id/statTotal"
-                                    android:layout_width="159dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
+                                    android:paddingRight="16sp"
                                     android:textAlignment="textEnd"
                                     android:textColor="@color/text_primary"
                                     android:textSize="16sp"
@@ -193,9 +194,10 @@
 
                                 <TextView
                                     android:id="@+id/statAverage"
-                                    android:layout_width="159dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
+                                    android:paddingRight="16sp"
                                     android:textAlignment="textEnd"
                                     android:textColor="@color/text_primary"
                                     android:textSize="16sp"

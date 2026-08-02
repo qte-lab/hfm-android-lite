@@ -99,18 +99,4 @@
         <item name="android:windowBackground">#FF1E1E1E</item>
         <item name="android:colorBackground">#FF1E1E1E</item>
     </style>
-
-    <!-- UCrop Theme - 确保不占用状态栏空间（uCrop 自带 Activity，沿用 AppCompat 主题） -->
-    <style name="UCropTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowFullscreen">false</item>
-        <item name="android:fitsSystemWindows">true</item>
-    </style>
 </resources>
