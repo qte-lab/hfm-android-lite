@@ -6,50 +6,6 @@
     android:orientation="vertical"
     android:background="@color/app_background">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/app_surface"
-        app:elevation="3dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/titleText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingStart="8dp"
-                android:text="@string/charts_title"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary" />
-
-            <ImageButton
-                android:id="@+id/chartTypeButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_chart_type"
-                android:tint="@color/text_primary"
-                android:contentDescription="@string/select_chart" />
-
-            <ImageButton
-                android:id="@+id/dateRangeButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_chart_date"
-                android:tint="@color/text_primary"
-                android:contentDescription="@string/select_time_range" />
-        </LinearLayout>
-    </androidx.appcompat.widget.Toolbar>
-
     <FrameLayout
         android:id="@+id/rootContainer"
         android:layout_width="match_parent"
@@ -77,24 +33,59 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
                         android:padding="16dp">
 
-                        <TextView
-                            android:id="@+id/timeRangeTitle"
-                            android:layout_width="match_parent"
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:textSize="16sp"
-                            android:textColor="@color/text_primary" />
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/timeRangeSubtitle"
-                            android:layout_width="match_parent"
+                            <TextView
+                                android:id="@+id/timeRangeTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_primary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/timeRangeSubtitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:textSize="14sp"
-                            android:textColor="@color/text_secondary" />
+                            android:layout_marginStart="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <ImageButton
+                                android:id="@+id/chartTypeButton"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/select_chart"
+                                android:src="@drawable/ic_chart_type"
+                                android:tint="@color/text_primary" />
+
+                            <ImageButton
+                                android:id="@+id/dateRangeButton"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="@string/select_time_range"
+                                android:src="@drawable/ic_chart_date"
+                                android:tint="@color/text_primary"
+                                android:visibility="visible" />
+                        </LinearLayout>
+
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -135,18 +126,21 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:paddingRight="16sp"
                                     android:text="@string/total_amount"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/text_secondary" />
+                                    android:textAlignment="textEnd"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
 
                                 <TextView
                                     android:id="@+id/statTotal"
-                                    android:layout_width="match_parent"
+                                    android:layout_width="159dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
-                                    android:textStyle="bold"
+                                    android:textAlignment="textEnd"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="16sp"
-                                    android:textColor="@color/text_primary" />
+                                    android:textStyle="bold" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -158,18 +152,20 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:paddingLeft="16sp"
                                     android:text="@string/count"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/text_secondary" />
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
 
                                 <TextView
                                     android:id="@+id/statCount"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
-                                    android:textStyle="bold"
+                                    android:paddingLeft="16sp"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="16sp"
-                                    android:textColor="@color/text_primary" />
+                                    android:textStyle="bold" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -189,18 +185,21 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:paddingRight="16sp"
                                     android:text="@string/average_amount"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/text_secondary" />
+                                    android:textAlignment="textEnd"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
 
                                 <TextView
                                     android:id="@+id/statAverage"
-                                    android:layout_width="match_parent"
+                                    android:layout_width="159dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
-                                    android:textStyle="bold"
+                                    android:textAlignment="textEnd"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="16sp"
-                                    android:textColor="@color/text_primary" />
+                                    android:textStyle="bold" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -212,18 +211,20 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:paddingLeft="16sp"
                                     android:text="@string/median_amount"
-                                    android:textSize="12sp"
-                                    android:textColor="@color/text_secondary" />
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
 
                                 <TextView
                                     android:id="@+id/statMedian"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
-                                    android:textStyle="bold"
+                                    android:paddingLeft="16sp"
+                                    android:textColor="@color/text_primary"
                                     android:textSize="16sp"
-                                    android:textColor="@color/text_primary" />
+                                    android:textStyle="bold" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
@@ -234,6 +235,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" />
+
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

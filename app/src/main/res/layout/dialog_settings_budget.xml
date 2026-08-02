@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/budget_enable_feature"
+            android:textAlignment="center"
             android:textAppearance="?attr/textAppearanceBodyLarge"
             android:textColor="@color/text_primary" />
 
@@ -39,7 +40,8 @@
             android:layout_weight="1"
             android:text="@string/budget_monthly_limit"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="@color/text_primary" />
+            android:textColor="@color/text_primary"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/btnBudgetMinus"
@@ -65,7 +67,8 @@
             android:gravity="center"
             android:hint="0.00"
             android:inputType="numberDecimal"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/btnBudgetPlus"
@@ -96,7 +99,8 @@
             android:layout_weight="1"
             android:text="@string/budget_warning_threshold"
             android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="@color/text_primary" />
+            android:textColor="@color/text_primary"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/btnThresholdMinus"
@@ -122,7 +126,8 @@
             android:gravity="center"
             android:hint="80"
             android:inputType="numberDecimal"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/btnThresholdPlus"

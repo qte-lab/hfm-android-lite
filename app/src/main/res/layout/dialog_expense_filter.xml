@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/expense_list_filter_title"
+            android:textAlignment="center"
             android:textAppearance="?attr/textAppearanceTitleLarge" />
 
         <ImageButton
@@ -60,7 +61,7 @@
                 android:id="@+id/btnSelectType"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="39dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/expense_list_filter_all_types" />
 
@@ -79,19 +80,19 @@
 
                 <Button
                     android:id="@+id/btnStartDate"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Widget.Holo.OutlinedButton"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_weight="1"
                     android:text="@string/expense_list_filter_start_date" />
 
                 <Button
                     android:id="@+id/btnEndDate"
-                    style="?attr/materialButtonOutlinedStyle"
+                    style="@style/Widget.Holo.OutlinedButton"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_height="30dp"
                     android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:text="@string/expense_list_filter_end_date" />
             </LinearLayout>
 
@@ -115,17 +116,19 @@
                     android:layout_weight="1"
                     android:hint="@string/expense_list_filter_min_amount"
                     android:inputType="numberDecimal"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textSize="14sp" />
 
                 <EditText
                     android:id="@+id/editMaxAmount"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="8dp"
+                    android:layout_weight="1"
                     android:hint="@string/expense_list_filter_max_amount"
                     android:inputType="numberDecimal"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -146,16 +149,17 @@
             android:id="@+id/btnClear"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="38dp"
             android:layout_weight="1"
-            android:text="@string/expense_list_clear_filters" />
+            android:text="@string/expense_list_clear_filters"
+            android:textAlignment="center" />
 
         <Button
             android:id="@+id/btnApply"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="41dp"
             android:layout_marginStart="8dp"
+            android:layout_weight="1"
             android:text="@string/expense_list_apply_filters" />
     </LinearLayout>
 </LinearLayout>

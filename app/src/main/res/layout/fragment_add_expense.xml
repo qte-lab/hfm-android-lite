@@ -22,14 +22,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="48dp">
 
             <!-- 分类选择 -->
+
             <TextView
                 style="?android:attr/textAppearanceMedium"
-                android:layout_width="match_parent"
+                android:layout_width="144dp"
                 android:layout_height="wrap_content"
+                android:lineSpacingExtra="8sp"
                 android:text="@string/add_expense_type_label"
+                android:textAlignment="textStart"
                 android:textColor="@color/text_primary" />
 
             <Space
@@ -40,10 +43,11 @@
                 android:id="@+id/typeInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_add_search"
+                android:hint="@string/add_expense_type_hint"
                 android:inputType="text"
                 android:textColor="@color/text_primary"
-                android:hint="@string/add_expense_type_hint"
-                android:drawableStart="@drawable/ic_add_search" />
+                android:textSize="16sp" />
 
             <Space
                 android:layout_width="match_parent"
@@ -65,9 +69,11 @@
                 android:id="@+id/amountInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:hint="@string/add_expense_amount_hint"
                 android:inputType="numberDecimal"
                 android:textColor="@color/text_primary"
-                android:hint="@string/add_expense_amount_hint" />
+                android:textSize="16sp" />
 
             <Space
                 android:layout_width="match_parent"
@@ -98,7 +104,7 @@
                 <TextView
                     android:id="@+id/dateText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:padding="16dp"
                     android:textColor="@color/text_primary"
                     android:textSize="16sp" />
@@ -135,10 +141,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="top"
+                android:hint="@string/add_expense_remark_hint"
                 android:inputType="textMultiLine"
                 android:minLines="3"
                 android:textColor="@color/text_primary"
-                android:hint="@string/add_expense_remark_hint" />
+                android:textSize="16sp" />
 
             <Space
                 android:layout_width="match_parent"

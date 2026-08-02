@@ -14,16 +14,18 @@
         android:paddingVertical="4dp">
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/budget_enable_feature"
-            android:textAppearance="?attr/textAppearanceBodyLarge" />
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:visibility="visible" />
 
         <Switch
             android:id="@+id/switchEnabled"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="48dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,13 +45,14 @@
 
         <EditText
             android:id="@+id/editMonthlyLimit"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="83dp"
+            android:layout_height="match_parent"
             android:layout_marginHorizontal="8dp"
+            android:layout_weight="1"
+            android:enabled="false"
             android:hint="@string/budget_monthly_limit"
             android:inputType="numberDecimal"
-            android:enabled="false" />
+            android:textSize="16sp" />
 
         <ImageButton
             android:id="@+id/btnLimitPlus"
@@ -79,11 +82,12 @@
             android:id="@+id/editWarningThreshold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginHorizontal="8dp"
+            android:layout_weight="1"
+            android:enabled="false"
             android:hint="@string/budget_warning_threshold"
             android:inputType="numberDecimal"
-            android:enabled="false" />
+            android:textSize="16sp" />
 
         <ImageButton
             android:id="@+id/btnThresholdPlus"
