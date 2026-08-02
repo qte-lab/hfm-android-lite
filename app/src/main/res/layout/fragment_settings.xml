@@ -118,7 +118,8 @@
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
-
+            </LinearLayout>
+            
             <!-- 数据同步 -->
             <LinearLayout
                 android:id="@+id/dataSyncContent"
