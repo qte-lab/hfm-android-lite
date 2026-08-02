@@ -228,11 +228,9 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
     private fun showAddMenu() {
         val popup = PopupMenu(requireContext(), binding.btnAdd)
         popup.menu.add(0, 0, 0, getString(R.string.add_expense_title))
-        popup.menu.add(0, 1, 1, getString(R.string.ai_expense_title))
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 0 -> navigateAdd()
-                1 -> navigateAI()
             }
             true
         }
