@@ -52,7 +52,7 @@
 
                             <TextView
                                 android:id="@+id/timeRangeSubtitle"
-                                android:layout_width="match_parent"
+                                android:layout_width="280dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:textColor="@color/text_secondary"

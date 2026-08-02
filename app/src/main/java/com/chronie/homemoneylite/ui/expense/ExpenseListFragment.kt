@@ -100,7 +100,7 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
 
     private fun setupToolbar() {
         binding.btnSort.setOnClickListener { showSortMenu() }
-        binding.btnAdd.setOnClickListener { showAddMenu() }
+        binding.btnAdd.setOnClickListener { navigateAdd() }
         binding.btnMore.setOnClickListener { showMoreMenu() }
     }
 
@@ -220,18 +220,6 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
         popup.setOnMenuItemClickListener { item ->
             val option = SortOption.values()[item.itemId]
             viewModel.updateFilters(latestFilters.copy(sortBy = option))
-            true
-        }
-        popup.show()
-    }
-
-    private fun showAddMenu() {
-        val popup = PopupMenu(requireContext(), binding.btnAdd)
-        popup.menu.add(0, 0, 0, getString(R.string.add_expense_title))
-        popup.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                0 -> navigateAdd()
-            }
             true
         }
         popup.show()
