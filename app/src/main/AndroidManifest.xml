@@ -50,6 +50,7 @@
                 android:name="androidx.work.WorkManagerInitializer"
                 tools:node="remove" />
         </provider>
+        </application>
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET"
