@@ -136,27 +136,6 @@
     <string name="add_expense_validation_date_required">请选择日期</string>
     <string name="edit_expense_title">编辑支出</string>
     
-    <!-- AI 智能识别 -->
-    <string name="ai_expense_title">智能记账</string>
-    <string name="ai_expense_select_images">选择图片</string>
-    <string name="ai_expense_add_images">添加图片</string>
-    <string name="ai_expense_or_input_text">或输入文字</string>
-    <string name="ai_expense_text_hint">例如：今天买了西红柿12元，黄瓜8元，鸡蛋15元</string>
-    <string name="ai_expense_start_recognition">开始识别</string>
-    <string name="ai_expense_recognizing">识别中…</string>
-    <string name="ai_expense_save_all">全部保存</string>
-    <string name="ai_expense_saving">保存中…</string>
-    <string name="ai_expense_edit_record">编辑</string>
-    <string name="ai_expense_delete_record">删除</string>
-    <string name="ai_expense_edited">已编辑</string>
-    <string name="ai_expense_no_input">请输入文字或选择图片</string>
-    <string name="ai_expense_no_records">未识别到消费记录</string>
-    <string name="ai_expense_recognition_failed">识别失败：%s</string>
-    <string name="ai_expense_save_failed">保存失败：%s</string>
-    <string name="ai_expense_no_valid_records">无有效记录</string>
-    <string name="ai_expense_select_type">选择分类</string>
-    <string name="ai_expense_amount">金额</string>
-    <string name="ai_expense_remark">备注</string>
     <string name="search_category">搜索分类…</string>
     <string name="search_results_count">%d 个结果</string>
     <string name="no_results_found">未找到匹配项</string>
