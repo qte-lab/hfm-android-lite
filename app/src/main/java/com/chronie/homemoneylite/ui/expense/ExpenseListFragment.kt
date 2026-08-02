@@ -315,10 +315,6 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
         findNavController().navigate(R.id.addExpenseFragment, null, slideNavOptions())
     }
 
-    private fun navigateAI() {
-        findNavController().navigate(R.id.aiExpenseFragment, null, slideNavOptions())
-    }
-
     private fun getSortOptionText(option: SortOption): String = when (option) {
         SortOption.DATE_DESC -> getString(R.string.expense_list_sort_date_desc)
         SortOption.DATE_ASC -> getString(R.string.expense_list_sort_date_asc)
