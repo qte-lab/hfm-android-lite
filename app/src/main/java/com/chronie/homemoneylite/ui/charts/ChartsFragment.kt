@@ -1,5 +1,6 @@
 package com.chronie.homemoneylite.ui.charts
 
+import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
@@ -7,7 +8,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -42,8 +42,8 @@ import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.NumberFormat
 import java.time.LocalDate
@@ -76,7 +76,7 @@ class ChartsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        selectedChart = ChartType.values()[
+        selectedChart = ChartType.entries.toTypedArray()[
             savedInstanceState?.getInt(KEY_SELECTED_CHART, ChartType.TREND.ordinal)
                 ?: ChartType.TREND.ordinal
         ]
@@ -134,14 +134,15 @@ class ChartsFragment : Fragment() {
                 lastSuccess = state
                 currentStartStr = state.startDate.format(DateTimeFormatter.ISO_LOCAL_DATE)
                 currentEndStr = state.endDate.format(DateTimeFormatter.ISO_LOCAL_DATE)
-                renderTimeRangeCard(state)
+                renderTimeRangeCard()
                 renderSummary(state)
                 renderChartSection(state)
             }
         }
     }
 
-    private fun renderTimeRangeCard(state: ChartsUiState.Success) {
+    @SuppressLint("SetTextI18n")
+    private fun renderTimeRangeCard() {
         val localeTag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             resources.configuration.locales[0].toLanguageTag()
         } else {
@@ -149,7 +150,7 @@ class ChartsFragment : Fragment() {
         }
         binding.timeRangeTitle.text = getTimeRangeText(requireContext(), viewModel.selectedTimeRange.value)
         binding.timeRangeSubtitle.text =
-            "${formatDateByLocale(currentStartStr, localeTag)} - ${formatDateByLocale(currentEndStr, localeTag)}"
+            "${formatDateByLocale(currentStartStr)} - ${formatDateByLocale(currentEndStr)}"
     }
 
     private fun renderSummary(state: ChartsUiState.Success) {
@@ -249,7 +250,7 @@ class ChartsFragment : Fragment() {
 
             val entries = state.categoryData.mapIndexed { i, c -> BarEntry(i.toFloat(), c.amount.toFloat()) }
             val dataSet = BarDataSet(entries, getString(R.string.category_breakdown)).apply {
-                colors = state.categoryData.mapIndexed { i, _ ->
+                colors = List(state.categoryData.size) { i ->
                     ContextCompat.getColor(requireContext(), seriesColorRes[i % seriesColorRes.size])
                 }
                 valueTextColor = textColor
@@ -313,7 +314,7 @@ class ChartsFragment : Fragment() {
             val dataSet = RadarDataSet(entries, getString(R.string.weekday_analysis)).apply {
                 color = primary
                 fillColor = primary
-                setFillAlpha(70)
+                fillAlpha = 70
                 lineWidth = 2f
                 valueTextColor = textColor
                 valueTextSize = 10f
@@ -321,7 +322,7 @@ class ChartsFragment : Fragment() {
             chart.data = RadarData(dataSet)
             chart.description.isEnabled = false
             chart.legend.isEnabled = false
-            chart.setRotationEnabled(false)
+            chart.isRotationEnabled = false
             chart.webLineWidth = 1f
             chart.webColor = divider
             chart.webColorInner = divider
@@ -391,6 +392,7 @@ class ChartsFragment : Fragment() {
         return card to inner
     }
 
+    @SuppressLint("DefaultLocale", "SetTextI18n")
     private fun buildCategoryList(data: List<CategoryChartData>): View {
         val container = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
@@ -402,7 +404,7 @@ class ChartsFragment : Fragment() {
             val itemBinding = ItemChartCategoryBinding.inflate(layoutInflater)
             itemBinding.catName.text = ExpenseTypeLocalizer.getLocalizedTypeName(requireContext(), category.type)
             itemBinding.catPct.text = String.format("%.1f%%", category.percentage)
-            itemBinding.catProgress.setProgress(category.percentage.toInt())
+            itemBinding.catProgress.progress = category.percentage.toInt()
             itemBinding.catDetail.text = "${currencyFormat.format(category.amount)} (${category.count} ${getString(R.string.records)})"
             container.addView(itemBinding.root)
             val spacer = View(requireContext())
@@ -412,6 +414,7 @@ class ChartsFragment : Fragment() {
         return container
     }
 
+    @SuppressLint("DefaultLocale")
     private fun buildWeekdayList(data: List<WeekdayChartData>): View {
         val container = LinearLayout(requireContext()).apply {
             orientation = LinearLayout.VERTICAL
@@ -449,12 +452,12 @@ class ChartsFragment : Fragment() {
     private fun showChartTypeMenu(anchor: View) {
         val popup = PopupMenu(requireContext(), anchor)
         popup.menu.setGroupCheckable(0, true, true)
-        ChartType.values().forEachIndexed { index, type ->
+        ChartType.entries.forEachIndexed { index, type ->
             val item = popup.menu.add(0, index, index, getString(type.stringRes))
             item.isChecked = selectedChart == type
         }
         popup.setOnMenuItemClickListener { item ->
-            selectedChart = ChartType.values()[item.itemId]
+            selectedChart = ChartType.entries.toTypedArray()[item.itemId]
             if (lastSuccess != null) renderChartSection(lastSuccess!!)
             true
         }

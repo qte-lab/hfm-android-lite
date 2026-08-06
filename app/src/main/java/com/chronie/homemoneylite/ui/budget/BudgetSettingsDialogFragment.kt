@@ -1,5 +1,6 @@
 package com.chronie.homemoneylite.ui.budget
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,7 @@ class BudgetSettingsDialogFragment : DialogFragment() {
         }
     }
 
+    @SuppressLint("UseGetLayoutInflater", "UseSwitchCompatOrMaterialCode")
     override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
         val context = requireContext()
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_budget_settings, null)
@@ -97,7 +99,7 @@ class BudgetSettingsDialogFragment : DialogFragment() {
             .create()
 
         dialog.setOnShowListener {
-            dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 val limit = editLimit.text.toString().toDoubleOrNull()
                 val threshold = editThreshold.text.toString().toDoubleOrNull()
                 val enabled = switchEnabled.isChecked

@@ -1,10 +1,8 @@
 package com.chronie.homemoneylite
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import com.chronie.homemoneylite.core.common.LanguageManager
 import com.chronie.homemoneylite.service.HealthCheckService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -16,9 +14,6 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
-
-    @Inject
-    lateinit var languageManager: LanguageManager
 
     @Inject
     lateinit var syncScheduler: com.chronie.homemoneylite.data.sync.SyncScheduler
@@ -49,18 +44,6 @@ class MainActivity : FragmentActivity() {
         healthCheckService.start()
 
         setContentView(R.layout.activity_main)
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(newBase)
-        if (::languageManager.isInitialized) {
-            languageManager.checkAndApplySystemLanguage()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        languageManager.checkAndApplySystemLanguage()
     }
 
     override fun onDestroy() {

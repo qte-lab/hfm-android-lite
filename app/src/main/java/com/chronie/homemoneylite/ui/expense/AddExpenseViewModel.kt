@@ -181,7 +181,7 @@ class AddExpenseViewModel @Inject constructor(
 private fun sanitizeRemark(raw: String?): String? {
     if (raw.isNullOrBlank()) return null
     val cleaned = raw.replace(Regex("[\\u0000-\\u001F\\u007F]"), "").trim()
-    return if (cleaned.isBlank()) null else cleaned
+    return cleaned.ifBlank { null }
 }
 
 data class AddExpenseUiState(

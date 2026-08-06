@@ -95,7 +95,7 @@ fun showWheelDateRangePicker(
         .setTitle(R.string.custom_range)
         .setView(container)
         .setPositiveButton(R.string.confirm) { _, _ ->
-            var s = startPicker.getDate()
+            val s = startPicker.getDate()
             var e = endPicker.getDate()
             if (e.isBefore(s)) e = s
             onConfirm(s, e)

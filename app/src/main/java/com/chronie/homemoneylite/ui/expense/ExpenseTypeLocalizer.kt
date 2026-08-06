@@ -50,7 +50,7 @@ object ExpenseTypeLocalizer {
         return try {
             val type = ExpenseType.valueOf(typeName)
             getLocalizedName(context, type)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             typeName // 如果无法解析，返回原始名称
         }
     }

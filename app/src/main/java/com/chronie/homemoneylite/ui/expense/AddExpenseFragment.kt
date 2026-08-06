@@ -115,7 +115,7 @@ class AddExpenseFragment : Fragment() {
     }
 
     private fun setupTypeInput() {
-        val adapter = ExpenseTypeAdapter(requireContext(), ExpenseType.values().toList())
+        val adapter = ExpenseTypeAdapter(requireContext(), ExpenseType.entries)
         binding.typeInput.setAdapter(adapter)
         binding.typeInput.threshold = 1
         binding.typeInput.setOnClickListener { binding.typeInput.showDropDown() }
@@ -149,7 +149,7 @@ class AddExpenseFragment : Fragment() {
     private fun showDatePicker() {
         val initial = try {
             LocalDate.parse(binding.dateText.text.toString(), dateFormatter)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             LocalDate.now()
         }
         showWheelDatePicker(

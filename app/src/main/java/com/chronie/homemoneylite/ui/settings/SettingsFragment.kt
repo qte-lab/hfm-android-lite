@@ -1,6 +1,6 @@
 package com.chronie.homemoneylite.ui.settings
 
-import android.content.Intent
+import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -13,8 +13,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import android.app.AlertDialog
-import android.app.DatePickerDialog
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.databinding.FragmentSettingsBinding
 import com.chronie.homemoneylite.domain.model.SyncStatus
@@ -152,9 +150,9 @@ class SettingsFragment : Fragment() {
             val parts = value.split(' ')
             val datePart = parts.getOrNull(0) ?: value
             val timePart = if (parts.size > 1) parts[1] else ""
-            val formatted = formatDateByLocale(datePart, localeTag())
+            val formatted = formatDateByLocale(datePart)
             if (timePart.isNotEmpty()) "$formatted $timePart" else formatted
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             value
         }
     }

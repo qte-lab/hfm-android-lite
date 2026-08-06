@@ -47,26 +47,30 @@ class ExpenseListAdapter(
 
         private val DIFF = object : DiffUtil.ItemCallback<ListItem>() {
             override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
-                return when {
-                    oldItem is ListItem.DateHeader && newItem is ListItem.DateHeader ->
+                return when (oldItem) {
+                    is ListItem.DateHeader if newItem is ListItem.DateHeader ->
                         oldItem.date == newItem.date
-                    oldItem is ListItem.ExpenseItem && newItem is ListItem.ExpenseItem ->
+
+                    is ListItem.ExpenseItem if newItem is ListItem.ExpenseItem ->
                         oldItem.expense.id == newItem.expense.id
-                    oldItem is ListItem.LoadMore && newItem is ListItem.LoadMore -> true
+
+                    is ListItem.LoadMore if newItem is ListItem.LoadMore -> true
                     else -> false
                 }
             }
 
             override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean {
-                return when {
-                    oldItem is ListItem.DateHeader && newItem is ListItem.DateHeader ->
+                return when (oldItem) {
+                    is ListItem.DateHeader if newItem is ListItem.DateHeader ->
                         oldItem.count == newItem.count && oldItem.totalAmount == newItem.totalAmount
-                    oldItem is ListItem.ExpenseItem && newItem is ListItem.ExpenseItem -> {
+
+                    is ListItem.ExpenseItem if newItem is ListItem.ExpenseItem -> {
                         val a = oldItem.expense
                         val b = newItem.expense
                         a.id == b.id && a.amount == b.amount && a.date == b.date &&
-                            a.type == b.type && a.remark == b.remark
+                                a.type == b.type && a.remark == b.remark
                     }
+
                     else -> true
                 }
             }
@@ -142,7 +146,7 @@ class ExpenseListAdapter(
             } else {
                 binding.expenseRemark.visibility = android.view.View.GONE
             }
-            binding.expenseDate.text = formatDateByLocale(expense.date, locale)
+            binding.expenseDate.text = formatDateByLocale(expense.date)
             binding.expenseAmount.text = "-" + currency(expense.amount)
 
             binding.root.setOnClickListener { onItemClick?.invoke(expense) }

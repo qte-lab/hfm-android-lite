@@ -1,21 +1,19 @@
 package com.chronie.homemoneylite.ui.expense
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
-import android.app.AlertDialog
 import android.widget.Button
 import android.widget.EditText
-import com.chronie.homemoneylite.ui.components.showWheelDatePicker
+import androidx.fragment.app.DialogFragment
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.domain.model.ExpenseFilters
 import com.chronie.homemoneylite.domain.model.ExpenseType
 import com.chronie.homemoneylite.domain.model.SortOption
-import java.time.Instant
+import com.chronie.homemoneylite.ui.components.showWheelDatePicker
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 /**
@@ -138,7 +136,7 @@ class ExpenseFilterDialogFragment : DialogFragment() {
 
     private fun showTypeSelector() {
         val context = requireContext()
-        val allTypes = ExpenseType.values()
+        val allTypes = ExpenseType.entries.toTypedArray()
         val names = allTypes.map { ExpenseTypeLocalizer.getLocalizedName(context, it) }.toTypedArray()
         val checked = allTypes.map { selectedTypes.contains(it) }.toBooleanArray()
 

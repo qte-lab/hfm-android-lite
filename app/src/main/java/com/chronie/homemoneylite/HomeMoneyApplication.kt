@@ -1,7 +1,6 @@
 package com.chronie.homemoneylite
 
 import android.app.Application
-import android.graphics.Bitmap
 import android.util.Log
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration

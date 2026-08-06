@@ -29,10 +29,6 @@ class WeekdayDetailViewModel @Inject constructor(
     init {
         loadWeekdayDetail()
     }
-    
-    fun refresh() {
-        loadWeekdayDetail()
-    }
 
     private fun loadWeekdayDetail() {
         viewModelScope.launch {
@@ -58,7 +54,7 @@ class WeekdayDetailViewModel @Inject constructor(
                             val expenseDate = LocalDate.parse(expense.date)
                             val expenseDayOfWeek = expenseDate.dayOfWeek.value % 7
                             expenseDayOfWeek == dayOfWeek
-                        } catch (e: Exception) {
+                        } catch (_: Exception) {
                             false
                         }
                     }

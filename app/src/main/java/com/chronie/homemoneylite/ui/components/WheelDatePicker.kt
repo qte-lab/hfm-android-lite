@@ -3,10 +3,8 @@ package com.chronie.homemoneylite.ui.components
 import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.NumberPicker
-import com.chronie.homemoneylite.R
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -39,17 +37,17 @@ class WheelDatePicker @JvmOverloads constructor(
         val pad = (8 * resources.displayMetrics.density).toInt()
         setPadding(pad, pad, pad, pad)
 
-        val lp = LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+        val lp = LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f)
         yearPicker = NumberPicker(context).apply {
-            descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+            descendantFocusability = FOCUS_BLOCK_DESCENDANTS
             layoutParams = lp
         }
         monthPicker = NumberPicker(context).apply {
-            descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+            descendantFocusability = FOCUS_BLOCK_DESCENDANTS
             layoutParams = lp
         }
         dayPicker = NumberPicker(context).apply {
-            descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+            descendantFocusability = FOCUS_BLOCK_DESCENDANTS
             layoutParams = lp
         }
 

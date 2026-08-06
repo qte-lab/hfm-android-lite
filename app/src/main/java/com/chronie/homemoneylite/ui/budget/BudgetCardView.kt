@@ -1,17 +1,16 @@
 package com.chronie.homemoneylite.ui.budget
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.os.LocaleListCompat
-import android.widget.Button
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.domain.model.BudgetStatus
 import com.chronie.homemoneylite.domain.model.BudgetUsage
@@ -88,27 +87,28 @@ class BudgetCardView @JvmOverloads constructor(
         btnExpand.setOnClickListener { setExpanded(!isExpanded) }
     }
 
+    @SuppressLint("SetTextI18n")
     fun bind(state: BudgetUiState) {
         val budget = state.budget
         if (budget?.isEnabled != true) {
-            enablePrompt.visibility = View.VISIBLE
-            usageCard.visibility = View.GONE
+            enablePrompt.visibility = VISIBLE
+            usageCard.visibility = GONE
             return
         }
-        enablePrompt.visibility = View.GONE
-        usageCard.visibility = View.VISIBLE
+        enablePrompt.visibility = GONE
+        usageCard.visibility = VISIBLE
 
         val usage = state.budgetUsage
         if (usage == null) {
-            loading.visibility = View.VISIBLE
-            detail.visibility = View.GONE
-            collapsedGroup.visibility = View.GONE
-            expandedGroup.visibility = View.GONE
+            loading.visibility = VISIBLE
+            detail.visibility = GONE
+            collapsedGroup.visibility = GONE
+            expandedGroup.visibility = GONE
             return
         }
-        loading.visibility = View.GONE
-        collapsedGroup.visibility = if (isExpanded) View.GONE else View.VISIBLE
-        expandedGroup.visibility = if (isExpanded) View.VISIBLE else View.GONE
+        loading.visibility = GONE
+        collapsedGroup.visibility = if (isExpanded) GONE else VISIBLE
+        expandedGroup.visibility = if (isExpanded) VISIBLE else GONE
 
         val status = when {
             usage.isOverLimit -> BudgetStatus.OVER_LIMIT
@@ -123,7 +123,7 @@ class BudgetCardView @JvmOverloads constructor(
         }
 
         val symbol = context.getString(R.string.currency_symbol)
-        val monthLabel = formatMonthLabelByLocale(usage.currentMonth + "-01", locale)
+        val monthLabel = formatMonthLabelByLocale(usage.currentMonth + "-01")
         val pct = usage.spendingPercentage
 
         monthCollapsed.text = monthLabel
@@ -175,7 +175,7 @@ class BudgetCardView @JvmOverloads constructor(
             BudgetStatus.NORMAL -> R.color.budget_alert_normal_bg
         }
         alert.setBackgroundColor(ContextCompat.getColor(context, alertBg))
-        alert.visibility = View.VISIBLE
+        alert.visibility = VISIBLE
 
         val symbol = context.getString(R.string.currency_symbol)
         when (status) {
@@ -211,18 +211,18 @@ class BudgetCardView @JvmOverloads constructor(
         if (isExpanded == expanded) return
         isExpanded = expanded
         if (expanded) {
-            detail.visibility = View.VISIBLE
+            detail.visibility = VISIBLE
             detail.alpha = 0f
             detail.animate().alpha(1f).setDuration(150).start()
-            collapsedGroup.visibility = View.GONE
-            expandedGroup.visibility = View.VISIBLE
+            collapsedGroup.visibility = GONE
+            expandedGroup.visibility = VISIBLE
             btnExpand.setImageResource(R.drawable.ic_exp_chevron_up)
             btnExpand.contentDescription = context.getString(R.string.budget_collapse)
         } else {
             detail.animate().alpha(0f).setDuration(150)
-                .withEndAction { detail.visibility = View.GONE }.start()
-            collapsedGroup.visibility = View.VISIBLE
-            expandedGroup.visibility = View.GONE
+                .withEndAction { detail.visibility = GONE }.start()
+            collapsedGroup.visibility = VISIBLE
+            expandedGroup.visibility = GONE
             btnExpand.setImageResource(R.drawable.ic_exp_chevron_down)
             btnExpand.contentDescription = context.getString(R.string.budget_expand)
         }

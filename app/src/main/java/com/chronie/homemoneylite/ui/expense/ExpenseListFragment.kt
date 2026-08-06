@@ -1,13 +1,14 @@
 package com.chronie.homemoneylite.ui.expense
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.net.toUri
 import androidx.core.os.LocaleListCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -17,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.databinding.FragmentExpenseListBinding
-import com.chronie.homemoneylite.domain.model.Expense
 import com.chronie.homemoneylite.domain.model.ExpenseFilters
 import com.chronie.homemoneylite.domain.model.SortOption
 import com.chronie.homemoneylite.ui.budget.BudgetSettingsDialogFragment
@@ -26,7 +26,6 @@ import com.chronie.homemoneylite.ui.budget.BudgetViewModel
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.common.slideNavOptions
 import dagger.hilt.android.AndroidEntryPoint
-import androidx.appcompat.widget.PopupMenu
 
 /**
  * 支出列表页（传统 View 版本，对应 Compose 的 ExpenseListScreen）。
@@ -188,7 +187,7 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
             }
             state.error != null && state.expenses.isEmpty() -> {
                 binding.statusContainer.visibility = View.VISIBLE
-                binding.statusText.text = state.error ?: getString(R.string.common_error)
+                binding.statusText.text = state.error
                 binding.statusDesc.visibility = View.GONE
                 binding.statusRetry.visibility = View.VISIBLE
             }
@@ -215,13 +214,13 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
 
     private fun showSortMenu() {
         val popup = PopupMenu(requireContext(), binding.btnSort)
-        SortOption.values().forEachIndexed { index, option ->
+        SortOption.entries.forEachIndexed { index, option ->
             val item = popup.menu.add(0, index, index, getSortOptionText(option))
             item.isCheckable = true
             item.isChecked = latestFilters.sortBy == option
         }
         popup.setOnMenuItemClickListener { item ->
-            val option = SortOption.values()[item.itemId]
+            val option = SortOption.entries[item.itemId]
             viewModel.updateFilters(latestFilters.copy(sortBy = option))
             true
         }
@@ -260,9 +259,9 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
     private fun openWebPortal() {
         val url = getString(R.string.web_portal_url)
         try {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
             startActivity(intent)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Toast.makeText(requireContext(), R.string.banner_web_open_failed, Toast.LENGTH_SHORT).show()
         }
     }

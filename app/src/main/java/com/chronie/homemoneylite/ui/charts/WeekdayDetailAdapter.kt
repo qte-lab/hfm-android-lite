@@ -33,7 +33,7 @@ class WeekdayDetailAdapter(
         holder.binding.itemName.text =
             ExpenseTypeLocalizer.getLocalizedTypeName(holder.itemView.context, item.type)
         holder.binding.itemPct.text = String.format("%.1f%%", item.percentage)
-        holder.binding.itemProgress.setProgress(item.percentage.toInt())
+        holder.binding.itemProgress.progress = item.percentage.toInt()
         holder.binding.itemCount.text =
             "${item.count} ${holder.itemView.context.getString(R.string.records)}"
         holder.binding.itemAmount.text = currencyFormat.format(item.amount)

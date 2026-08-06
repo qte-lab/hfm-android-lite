@@ -41,7 +41,7 @@ object DeviceInfoUtils {
                     packageInfo.versionCode.toString()
                 }
             )
-        } catch (e: PackageManager.NameNotFoundException) {
+        } catch (_: PackageManager.NameNotFoundException) {
             AppVersionInfo(
                 versionName = "Unknown",
                 versionCode = "Unknown"

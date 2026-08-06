@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chronie.homemoneylite.R
-import com.chronie.homemoneylite.core.common.LanguageManager
 import com.chronie.homemoneylite.data.sync.SyncScheduler
 import com.chronie.homemoneylite.domain.model.SyncStatus
 import com.chronie.homemoneylite.domain.sync.SyncManager
@@ -20,7 +19,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val languageManager: LanguageManager,
     private val syncManager: SyncManager,
     private val syncScheduler: SyncScheduler,
     private val exportExpensesUseCase: ExportExpensesUseCase,
