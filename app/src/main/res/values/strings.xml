@@ -14,6 +14,11 @@
     <string name="settings_category_data_sync_description">同步与导入导出</string>
     <string name="api_key_set">已设置：%s</string>
 
+    <!-- 网页端引导 banner -->
+    <string name="banner_web_text">需要更多高级功能？立刻访问网页端</string>
+    <string name="web_portal_url">http://192.168.10.9:3011</string>
+    <string name="banner_web_open_failed">无法打开网页端，请确认已安装浏览器</string>
+
     <!-- 通用 -->
     <string name="back">返回</string>
     <string name="cancel">取消</string>

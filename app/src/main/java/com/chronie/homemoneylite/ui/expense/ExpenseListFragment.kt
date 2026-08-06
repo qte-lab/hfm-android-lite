@@ -1,10 +1,13 @@
 package com.chronie.homemoneylite.ui.expense
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.LocaleListCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -22,7 +25,6 @@ import com.chronie.homemoneylite.ui.budget.BudgetUiState
 import com.chronie.homemoneylite.ui.budget.BudgetViewModel
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.common.slideNavOptions
-import android.app.AlertDialog
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.appcompat.widget.PopupMenu
 
@@ -79,6 +81,8 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
 
         binding.statusRetry.setOnClickListener { viewModel.refresh() }
 
+        binding.bannerWeb.setOnClickListener { openWebPortal() }
+
         binding.budgetCardView.onSettingsRequested = { showBudgetSettings() }
 
         observeState()
@@ -108,7 +112,6 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
         adapter = ExpenseListAdapter(requireContext())
         adapter.setHasStableIds(true)
         adapter.onItemClick = { expense -> navigateEdit(expense.id) }
-        adapter.onItemLongClick = { expense -> showActionDialog(expense) }
         adapter.onLoadMoreClick = { viewModel.loadMore() }
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerView.adapter = adapter
@@ -254,41 +257,14 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
         dialog.show(childFragmentManager, "budget_settings")
     }
 
-    private fun showActionDialog(expense: Expense) {
-        val ctx = requireContext()
-        val typeName = ExpenseTypeLocalizer.getLocalizedName(ctx, expense.type)
-        val dateStr = formatDateByLocale(expense.date, locale)
-        val amountStr = "-" + getString(
-            R.string.currency_format, getString(R.string.currency_symbol), expense.amount
-        )
-        val message = buildString {
-            if (!expense.remark.isNullOrBlank()) append(expense.remark).append("\n")
-            append(dateStr).append("\n").append(amountStr)
+    private fun openWebPortal() {
+        val url = getString(R.string.web_portal_url)
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), R.string.banner_web_open_failed, Toast.LENGTH_SHORT).show()
         }
-        AlertDialog.Builder(ctx)
-            .setTitle(typeName)
-            .setMessage(message)
-            .setPositiveButton(R.string.edit) { _, _ -> navigateEdit(expense.id) }
-            .setNegativeButton(R.string.delete) { _, _ -> showDeleteConfirm1(expense) }
-            .show()
-    }
-
-    private fun showDeleteConfirm1(expense: Expense) {
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.delete_confirm_title)
-            .setMessage(R.string.delete_confirm_message)
-            .setPositiveButton(R.string.confirm) { _, _ -> showDeleteConfirm2(expense) }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
-    }
-
-    private fun showDeleteConfirm2(expense: Expense) {
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.delete_second_confirm_title)
-            .setMessage(R.string.delete_second_confirm_message)
-            .setPositiveButton(R.string.delete) { _, _ -> viewModel.deleteExpense(expense) }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
     }
 
     private fun navigateEdit(id: String) {

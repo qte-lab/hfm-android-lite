@@ -22,7 +22,6 @@ class ExpenseListAdapter(
 ) : ListAdapter<ExpenseListAdapter.ListItem, RecyclerView.ViewHolder>(DIFF) {
 
     var onItemClick: ((Expense) -> Unit)? = null
-    var onItemLongClick: ((Expense) -> Unit)? = null
     var onLoadMoreClick: (() -> Unit)? = null
 
     private var isLoadMoreLoading = false
@@ -147,10 +146,6 @@ class ExpenseListAdapter(
             binding.expenseAmount.text = "-" + currency(expense.amount)
 
             binding.root.setOnClickListener { onItemClick?.invoke(expense) }
-            binding.root.setOnLongClickListener {
-                onItemLongClick?.invoke(expense)
-                true
-            }
         }
     }
 

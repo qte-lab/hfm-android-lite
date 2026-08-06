@@ -264,7 +264,8 @@ class ChartsFragment : Fragment() {
             chart.isScaleYEnabled = false
             chart.setPinchZoom(false)
             chart.setFitBars(true)
-            chart.setExtraOffsets(8f, 8f, 8f, 8f)
+            // 底部留出空间容纳 -45° 旋转的分类名，避免被裁切
+            chart.setExtraOffsets(8f, 8f, 8f, 36f)
 
             val xAxis = chart.xAxis
             xAxis.position = XAxis.XAxisPosition.BOTTOM
@@ -272,7 +273,9 @@ class ChartsFragment : Fragment() {
             xAxis.textColor = textColor
             xAxis.setDrawGridLines(false)
             xAxis.granularity = 1f
-            xAxis.setCenterAxisLabels(true)
+            // 单系列柱状图：柱体天然以整数 x 居中，标签也落在整数 x 上，二者本就对齐；
+            // 不要再 setCenterAxisLabels(true)，否则会与 setFitBars 叠加导致标签整体偏移半根柱宽。
+            xAxis.setAvoidFirstLastClipping(true)
             xAxis.labelRotationAngle = -45f
             xAxis.valueFormatter = IndexAxisValueFormatter(
                 state.categoryData.map { ExpenseTypeLocalizer.getLocalizedTypeName(requireContext(), it.type) }

@@ -15,13 +15,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.widget.Button
-import android.widget.EditText
 import com.chronie.homemoneylite.R
-import com.chronie.homemoneylite.databinding.DialogSettingsBudgetBinding
 import com.chronie.homemoneylite.databinding.FragmentSettingsBinding
 import com.chronie.homemoneylite.domain.model.SyncStatus
-import com.chronie.homemoneylite.ui.budget.BudgetViewModel
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,7 +31,6 @@ class SettingsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SettingsViewModel by viewModels()
-    private val budgetViewModel: BudgetViewModel by viewModels()
 
     private var pendingAction: (() -> Unit)? = null
 
@@ -67,7 +62,6 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupTabs()
         setupClickListeners()
         setupObservers()
         setupVersion()
@@ -78,45 +72,7 @@ class SettingsFragment : Fragment() {
         _binding = null
     }
 
-    // region 分类切换（无动画，直接切换内容；Holo 用 LinearLayout + 两个 Button 替代 TabLayout）
-    private fun setupTabs() {
-        val tab0 = binding.tabsCategory.findViewById<Button>(R.id.tab_category_0)
-        val tab1 = binding.tabsCategory.findViewById<Button>(R.id.tab_category_1)
-        tab0.text = getString(R.string.settings_category_function)
-        tab1.text = getString(R.string.settings_category_data_sync)
-        tab0.setOnClickListener { switchCategory(0) }
-        tab1.setOnClickListener { switchCategory(1) }
-        switchCategory(0)
-    }
-
-    private fun switchCategory(position: Int) {
-        val isFunction = position == 0
-        binding.functionContent.visibility = if (isFunction) View.VISIBLE else View.GONE
-        binding.dataSyncContent.visibility = if (isFunction) View.GONE else View.VISIBLE
-        updateCategoryTabSelected(position)
-    }
-
-    private fun updateCategoryTabSelected(position: Int) {
-        val ctx = requireContext()
-        val tabs = listOf(
-            binding.tabsCategory.findViewById<Button>(R.id.tab_category_0),
-            binding.tabsCategory.findViewById<Button>(R.id.tab_category_1)
-        )
-        tabs.forEachIndexed { index, btn ->
-            val selected = index == position
-            btn.isSelected = selected
-            btn.setTextColor(
-                ContextCompat.getColor(
-                    ctx,
-                    if (selected) R.color.holo_blue else R.color.text_secondary
-                )
-            )
-        }
-    }
-    // endregion
-
     private fun setupClickListeners() {
-        binding.rowBudget.setOnClickListener { showBudgetDialog() }
         binding.btnManualSync.setOnClickListener { viewModel.manualSync() }
         binding.btnExport.setOnClickListener {
             checkAndRequestPermissions { showExportChoice() }
@@ -170,20 +126,6 @@ class SettingsFragment : Fragment() {
 
         collectWithLifecycle(viewModel.exportInProgress) { _ -> updateImportExportState() }
         collectWithLifecycle(viewModel.importInProgress) { _ -> updateImportExportState() }
-
-        collectWithLifecycle(budgetViewModel.uiState) { state ->
-            val budget = state.budget
-            binding.tvBudgetStatus.visibility = View.VISIBLE
-            if (budget?.isEnabled == true) {
-                val symbol = getString(R.string.currency_symbol)
-                binding.tvBudgetStatus.text = getString(R.string.budget_enable_feature) + ": " +
-                    getString(R.string.currency_format, symbol, budget.monthlyLimit)
-                binding.tvBudgetStatus.setTextColor(themeColor(R.color.brand_primary))
-            } else {
-                binding.tvBudgetStatus.text = getString(R.string.budget_enable_title)
-                binding.tvBudgetStatus.setTextColor(themeColor(R.color.text_primary))
-            }
-        }
     }
 
     private fun updateImportExportState() {
@@ -219,89 +161,6 @@ class SettingsFragment : Fragment() {
     // endregion
 
     // region 对话框
-    private fun showBudgetDialog() {
-        val budget = budgetViewModel.uiState.value.budget
-        val dialogBinding = DialogSettingsBudgetBinding.inflate(layoutInflater)
-        var enabled = budget?.isEnabled ?: false
-        dialogBinding.switchBudgetEnabled.isChecked = enabled
-        dialogBinding.etBudgetLimit.setText(budget?.monthlyLimit?.toString() ?: "")
-        dialogBinding.etBudgetThreshold.setText(((budget?.warningThreshold ?: 0.8) * 100).toString())
-        updateBudgetEditsEnabled(dialogBinding, enabled)
-
-        dialogBinding.switchBudgetEnabled.setOnCheckedChangeListener { _, isChecked ->
-            enabled = isChecked
-            updateBudgetEditsEnabled(dialogBinding, enabled)
-        }
-        dialogBinding.btnBudgetMinus.setOnClickListener {
-            adjust(dialogBinding.etBudgetLimit, -1000.0, 0.0, null)
-            dialogBinding.tvBudgetError.visibility = View.GONE
-        }
-        dialogBinding.btnBudgetPlus.setOnClickListener {
-            adjust(dialogBinding.etBudgetLimit, 1000.0, null, null)
-            dialogBinding.tvBudgetError.visibility = View.GONE
-        }
-        dialogBinding.btnThresholdMinus.setOnClickListener {
-            adjust(dialogBinding.etBudgetThreshold, -10.0, 0.0, 100.0)
-            dialogBinding.tvBudgetError.visibility = View.GONE
-        }
-        dialogBinding.btnThresholdPlus.setOnClickListener {
-            adjust(dialogBinding.etBudgetThreshold, 10.0, 0.0, 100.0)
-            dialogBinding.tvBudgetError.visibility = View.GONE
-        }
-
-        val dialog = AlertDialog.Builder(requireContext())
-            .setTitle(R.string.budget_settings_title)
-            .setView(dialogBinding.root)
-            .setPositiveButton(R.string.common_save, null)
-            .setNegativeButton(R.string.common_cancel, null)
-            .show()
-
-        // 校验失败时保持对话框打开
-        dialog.getButton(android.content.DialogInterface.BUTTON_POSITIVE).setOnClickListener {
-            val limit = dialogBinding.etBudgetLimit.text.toString().toDoubleOrNull()
-            val threshold = dialogBinding.etBudgetThreshold.text.toString().toDoubleOrNull()
-            when {
-                enabled && (limit == null || limit <= 0) -> {
-                    dialogBinding.tvBudgetError.setText(R.string.budget_error_invalid_limit)
-                    dialogBinding.tvBudgetError.visibility = View.VISIBLE
-                }
-                enabled && (threshold == null || threshold < 0 || threshold > 100) -> {
-                    dialogBinding.tvBudgetError.setText(R.string.budget_error_invalid_threshold)
-                    dialogBinding.tvBudgetError.visibility = View.VISIBLE
-                }
-                else -> {
-                    budgetViewModel.saveBudget(limit ?: 0.0, (threshold ?: 80.0) / 100, enabled)
-                    dialog.dismiss()
-                }
-            }
-        }
-    }
-
-    private fun adjust(
-        edit: EditText,
-        delta: Double,
-        min: Double?,
-        max: Double?
-    ) {
-        val current = edit.text.toString().toDoubleOrNull() ?: 0.0
-        var next = current + delta
-        if (min != null) next = next.coerceAtLeast(min)
-        if (max != null) next = next.coerceAtMost(max)
-        edit.setText(next.toString())
-    }
-
-    private fun updateBudgetEditsEnabled(
-        binding: DialogSettingsBudgetBinding,
-        enabled: Boolean
-    ) {
-        binding.etBudgetLimit.isEnabled = enabled
-        binding.etBudgetThreshold.isEnabled = enabled
-        binding.btnBudgetMinus.isEnabled = enabled
-        binding.btnBudgetPlus.isEnabled = enabled
-        binding.btnThresholdMinus.isEnabled = enabled
-        binding.btnThresholdPlus.isEnabled = enabled
-    }
-
     private fun showExportChoice() {
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.export_data)
