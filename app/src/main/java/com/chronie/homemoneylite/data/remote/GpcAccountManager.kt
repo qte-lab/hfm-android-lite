@@ -22,6 +22,10 @@ class GpcAccountManager @Inject constructor(
         private const val KEY_GPC_USERNAME = "gpc_username"
         private const val KEY_ACCESS_TOKEN = "gpc_access_token"
         private const val KEY_EOL_UNTIL = "gpc_eol_until"
+        /** 最后一次成功从 GPC 服务器更新 EOL 缓存的时间戳（epoch 毫秒），用于 7 日强制刷新判断 */
+        private const val KEY_EOL_CACHE_UPDATED_AT = "gpc_eol_cache_updated_at"
+        /** EOL 缓存最长有效天数：超过该天数必须再次成功从服务器刷新 */
+        const val EOL_CACHE_MAX_AGE_DAYS = 7L
     }
 
     /** 是否已绑定 GPC 账号（OAuth 授权成功） */
@@ -81,12 +85,26 @@ class GpcAccountManager @Inject constructor(
         return if (v > 0) v else null
     }
 
-    /** 更新本地缓存的 EOL 到期日 */
+    /** 更新本地缓存的 EOL 到期日，并顺带记录本次更新时间戳 */
     fun cacheEolUntil(until: Long?) {
         if (until == null) {
             prefs.edit().remove(KEY_EOL_UNTIL).apply()
         } else {
-            prefs.edit().putLong(KEY_EOL_UNTIL, until).apply()
+            prefs.edit()
+                .putLong(KEY_EOL_UNTIL, until)
+                .putLong(KEY_EOL_CACHE_UPDATED_AT, System.currentTimeMillis())
+                .apply()
         }
+    }
+
+    /** 读取最后一次成功从服务器更新 EOL 缓存的时间戳（epoch 毫秒），无记录返回 0 */
+    fun getEolCacheUpdatedAt(): Long = prefs.getLong(KEY_EOL_CACHE_UPDATED_AT, 0L)
+
+    /** 判断本地 EOL 缓存是否已过期（距上次成功更新 ≥ EOL_CACHE_MAX_AGE_DAYS 天） */
+    fun isEolCacheStale(): Boolean {
+        val last = getEolCacheUpdatedAt()
+        if (last <= 0) return true
+        val ageMs = System.currentTimeMillis() - last
+        return ageMs >= EOL_CACHE_MAX_AGE_DAYS * 24 * 60 * 60 * 1000L
     }
 }

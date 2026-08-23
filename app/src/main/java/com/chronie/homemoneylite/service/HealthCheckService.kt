@@ -10,6 +10,7 @@ import android.os.Looper
 import android.widget.Toast
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.data.remote.GpcAccountManager
+import com.chronie.homemoneylite.data.remote.api.GoldPigCoinApi
 import com.chronie.homemoneylite.data.remote.api.MemberApi
 import com.chronie.homemoneylite.ui.eol.EolManageActivity
 import java.text.SimpleDateFormat
@@ -31,7 +32,8 @@ import kotlin.time.Duration.Companion.milliseconds
 class HealthCheckService @Inject constructor(
     @param:ApplicationContext private val context: Context,
     @param:javax.inject.Named("HealthCheckApi") private val memberApi: MemberApi,
-    private val gpcAccountManager: GpcAccountManager
+    private val gpcAccountManager: GpcAccountManager,
+    private val gpcApi: GoldPigCoinApi
 ) {
     private val serviceScope = CoroutineScope(Dispatchers.IO + Job())
     private var healthCheckJob: Job? = null
@@ -141,32 +143,80 @@ class HealthCheckService @Inject constructor(
 
     /**
      * 若服务器 timestamp 已超过服务截止时间：
-     *  - 若本地缓存的 EOL 延期仍有效（eolUntil > now），则视为已购买延期，正常放行；
+     *  - 实时向 GPC 服务端查询该用户 EOL 延期状态（服务端为唯一真相源）；
+     *    成功则以其返回值判定是否豁免，并刷新本地缓存；
+     *  - 若实时查询失败（无网/超时），则回退到本地缓存的 EOL 到期日判定；
+     *  - 本地缓存超过 7 个自然日未成功从服务器更新时，视为「必须重新联网刷新」，
+     *    即便本地仍显示有效也不再豁免，跳转 EOL 管理页促使用户联网确认。
      *  - 否则不再崩溃退出，而是跳转至 EOL 管理页，用户可在该页查看状态 / 绑定账号 / 购买延期。
      */
-    private fun enforceServiceEndIfNeeded(timestamp: String?) {
+    private suspend fun enforceServiceEndIfNeeded(timestamp: String?) {
         if (sunsetTriggered) return
         val tsMs = parseUtcInstant(timestamp) ?: return
-        if (tsMs > SERVICE_END_DEADLINE_MS) {
-            // 已购买延期且本地缓存仍有效 → 豁免
-            val cachedUntil = gpcAccountManager.getCachedEolUntil()
-            if (cachedUntil != null && cachedUntil > System.currentTimeMillis()) {
-                android.util.Log.i("HealthCheckService", "Service deadline reached but EOL extension active (until=$cachedUntil), exempt.")
+        if (tsMs <= SERVICE_END_DEADLINE_MS) return
+
+        // 服务已到期：先尝试实时拉取 GPC 真相
+        val uid = gpcAccountManager.getBoundUserId()
+        var serverUntil: Long? = null
+        if (!uid.isNullOrBlank()) {
+            serverUntil = fetchEolUntilFromServer(uid)
+        }
+
+        if (serverUntil != null) {
+            // 实时成功：以服务端返回为准
+            if (serverUntil > System.currentTimeMillis()) {
+                android.util.Log.i("HealthCheckService", "Service deadline reached but EOL active per GPC server (until=$serverUntil), exempt.")
                 return
             }
-            sunsetTriggered = true
-            android.util.Log.w("HealthCheckService", "Service deadline reached (timestamp=$timestamp), redirecting to EOL manage page instead of exit")
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(context, R.string.app_eol_redirect_toast, Toast.LENGTH_LONG).show()
-                try {
-                    val intent = Intent(context, EolManageActivity::class.java).apply {
-                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    }
-                    context.startActivity(intent)
-                } catch (e: Exception) {
-                    android.util.Log.e("HealthCheckService", "Failed to launch EolManageActivity", e)
-                }
+        } else {
+            // 实时失败：回退本地缓存（但缓存过期则不可豁免）
+            val cachedUntil = gpcAccountManager.getCachedEolUntil()
+            if (cachedUntil != null && cachedUntil > System.currentTimeMillis()
+                && !gpcAccountManager.isEolCacheStale()
+            ) {
+                android.util.Log.w("HealthCheckService", "Service deadline reached; GPC unreachable, fallback to fresh local cache (until=$cachedUntil), exempt.")
+                return
             }
+            if (gpcAccountManager.isEolCacheStale()) {
+                android.util.Log.w("HealthCheckService", "Local EOL cache stale (>7d) and GPC unreachable; cannot grant exemption.")
+            }
+        }
+
+        sunsetTriggered = true
+        android.util.Log.w("HealthCheckService", "Service deadline reached (timestamp=$timestamp), redirecting to EOL manage page instead of exit")
+        Handler(Looper.getMainLooper()).post {
+            Toast.makeText(context, R.string.app_eol_redirect_toast, Toast.LENGTH_LONG).show()
+            try {
+                val intent = Intent(context, EolManageActivity::class.java).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+                context.startActivity(intent)
+            } catch (e: Exception) {
+                android.util.Log.e("HealthCheckService", "Failed to launch EolManageActivity", e)
+            }
+        }
+    }
+
+    /**
+     * 实时向 GPC 服务端查询某 hfm 用户的 EOL 到期日（公开接口，无需 token）。
+     * 成功返回 epoch 毫秒并刷新本地缓存；任何失败返回 null。
+     */
+    private suspend fun fetchEolUntilFromServer(hfmUserId: String): Long? {
+        return try {
+            val resp = withTimeout(3000.milliseconds) {
+                gpcApi.getEolStatus(hfmUserId)
+            }
+            if (resp.isSuccessful && resp.body()?.success == true) {
+                val d = resp.body()?.data
+                val until = d?.eolUntil
+                if (until != null && until > 0L) {
+                    gpcAccountManager.cacheEolUntil(if (d.active) until else null)
+                    until
+                } else null
+            } else null
+        } catch (e: Exception) {
+            android.util.Log.w("HealthCheckService", "fetchEolUntilFromServer failed: ${e.message}")
+            null
         }
     }
 

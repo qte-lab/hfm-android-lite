@@ -53,6 +53,13 @@ class EolManageFragment : Fragment() {
         viewModel.refreshEolStatus()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // 从 GPC App 支付返回 / 重新进入页面时，强制重新拉取 EOL 状态，
+        // 确保服务端已落库的延期结果能立刻反映到本地（GPC 为唯一真相源）。
+        viewModel.refreshEolStatus()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
