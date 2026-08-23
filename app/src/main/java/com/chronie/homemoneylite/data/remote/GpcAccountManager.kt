@@ -100,11 +100,15 @@ class GpcAccountManager @Inject constructor(
     /** 读取最后一次成功从服务器更新 EOL 缓存的时间戳（epoch 毫秒），无记录返回 0 */
     fun getEolCacheUpdatedAt(): Long = prefs.getLong(KEY_EOL_CACHE_UPDATED_AT, 0L)
 
-    /** 判断本地 EOL 缓存是否已过期（距上次成功更新 ≥ EOL_CACHE_MAX_AGE_DAYS 天） */
-    fun isEolCacheStale(): Boolean {
+    /**
+     * 判断本地 EOL 缓存是否已过期（距上次成功更新 ≥ EOL_CACHE_MAX_AGE_DAYS 天）。
+     * @param now 当前时刻（epoch 毫秒）。EOL 场景应传入服务端时间轴（HealthCheckService.serverNowMillis()），
+     *            避免用户修改系统时钟影响缓存新鲜度判断；默认使用本地时钟。
+     */
+    fun isEolCacheStale(now: Long = System.currentTimeMillis()): Boolean {
         val last = getEolCacheUpdatedAt()
         if (last <= 0) return true
-        val ageMs = System.currentTimeMillis() - last
+        val ageMs = now - last
         return ageMs >= EOL_CACHE_MAX_AGE_DAYS * 24 * 60 * 60 * 1000L
     }
 }

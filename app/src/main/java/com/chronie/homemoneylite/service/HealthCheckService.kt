@@ -44,6 +44,20 @@ class HealthCheckService @Inject constructor(
     @Volatile
     private var sunsetTriggered = false
 
+    /**
+     * 服务端时间偏移量：serverTimeOffset = 服务器 timestamp(ms) - 客户端本地时钟(ms)。
+     * 所有 EOL 到期判断都必须基于服务端时间轴（serverNow = 本地时钟 + offset），
+     * 而非客户端本地时钟，避免用户手动修改系统时间/时区导致误判。
+     */
+    @Volatile
+    private var serverTimeOffset: Long = 0L
+
+    /**
+     * 以服务端时间轴返回的「当前时刻」(epoch 毫秒)。
+     * EOL 到期 / 缓存新鲜度等判断一律调用此方法，切勿直接使用 System.currentTimeMillis()。
+     */
+    fun serverNowMillis(): Long = System.currentTimeMillis() + serverTimeOffset
+
     companion object {
         private const val CHECK_INTERVAL = 5000L // 5秒
         private const val HEALTH_CHECK_TIMEOUT = 2000L // 2秒超时
@@ -103,7 +117,14 @@ class HealthCheckService @Inject constructor(
             
             android.util.Log.d("HealthCheckService", "Health check response: status=${response.status}, database=${response.database}")
 
-            // 服务到期强制退出检查
+            // 以服务器 timestamp 校准本地时间偏移量（防止用户篡改系统时钟影响 EOL 判断）
+            val tsMs = parseUtcInstant(response.timestamp)
+            if (tsMs != null) {
+                serverTimeOffset = tsMs - System.currentTimeMillis()
+                android.util.Log.d("HealthCheckService", "Calibrated serverTimeOffset=$serverTimeOffset ms")
+            }
+
+            // 服务到期强制退出检查（统一基于服务端时间轴）
             enforceServiceEndIfNeeded(response.timestamp)
             
             if (response.status == "OK" && response.database == "connected") {
@@ -155,6 +176,9 @@ class HealthCheckService @Inject constructor(
         val tsMs = parseUtcInstant(timestamp) ?: return
         if (tsMs <= SERVICE_END_DEADLINE_MS) return
 
+        // 统一以服务端时间轴判定「现在」
+        val serverNow = serverNowMillis()
+
         // 服务已到期：先尝试实时拉取 GPC 真相
         val uid = gpcAccountManager.getBoundUserId()
         var serverUntil: Long? = null
@@ -163,21 +187,21 @@ class HealthCheckService @Inject constructor(
         }
 
         if (serverUntil != null) {
-            // 实时成功：以服务端返回为准
-            if (serverUntil > System.currentTimeMillis()) {
+            // 实时成功：以服务端返回为准（serverUntil 与服务端时间轴一致，直接用 serverNow 比较）
+            if (serverUntil > serverNow) {
                 android.util.Log.i("HealthCheckService", "Service deadline reached but EOL active per GPC server (until=$serverUntil), exempt.")
                 return
             }
         } else {
             // 实时失败：回退本地缓存（但缓存过期则不可豁免）
             val cachedUntil = gpcAccountManager.getCachedEolUntil()
-            if (cachedUntil != null && cachedUntil > System.currentTimeMillis()
-                && !gpcAccountManager.isEolCacheStale()
+            if (cachedUntil != null && cachedUntil > serverNow
+                && !gpcAccountManager.isEolCacheStale(serverNow)
             ) {
                 android.util.Log.w("HealthCheckService", "Service deadline reached; GPC unreachable, fallback to fresh local cache (until=$cachedUntil), exempt.")
                 return
             }
-            if (gpcAccountManager.isEolCacheStale()) {
+            if (gpcAccountManager.isEolCacheStale(serverNow)) {
                 android.util.Log.w("HealthCheckService", "Local EOL cache stale (>7d) and GPC unreachable; cannot grant exemption.")
             }
         }
@@ -189,6 +213,8 @@ class HealthCheckService @Inject constructor(
             try {
                 val intent = Intent(context, EolManageActivity::class.java).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    // 标记为「强制模式」：用户必须停留在此页购买延期，不可返回退出
+                    putExtra(EolManageActivity.EXTRA_FORCED, true)
                 }
                 context.startActivity(intent)
             } catch (e: Exception) {
