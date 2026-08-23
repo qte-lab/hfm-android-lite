@@ -2,6 +2,8 @@ package com.chronie.homemoneylite.ui.expense
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +28,8 @@ import com.chronie.homemoneylite.ui.budget.BudgetViewModel
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.common.slideNavOptions
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.Calendar
+import java.util.TimeZone
 
 /**
  * 支出列表页（传统 View 版本，对应 Compose 的 ExpenseListScreen）。
@@ -57,6 +61,14 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
     private lateinit var statAverage: TextView
     private lateinit var statMedian: TextView
 
+    private val countdownHandler = Handler(Looper.getMainLooper())
+    private val countdownRunnable = object : Runnable {
+        override fun run() {
+            updateCountdown()
+            countdownHandler.postDelayed(this, 1000L)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -82,6 +94,9 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
 
         binding.bannerWeb.setOnClickListener { openWebPortal() }
 
+        updateCountdown()
+        countdownHandler.postDelayed(countdownRunnable, 1000L)
+
         binding.budgetCardView.onSettingsRequested = { showBudgetSettings() }
 
         observeState()
@@ -89,6 +104,7 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
     }
 
     override fun onDestroyView() {
+        countdownHandler.removeCallbacks(countdownRunnable)
         _binding = null
         super.onDestroyView()
     }
@@ -264,6 +280,31 @@ class ExpenseListFragment : Fragment(R.layout.fragment_expense_list) {
         } catch (_: Exception) {
             Toast.makeText(requireContext(), R.string.banner_web_open_failed, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    /** 服务停止时间（按北京时间 2026-08-31 23:59:59 解释）对应的 epoch 毫秒 */
+    private fun serviceDeadlineMillis(): Long {
+        val cal = Calendar.getInstance(TimeZone.getTimeZone("Asia/Shanghai"))
+        cal.set(2026, Calendar.AUGUST, 31, 23, 59, 59)
+        cal.set(Calendar.MILLISECOND, 0)
+        return cal.timeInMillis
+    }
+
+    /** 刷新红色倒计时文案；到期后显示停止服务并停止刷新 */
+    private fun updateCountdown() {
+        val remaining = serviceDeadlineMillis() - System.currentTimeMillis()
+        if (remaining <= 0) {
+            binding.bannerWebCountdown.setText(R.string.app_stopped_toast)
+            countdownHandler.removeCallbacks(countdownRunnable)
+            return
+        }
+        val totalSeconds = remaining / 1000
+        val days = totalSeconds / 86400
+        val hours = (totalSeconds % 86400) / 3600
+        val minutes = (totalSeconds % 3600) / 60
+        val seconds = totalSeconds % 60
+        binding.bannerWebCountdown.text =
+            getString(R.string.banner_web_countdown, days, hours, minutes, seconds)
     }
 
     private fun navigateEdit(id: String) {

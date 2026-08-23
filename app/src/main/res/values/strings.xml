@@ -15,9 +15,10 @@
     <string name="api_key_set">已设置：%s</string>
 
     <!-- 网页端引导 banner -->
-    <string name="banner_web_text">需要更多高级功能？立刻访问网页端</string>
-    <string name="web_portal_url">http://192.168.10.9:3011</string>
+    <string name="banner_web_text">需要EOL后的支持？您可以更换安卓15+设备或 立刻改用访问网页端</string>
+    <string name="web_portal_url">http://192.168.10.9:3010</string>
     <string name="banner_web_open_failed">无法打开网页端，请确认已安装浏览器</string>
+    <string name="banner_web_countdown">距停止服务仅剩 %1$d 天 %2$d 小时 %3$d 分 %4$d 秒</string>
 
     <!-- 通用 -->
     <string name="back">返回</string>
@@ -241,8 +242,8 @@
     <string name="server_connection_error_message">无法连接服务器，请检查网络</string>
     <string name="server_connection_restored">连接已恢复</string>
 
-    <!-- 应用停运通知 -->
-    <string name="sunset_notice_title">应用停运通知</string>
+    <!-- 应用EOL停止服务通知 -->
+    <string name="sunset_notice_title">应用EOL停止服务通知</string>
     <string name="sunset_notice_message">此应用已停止新功能更新，将于2026年8月31日23:59:59停止服务。</string>
     <string name="app_stopped_toast">此应用已停止服务</string>
 

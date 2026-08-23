@@ -49,8 +49,8 @@ class MainActivity : FragmentActivity() {
 
         setContentView(R.layout.activity_main)
 
-        // 首次进入展示停运通知（仅一次）
-        appSunsetNotice.showFirstLaunchNotice(this)
+        // 每次进入展示停运通知
+        appSunsetNotice.showNotice(this)
     }
 
     override fun onDestroy() {
