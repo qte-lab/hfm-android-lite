@@ -8,4 +8,10 @@
         <item name="android:navigationBarColor">@color/app_surface</item>
         <item name="android:windowLightNavigationBar">false</item>
     </style>
+
+    <!-- 深色模式 + API 27+：EOL 管理页主题，追加导航栏相关项（显式继承 EolBase）。 -->
+    <style name="AppTheme.Eol" parent="AppTheme.EolBase">
+        <item name="android:navigationBarColor">@color/app_surface</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
 </resources>

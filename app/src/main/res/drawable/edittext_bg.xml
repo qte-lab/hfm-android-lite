@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 自定义金额输入框背景：随 DayNight 主题变化。
+     solid 用 ?attr/colorSurface（浅色白/深色深灰），stroke 用 ?attr/colorOutline，
+     避免框架 @android:drawable/edit_text 固定浅色背景在深色模式下白底浅字的不可读问题。 -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="?attr/colorSurface" />
+    <stroke
+        android:width="1dp"
+        android:color="?attr/colorOutline" />
+    <corners android:radius="8dp" />
+</shape>

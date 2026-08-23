@@ -73,7 +73,7 @@
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/select_chart"
                                 android:src="@drawable/ic_chart_type"
-                                android:tint="@color/text_primary" />
+                                app:tint="@color/text_primary" />
 
                             <ImageButton
                                 android:id="@+id/dateRangeButton"
@@ -82,7 +82,7 @@
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/select_time_range"
                                 android:src="@drawable/ic_chart_date"
-                                android:tint="@color/text_primary"
+                                app:tint="@color/text_primary"
                                 android:visibility="visible" />
                         </LinearLayout>
 

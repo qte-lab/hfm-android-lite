@@ -37,8 +37,8 @@ android {
             abiFilters 'arm64-v8a'
         }
         
-        versionCode = 8231
-        versionName = "2026.8.23.1"
+        versionCode = 8232
+        versionName = "2026.8.23.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
         aaptOptions {
@@ -132,14 +132,14 @@ dependencies {
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:3.0.0'
     implementation 'com.squareup.retrofit2:converter-gson:3.0.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:5.4.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.5.0'
     
     // Paging
     implementation 'androidx.paging:paging-runtime-ktx:3.5.1'
     
     // Security
     implementation 'androidx.security:security-crypto:1.1.0'
-    implementation 'net.zetetic:sqlcipher-android:4.17.0@aar'
+    implementation 'net.zetetic:sqlcipher-android:4.18.0@aar'
     implementation 'androidx.sqlite:sqlite:2.7.0'
     
     // WorkManager

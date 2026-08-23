@@ -246,6 +246,7 @@
     <string name="sunset_notice_title">应用EOL停止服务通知</string>
     <string name="sunset_notice_message">此应用已停止新功能更新，将于2026年8月31日23:59:59停止服务。</string>
     <string name="app_stopped_toast">此应用已停止服务</string>
+    <string name="app_eol_redirect_toast">服务已到期，请到「EOL 服务管理」购买延期以继续使用</string>
 
     <!-- 日期格式化 -->
     <string name="date_today">今天</string>
@@ -253,4 +254,63 @@
     <string name="date_days_ago">%d天前</string>
     
     <!-- 开源许可证（设置页不再展示） -->
+
+    <!-- 金猪币（GPC）跨应用支付服务 -->
+    <string name="gpc_service_title">金猪币服务</string>
+    <string name="gpc_service_desc">使用金猪币（GPC）购买延长支持期或新功能移植服务。</string>
+    <string name="gpc_open_payment">打开金猪币支付</string>
+
+    <string name="gpc_payment_title">金猪币支付</string>
+    <string name="gpc_choose_product">选择服务</string>
+    <string name="gpc_pay_now">去支付</string>
+
+    <string name="gpc_product_eol_title">延长 EOL 支持期</string>
+    <string name="gpc_product_eol_desc">按月订阅，延长本应用停止服务（EOL）时间，每月需 350 GPC。</string>
+    <string name="gpc_price_350">350 GPC/月</string>
+
+    <string name="gpc_product_port_title">新功能移植</string>
+    <string name="gpc_product_port_desc">将你所需的新功能移植到本应用，金额可自定义。</string>
+    <string name="gpc_price_custom">自定义</string>
+    <string name="gpc_custom_amount_hint">金额（GPC）</string>
+    <string name="gpc_custom_notice">每个新功能移植需要 500-5000 GPC 不等，下单前请先联系开发团队。</string>
+
+    <string name="gpc_intent_id_hint">支付单 ID（由服务端下发）</string>
+
+    <string name="gpc_payment_password_title">输入支付密码</string>
+    <string name="gpc_payment_password_hint">金猪币支付密码</string>
+
+    <string name="gpc_error_intent_id_required">请输入支付单 ID</string>
+    <string name="gpc_error_amount_range">新功能移植金额需在 500-5000 GPC 之间</string>
+    <string name="gpc_error_pw_required">请输入支付密码</string>
+    <string name="gpc_error_app_not_installed">未检测到金猪币 App，请先安装 gold-pig-coin 后再支付。</string>
+    <string name="gpc_error_no_browser">设备上未找到可用的浏览器，无法打开金猪币授权页。</string>
+
+    <string name="gpc_pay_success_title">支付成功</string>
+    <string name="gpc_pay_success_msg" formatted="false">已支付 %.2f GPC。订单号：%s</string>
+    <string name="gpc_pay_review_title">支付待审核</string>
+    <string name="gpc_pay_review_msg">已提交 %.2f GPC，等待管理员审核通过。</string>
+
+    <!-- EOL 管理页 -->
+    <string name="eol_manage_title">EOL 服务管理</string>
+    <string name="eol_current_title">当前服务到期日</string>
+    <string name="eol_active_hint">当前处于有效支持期内，可继续正常使用。</string>
+    <string name="eol_expired_hint">服务已到期，请购买延期以继续使用。</string>
+    <string name="eol_gpc_account_title">金猪币（GPC）账号</string>
+    <string name="eol_not_bound">未授权登录 GPC（购买 EOL 延期需先授权）</string>
+    <string name="eol_bound_format">已授权：%s</string>
+    <string name="eol_bind">通过 GPC 授权登录</string>
+    <string name="eol_unbind">解绑</string>
+    <string name="eol_bind_hint">GPC 用户标识（userId）</string>
+    <string name="eol_bind_message">点击下方按钮，将跳转金猪币 App 完成授权登录。授权后本应用可查询并购买你的 EOL 延期服务。</string>
+    <string name="eol_extend_title">延长 EOL 支持期</string>
+    <string name="eol_price_format" formatted="false">当前月单价：%d GPC/月（%d 个月，梯度价随月份变动）</string>
+    <string name="eol_price_unavailable">当前已停止销售 EOL 延期（2027 年 9 月起）</string>
+    <string name="eol_total_format">本次应付：%d GPC</string>
+    <string name="eol_buy_extend">去支付（延期）</string>
+    <string name="eol_port_title">新功能移植</string>
+    <string name="eol_port_desc">将你所需的新功能移植到本应用。</string>
+    <string name="eol_port_amount_hint">金额（GPC）</string>
+    <string name="eol_port_notice">每个新功能移植需要 500-5000 GPC 不等，下单前请先联系开发团队。2027 年起停止销售。</string>
+    <string name="eol_buy_port">去支付（移植）</string>
+    <string name="eol_error_amount">请输入有效的金额</string>
 </resources>

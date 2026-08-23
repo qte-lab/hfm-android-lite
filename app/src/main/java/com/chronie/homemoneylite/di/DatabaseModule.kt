@@ -3,7 +3,9 @@
 package com.chronie.homemoneylite.di
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
+import java.io.File
 import androidx.room.Room
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
@@ -85,7 +87,13 @@ object DatabaseModule {
      */
     private fun deleteCorruptedPrefs(context: Context) {
         try {
-            context.deleteSharedPreferences(ENCRYPTED_PREFS_FILE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                context.deleteSharedPreferences(ENCRYPTED_PREFS_FILE)
+            } else {
+                // API < 24 无 deleteSharedPreferences，直接删除底层 xml 文件（等效）
+                val prefsFile = File(context.applicationInfo.dataDir, "shared_prefs/$ENCRYPTED_PREFS_FILE.xml")
+                if (prefsFile.exists()) prefsFile.delete()
+            }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to delete corrupted prefs", e)
         }

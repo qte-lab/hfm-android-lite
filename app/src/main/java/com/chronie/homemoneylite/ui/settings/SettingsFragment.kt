@@ -1,6 +1,7 @@
 package com.chronie.homemoneylite.ui.settings
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -18,6 +19,7 @@ import com.chronie.homemoneylite.databinding.FragmentSettingsBinding
 import com.chronie.homemoneylite.domain.model.SyncStatus
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
+import com.chronie.homemoneylite.ui.eol.EolManageActivity
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.util.Locale
@@ -72,6 +74,9 @@ class SettingsFragment : Fragment() {
 
     private fun setupClickListeners() {
         binding.btnManualSync.setOnClickListener { viewModel.manualSync() }
+        binding.btnOpenGoldPigCoin.setOnClickListener {
+            startActivity(Intent(requireContext(), EolManageActivity::class.java))
+        }
         binding.btnExport.setOnClickListener {
             checkAndRequestPermissions { showExportChoice() }
         }

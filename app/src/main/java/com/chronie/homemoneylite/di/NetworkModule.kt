@@ -28,6 +28,8 @@ object NetworkModule {
     
     // 注意：BASE_URL不包含/api/，因为各个API接口会自己添加路径前缀
     private const val BASE_URL = "http://192.168.10.9:3010/"
+    // 金猪币（GPC）跨应用支付服务独立部署在 3000 端口，与 hfm 后端（3010）分离
+    private const val GPC_BASE_URL = "http://192.168.10.9:3000/"
     private const val CONNECT_TIMEOUT = 5L
     private const val READ_TIMEOUT = 5L
     private const val WRITE_TIMEOUT = 5L
@@ -149,6 +151,28 @@ object NetworkModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService {
         return retrofit.create(ApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    @javax.inject.Named("GoldPigCoinRetrofit")
+    fun provideGoldPigCoinRetrofit(
+        okHttpClient: OkHttpClient,
+        gson: Gson
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(GPC_BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGoldPigCoinApi(
+        @javax.inject.Named("GoldPigCoinRetrofit") retrofit: Retrofit
+    ): GoldPigCoinApi {
+        return retrofit.create(GoldPigCoinApi::class.java)
     }
     
     @Provides
