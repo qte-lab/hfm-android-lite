@@ -9,6 +9,9 @@ import android.os.Looper
 import android.widget.Toast
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.data.remote.api.MemberApi
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,9 +34,25 @@ class HealthCheckService @Inject constructor(
     private var consecutiveFailures = 0
     private val maxConsecutiveFailures = 3
 
+    /** 防止重复触发强制退出 */
+    @Volatile
+    private var sunsetTriggered = false
+
     companion object {
         private const val CHECK_INTERVAL = 5000L // 5秒
         private const val HEALTH_CHECK_TIMEOUT = 2000L // 2秒超时
+
+        /**
+         * 服务截止时间（按 UTC 解释，与服务器 timestamp 字段的 'Z' 时区对齐）。
+         * 当服务器返回的 timestamp（UTC 瞬时）大于该值时，判定服务已停止并强制退出。
+         * 注意：若服务器 timestamp 实际表示北京时间，请将此处改为 "2026-08-31T15:59:59"（对应 UTC）。
+         */
+        private const val SERVICE_END_DEADLINE_UTC = "2026-08-31T23:59:59"
+        private val SERVICE_END_DEADLINE_MS: Long by lazy {
+            val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+            fmt.timeZone = TimeZone.getTimeZone("UTC")
+            fmt.parse(SERVICE_END_DEADLINE_UTC)?.time ?: Long.MAX_VALUE
+        }
     }
 
     fun start() {
@@ -77,6 +96,9 @@ class HealthCheckService @Inject constructor(
             }
             
             android.util.Log.d("HealthCheckService", "Health check response: status=${response.status}, database=${response.database}")
+
+            // 服务到期强制退出检查
+            enforceServiceEndIfNeeded(response.timestamp)
             
             if (response.status == "OK" && response.database == "connected") {
                 if (consecutiveFailures > 0) {
@@ -110,6 +132,39 @@ class HealthCheckService @Inject constructor(
     private fun showToast(message: String) {
         Handler(Looper.getMainLooper()).post {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    /**
+     * 若服务器 timestamp 已超过服务截止时间，则弹出 toast 并主动抛出未捕获异常，
+     * 触发 Java 崩溃以强制退出应用。
+     */
+    private fun enforceServiceEndIfNeeded(timestamp: String?) {
+        if (sunsetTriggered) return
+        val tsMs = parseUtcInstant(timestamp) ?: return
+        if (tsMs > SERVICE_END_DEADLINE_MS) {
+            sunsetTriggered = true
+            android.util.Log.e("HealthCheckService", "Service deadline reached (timestamp=$timestamp), forcing exit")
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(context, R.string.app_stopped_toast, Toast.LENGTH_LONG).show()
+                // 延迟以确保 toast 可见后再崩溃
+                Handler(Looper.getMainLooper()).postDelayed({
+                    throw RuntimeException("应用已停止服务（服务已到期）")
+                }, 2500L)
+            }
+        }
+    }
+
+    /** 将形如 "2026-08-15T23:17:40Z" 的 UTC 时间解析为 epoch 毫秒；解析失败返回 null */
+    private fun parseUtcInstant(s: String?): Long? {
+        if (s.isNullOrEmpty()) return null
+        return try {
+            val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
+            fmt.timeZone = TimeZone.getTimeZone("UTC")
+            fmt.parse(s)?.time
+        } catch (e: Exception) {
+            android.util.Log.w("HealthCheckService", "Failed to parse timestamp: $s", e)
+            null
         }
     }
 

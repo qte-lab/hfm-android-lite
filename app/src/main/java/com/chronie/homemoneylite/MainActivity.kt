@@ -3,6 +3,7 @@ package com.chronie.homemoneylite
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import com.chronie.homemoneylite.service.AppSunsetNotice
 import com.chronie.homemoneylite.service.HealthCheckService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -20,6 +21,9 @@ class MainActivity : FragmentActivity() {
 
     @Inject
     lateinit var healthCheckService: HealthCheckService
+
+    @Inject
+    lateinit var appSunsetNotice: AppSunsetNotice
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +48,9 @@ class MainActivity : FragmentActivity() {
         healthCheckService.start()
 
         setContentView(R.layout.activity_main)
+
+        // 首次进入展示停运通知（仅一次）
+        appSunsetNotice.showFirstLaunchNotice(this)
     }
 
     override fun onDestroy() {

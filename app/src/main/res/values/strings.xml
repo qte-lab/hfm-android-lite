@@ -240,7 +240,12 @@
     <!-- 健康检查 -->
     <string name="server_connection_error_message">无法连接服务器，请检查网络</string>
     <string name="server_connection_restored">连接已恢复</string>
-    
+
+    <!-- 应用停运通知 -->
+    <string name="sunset_notice_title">应用停运通知</string>
+    <string name="sunset_notice_message">此应用已停止新功能更新，将于2026年8月31日23:59:59停止服务。</string>
+    <string name="app_stopped_toast">此应用已停止服务</string>
+
     <!-- 日期格式化 -->
     <string name="date_today">今天</string>
     <string name="date_yesterday">昨天</string>
