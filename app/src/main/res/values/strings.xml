@@ -14,11 +14,10 @@
     <string name="settings_category_data_sync_description">同步与导入导出</string>
     <string name="api_key_set">已设置：%s</string>
 
-    <!-- 网页端引导 banner -->
-    <string name="banner_web_text">需要EOL后的支持？您可以更换安卓15+设备 或 前往设置-金猪币服务购买服务延期 或 免费改用访问网页端</string>
+    <!-- 网页端引导：EOL 服务管理页顶部的链接卡片 -->
     <string name="web_portal_url">http://192.168.10.9:3010</string>
-    <string name="banner_web_open_failed">无法打开网页端，请确认已安装浏览器</string>
-    <string name="banner_web_countdown">距停止EOL免费服务仅剩 %1$d 天 %2$d 小时 %3$d 分 %4$d 秒</string>
+    <string name="eol_web_portal_card_text">当前应用已EOL，您可以更换安卓15+设备继续免费使用 或 在下方购买服务延期 或 点击免费改用网页端访问</string>
+    <string name="eol_web_portal_open_failed">无法打开网页端，请确认已安装浏览器</string>
 
     <!-- 通用 -->
     <string name="back">返回</string>
@@ -242,10 +241,7 @@
     <string name="server_connection_error_message">无法连接服务器，请检查网络</string>
     <string name="server_connection_restored">连接已恢复</string>
 
-    <!-- 应用EOL停止服务通知 -->
-    <string name="sunset_notice_title">应用EOL停止免费维护服务通知</string>
-    <string name="sunset_notice_message">此应用已停止新功能更新，将于2026年8月31日23:59:59停止服务。\n您可前往设置-金猪币服务购买延期服务，或更换安卓15+设备，或使用web网页端</string>
-    <string name="app_stopped_toast">此应用已停止服务</string>
+    <!-- 应用EOL停止服务提示（Toast / 强制停留页） -->
     <string name="app_eol_redirect_toast">服务已到期，请到「EOL 服务管理」购买延期以继续使用</string>
     <string name="eol_forced_stay_hint">服务已到期，需先购买延期才能继续使用，无法返回</string>
 

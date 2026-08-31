@@ -12,6 +12,45 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- 网页端引导链接卡片：点击跳转 http://192.168.10.9:3010 -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardWebPortal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/eol_portal_card_bg"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="14dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/eol_web_portal_card_text"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="@color/text_primary" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@string/eol_web_portal_card_text"
+                    android:src="@drawable/ic_set_chevron"
+                    app:tint="@color/holo_blue" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <!-- 当前 EOL 状态 -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

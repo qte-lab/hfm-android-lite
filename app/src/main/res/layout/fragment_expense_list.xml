@@ -61,53 +61,6 @@
         android:layout_height="1dp"
         android:background="?attr/colorOutline" />
 
-    <!-- 网页端引导 banner -->
-    <LinearLayout
-        android:id="@+id/bannerWeb"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/brand_primary"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="10dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/banner_web_text"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/ic_set_chevron"
-                app:tint="@android:color/white"
-                android:contentDescription="@string/banner_web_text" />
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/bannerWebCountdown"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textColor="@android:color/holo_red_light"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
     <!-- 固定顶部：预算卡 + 统计卡 -->
     <LinearLayout
         android:id="@+id/headerContainer"

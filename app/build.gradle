@@ -115,6 +115,7 @@ dependencies {
     implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
     implementation 'androidx.fragment:fragment-ktx:1.9.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
+    // 注意：Navigation 2.10.0 起 navigation-runtime 的 minSdk = 24，因此本项目 minSdk 不得低于 24。
     implementation 'androidx.navigation:navigation-fragment-ktx:2.10.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.10.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.11.0'

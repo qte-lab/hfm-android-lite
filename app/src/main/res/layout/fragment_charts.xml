@@ -66,6 +66,8 @@
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
+                            <!-- 用 android:tint 而非 app:tint：宿主 MainActivity 继承 FragmentActivity，
+                                 没有 AppCompatDelegate 的视图工厂，ImageButton 按平台控件解析，app:tint 会被忽略。 -->
                             <ImageButton
                                 android:id="@+id/chartTypeButton"
                                 android:layout_width="48dp"
@@ -73,7 +75,7 @@
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/select_chart"
                                 android:src="@drawable/ic_chart_type"
-                                app:tint="@color/text_primary" />
+                                android:tint="@color/text_primary" />
 
                             <ImageButton
                                 android:id="@+id/dateRangeButton"
@@ -82,7 +84,7 @@
                                 android:background="?attr/selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/select_time_range"
                                 android:src="@drawable/ic_chart_date"
-                                app:tint="@color/text_primary"
+                                android:tint="@color/text_primary"
                                 android:visibility="visible" />
                         </LinearLayout>
 

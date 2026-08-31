@@ -1,6 +1,7 @@
 package com.chronie.homemoneylite.ui.eol
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -68,6 +69,9 @@ class EolManageFragment : Fragment() {
     private fun setupListeners() {
         val b = binding
 
+        // 顶部网页端引导卡片：点击用浏览器打开网页端
+        b.cardWebPortal.setOnClickListener { openWebPortal() }
+
         // 绑定 = 拉起 GPC 授权登录深链（OAuth2 授权码流程）
         b.btnBind.setOnClickListener { launchGpcOauth() }
         b.btnUnbind.setOnClickListener { viewModel.unbindAccount() }
@@ -82,6 +86,16 @@ class EolManageFragment : Fragment() {
                 return@setOnClickListener
             }
             viewModel.purchaseFeaturePort(amt)
+        }
+    }
+
+    /** 顶部卡片点击：用系统浏览器打开网页端（http://192.168.10.9:3010） */
+    private fun openWebPortal() {
+        val url = getString(R.string.web_portal_url)
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        } catch (_: Exception) {
+            showError(getString(R.string.eol_web_portal_open_failed))
         }
     }
 
