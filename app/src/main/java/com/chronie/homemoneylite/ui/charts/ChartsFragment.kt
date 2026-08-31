@@ -19,21 +19,15 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.databinding.FragmentChartsBinding
-import com.chronie.homemoneylite.databinding.ItemChartCategoryBinding
 import com.chronie.homemoneylite.databinding.ItemChartWeekdayBinding
 import com.chronie.homemoneylite.domain.model.TimeRange
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.common.slideNavOptions
 import com.chronie.homemoneylite.ui.components.showWheelDateRangePicker
-import com.chronie.homemoneylite.ui.expense.ExpenseTypeLocalizer
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
@@ -62,13 +56,6 @@ class ChartsFragment : Fragment() {
 
     private val shortDateFormatter = DateTimeFormatter.ofPattern("MM/dd", Locale.getDefault())
 
-    // 分类柱状图每根柱子的配色（charts.xml 中 chart_series_1..10）
-    private val seriesColorRes = intArrayOf(
-        R.color.chart_series_1, R.color.chart_series_2, R.color.chart_series_3, R.color.chart_series_4,
-        R.color.chart_series_5, R.color.chart_series_6, R.color.chart_series_7, R.color.chart_series_8,
-        R.color.chart_series_9, R.color.chart_series_10
-    )
-
     private var selectedChart = ChartType.TREND
     private var lastSuccess: ChartsUiState.Success? = null
     private var currentStartStr: String = ""
@@ -76,10 +63,9 @@ class ChartsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        selectedChart = ChartType.entries.toTypedArray()[
-            savedInstanceState?.getInt(KEY_SELECTED_CHART, ChartType.TREND.ordinal)
-                ?: ChartType.TREND.ordinal
-        ]
+        val savedOrdinal = savedInstanceState?.getInt(KEY_SELECTED_CHART, ChartType.TREND.ordinal)
+            ?: ChartType.TREND.ordinal
+        selectedChart = ChartType.entries.getOrElse(savedOrdinal) { ChartType.TREND }
     }
 
     override fun onCreateView(
@@ -165,7 +151,6 @@ class ChartsFragment : Fragment() {
         binding.chartSection.removeAllViews()
         when (selectedChart) {
             ChartType.TREND -> buildTrendCard(state)
-            ChartType.CATEGORY -> buildCategoryCard(state)
             ChartType.WEEKDAY -> buildWeekdayCard(state)
         }
     }
@@ -232,67 +217,6 @@ class ChartsFragment : Fragment() {
             chart.axisRight.isEnabled = false
 
             inner.addView(chart)
-        }
-        binding.chartSection.addView(card)
-    }
-
-    private fun buildCategoryCard(state: ChartsUiState.Success) {
-        val (card, inner) = buildChartCard(R.string.category_breakdown)
-        if (state.categoryData.isEmpty()) {
-            inner.addView(noDataText())
-        } else {
-            // 注意：MPAndroidChart 的 BarChart 放入 HorizontalScrollView 时首帧测量宽度异常，
-            // 会导致整张图白屏。这里直接 MATCH_PARENT 宽度，与趋势图/雷达图一致，保证稳定渲染。
-            val chart = BarChart(requireContext()).apply {
-                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(300))
-            }
-            val textColor = ContextCompat.getColor(requireContext(), R.color.text_primary)
-
-            val entries = state.categoryData.mapIndexed { i, c -> BarEntry(i.toFloat(), c.amount.toFloat()) }
-            val dataSet = BarDataSet(entries, getString(R.string.category_breakdown)).apply {
-                colors = List(state.categoryData.size) { i ->
-                    ContextCompat.getColor(requireContext(), seriesColorRes[i % seriesColorRes.size])
-                }
-                valueTextColor = textColor
-                valueTextSize = 10f
-                setDrawValues(true)
-            }
-            val barData = BarData(dataSet).apply { barWidth = 0.6f }
-            chart.data = barData
-            chart.description.isEnabled = false
-            chart.legend.isEnabled = false
-            chart.isScaleXEnabled = false
-            chart.isScaleYEnabled = false
-            chart.setPinchZoom(false)
-            chart.setFitBars(true)
-            // 底部留出空间容纳 -45° 旋转的分类名，避免被裁切
-            chart.setExtraOffsets(8f, 8f, 8f, 36f)
-
-            val xAxis = chart.xAxis
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
-            xAxis.textSize = 11f
-            xAxis.textColor = textColor
-            xAxis.setDrawGridLines(false)
-            xAxis.granularity = 1f
-            // 单系列柱状图：柱体天然以整数 x 居中，标签也落在整数 x 上，二者本就对齐；
-            // 不要再 setCenterAxisLabels(true)，否则会与 setFitBars 叠加导致标签整体偏移半根柱宽。
-            xAxis.setAvoidFirstLastClipping(true)
-            xAxis.labelRotationAngle = -45f
-            xAxis.valueFormatter = IndexAxisValueFormatter(
-                state.categoryData.map { ExpenseTypeLocalizer.getLocalizedTypeName(requireContext(), it.type) }
-            )
-
-            val left = chart.axisLeft
-            left.textSize = 11f
-            left.textColor = textColor
-            left.axisMinimum = 0f
-            left.valueFormatter = currencyAxisFormatter()
-            chart.axisRight.isEnabled = false
-
-            inner.addView(chart)
-
-            val list = buildCategoryList(state.categoryData)
-            inner.addView(list)
         }
         binding.chartSection.addView(card)
     }
@@ -390,28 +314,6 @@ class ChartsFragment : Fragment() {
 
         card.addView(inner)
         return card to inner
-    }
-
-    @SuppressLint("DefaultLocale", "SetTextI18n")
-    private fun buildCategoryList(data: List<CategoryChartData>): View {
-        val container = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
-            )
-        }
-        data.forEach { category ->
-            val itemBinding = ItemChartCategoryBinding.inflate(layoutInflater)
-            itemBinding.catName.text = ExpenseTypeLocalizer.getLocalizedTypeName(requireContext(), category.type)
-            itemBinding.catPct.text = String.format("%.1f%%", category.percentage)
-            itemBinding.catProgress.progress = category.percentage.toInt()
-            itemBinding.catDetail.text = "${currencyFormat.format(category.amount)} (${category.count} ${getString(R.string.records)})"
-            container.addView(itemBinding.root)
-            val spacer = View(requireContext())
-            spacer.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(12))
-            container.addView(spacer)
-        }
-        return container
     }
 
     @SuppressLint("DefaultLocale")
@@ -546,7 +448,6 @@ class ChartsFragment : Fragment() {
 
     private enum class ChartType(val stringRes: Int) {
         TREND(R.string.trend_chart),
-        CATEGORY(R.string.category_breakdown),
         WEEKDAY(R.string.weekday_analysis)
     }
 

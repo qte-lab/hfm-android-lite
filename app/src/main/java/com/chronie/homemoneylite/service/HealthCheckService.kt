@@ -74,15 +74,21 @@ class HealthCheckService @Inject constructor(
         private const val HEALTH_CHECK_TIMEOUT = 2000L // 2秒超时
 
         /**
-         * 服务截止时间（按 UTC 解释，与服务器 timestamp 字段的 'Z' 时区对齐）。
-         * 当服务器返回的 timestamp（UTC 瞬时）大于该值时，判定服务已停止并强制退出。
-         * 注意：若服务器 timestamp 实际表示北京时间，请将此处改为 "2026-08-31T15:59:59"（对应 UTC）。
+         * 服务截止时间（业务口径为「北京时间 23:59:59」，UTC+8）。
+         *
+         * 注意：此处按 Asia/Shanghai 时区解析，而非 UTC。原因：业务上「服务到期日」
+         * 是北京时间 23:59，但服务器健康检查 timestamp 是 UTC 瞬时（带 'Z'），
+         * enforceServiceEndIfNeeded 用服务器 UTC 时钟与该截止线比较。若按 UTC 解析，
+         * "2026-08-31T23:59:59" 会被当成 09-01 07:59 北京，导致强制页整整晚 8 小时才弹出
+         * （用户实测现象：应在 23:59 弹，实际 07:59 才弹）。
+         *
+         * 故必须把字面量显式按 Asia/Shanghai 解析：2026-08-31T23:59:59(北京) = 2026-08-31T15:59:59Z(UTC)。
          */
-        private const val SERVICE_END_DEADLINE_UTC = "2026-08-31T23:59:59"
+        private const val SERVICE_END_DEADLINE = "2026-08-31T23:59:59"
         private val SERVICE_END_DEADLINE_MS: Long by lazy {
             val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
-            fmt.timeZone = TimeZone.getTimeZone("UTC")
-            fmt.parse(SERVICE_END_DEADLINE_UTC)?.time ?: Long.MAX_VALUE
+            fmt.timeZone = TimeZone.getTimeZone("Asia/Shanghai")
+            fmt.parse(SERVICE_END_DEADLINE)?.time ?: Long.MAX_VALUE
         }
     }
 
