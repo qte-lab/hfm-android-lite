@@ -54,10 +54,7 @@ interface ExpenseDao {
     
     @Query("SELECT SUM(amount) FROM expenses WHERE date BETWEEN :startDate AND :endDate AND deleted_at IS NULL")
     suspend fun getTotalAmountByDateRange(startDate: String, endDate: String): Double?
-    
-    @Query("SELECT * FROM expenses WHERE date BETWEEN :startDate AND :endDate AND deleted_at IS NULL ORDER BY date DESC")
-    suspend fun getExpensesByDateRangeSync(startDate: String, endDate: String): List<ExpenseEntity>
-    
+
     @Query("SELECT MAX(updated_at) FROM expenses")
     suspend fun getLastUpdateTime(): Long?
     

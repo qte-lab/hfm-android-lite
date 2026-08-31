@@ -34,7 +34,6 @@
     
     <!-- 数据库测试 -->
     <string name="total_amount">总金额</string>
-    <string name="expense_records">支出记录</string>
     <string name="no_data">暂无数据</string>
 
     <!-- 同步 -->
@@ -193,6 +192,8 @@
     <string name="this_quarter">本季度</string>
     <string name="this_year">今年</string>
     <string name="custom_range">自定义</string>
+    <string name="start_date">开始日期</string>
+    <string name="end_date">结束日期</string>
     <string name="custom_range_invalid">开始日期不能晚于结束日期</string>
     <string name="retry">重试</string>
     
@@ -211,31 +212,6 @@
     <string name="thursday_short">四</string>
     <string name="friday_short">五</string>
     <string name="saturday_short">六</string>
-
-    <!-- 数据导入导出 -->
-    <string name="data_import_export">导入导出</string>
-    <string name="data_import_export_description">导出或导入Excel格式的账单数据</string>
-    <string name="export_data">导出数据</string>
-    <string name="import_data">导入数据</string>
-    <string name="export_all_data">导出全部数据</string>
-    <string name="export_date_range">导出日期范围</string>
-    <string name="export_select_range">选择日期范围</string>
-    <string name="export_start_date">开始日期</string>
-    <string name="export_end_date">结束日期</string>
-    <string name="export_in_progress">导出中…</string>
-    <string name="export_success">导出成功：%s</string>
-    <string name="export_failed">导出失败：%s</string>
-    <string name="import_in_progress">导入中…</string>
-    <string name="import_success">导入成功：%d 条记录</string>
-    <string name="import_failed">导入失败：%s</string>
-    <string name="import_validation_error">数据错误：%s</string>
-    <string name="export_filename_prefix">支出记录</string>
-    <string name="excel_header_date">日期</string>
-    <string name="excel_header_type">分类</string>
-    <string name="excel_header_amount">金额</string>
-    <string name="excel_header_remark">备注</string>
-    <string name="permission_storage_required">需要存储权限</string>
-    <string name="no_records_to_export">暂无记录可导出</string>
 
     <!-- 健康检查 -->
     <string name="server_connection_error_message">无法连接服务器，请检查网络</string>

@@ -148,14 +148,6 @@ dependencies {
     implementation 'androidx.hilt:hilt-work:1.4.0'
     ksp 'androidx.hilt:hilt-compiler:1.4.0'
     
-    // fastExcel for Excel import/export
-    implementation 'org.dhatim:fastexcel:0.20.2'
-    implementation 'org.dhatim:fastexcel-reader:0.20.2'
-    // aalto-xml: StAX implementation for fastExcel (javax.xml.stream API is provided by Android framework)
-    implementation 'com.fasterxml:aalto-xml:1.4.0'
-    // XZ compression library for commons-compress
-    implementation 'org.tukaani:xz:1.12'
-    
     // Testing
     testImplementation "junit:junit:$junitVersion"
     testImplementation 'io.mockk:mockk:1.14.11'

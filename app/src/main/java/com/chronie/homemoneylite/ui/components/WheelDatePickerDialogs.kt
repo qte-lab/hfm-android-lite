@@ -76,14 +76,14 @@ fun showWheelDateRangePicker(
         setPadding(pad, pad, pad, pad)
 
         addView(TextView(context).apply {
-            text = context.getString(R.string.export_start_date)
+            text = context.getString(R.string.start_date)
             textSize = 14f
             setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
         })
         addView(startPicker)
 
         addView(TextView(context).apply {
-            text = context.getString(R.string.export_end_date)
+            text = context.getString(R.string.end_date)
             textSize = 14f
             setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
             setPadding(0, (16 * density).toInt(), 0, 0)
