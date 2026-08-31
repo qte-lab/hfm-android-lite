@@ -40,9 +40,20 @@ class HealthCheckService @Inject constructor(
     private var consecutiveFailures = 0
     private val maxConsecutiveFailures = 3
 
-    /** 防止重复触发强制退出 */
+    /**
+     * EOL 强制管理页当前是否处于前台。
+     * 由 EolManageActivity 在其 onCreate / onDestroy 维护。
+     *
+     * 用途：
+     *  1) 避免对已在前台的强制页重复拉起（每 5 秒一次的健康检查若每次都 startActivity 会反复打断用户）；
+     *  2) 用户通过多任务/返回等方式关闭强制页后，下次健康检查会重新拉起，
+     *     实现「服务到期必须停留 EOL 管理页」的强制保持。
+     *
+     * 注意：原先使用一次性置位的 sunsetTriggered 标志，置位后便永久不再拉起，
+     * 导致强制页被关闭一次后即彻底失效（正是本 bug 的根因）。
+     */
     @Volatile
-    private var sunsetTriggered = false
+    var eolForcedActivityVisible: Boolean = false
 
     /**
      * 服务端时间偏移量：serverTimeOffset = 服务器 timestamp(ms) - 客户端本地时钟(ms)。
@@ -172,12 +183,15 @@ class HealthCheckService @Inject constructor(
      *  - 否则不再崩溃退出，而是跳转至 EOL 管理页，用户可在该页查看状态 / 绑定账号 / 购买延期。
      */
     private suspend fun enforceServiceEndIfNeeded(timestamp: String?) {
-        if (sunsetTriggered) return
         val tsMs = parseUtcInstant(timestamp) ?: return
         if (tsMs <= SERVICE_END_DEADLINE_MS) return
 
         // 统一以服务端时间轴判定「现在」
         val serverNow = serverNowMillis()
+
+        // 强制页已在前台：不重复拉起（避免每 5 秒打断用户）。
+        // 注意：若用户已关闭该页，eolForcedActivityVisible 会被置为 false，下次检查将重新拉起。
+        if (eolForcedActivityVisible) return
 
         // 服务已到期：先尝试实时拉取 GPC 真相
         val uid = gpcAccountManager.getBoundUserId()
@@ -206,7 +220,6 @@ class HealthCheckService @Inject constructor(
             }
         }
 
-        sunsetTriggered = true
         android.util.Log.w("HealthCheckService", "Service deadline reached (timestamp=$timestamp), redirecting to EOL manage page instead of exit")
         Handler(Looper.getMainLooper()).post {
             Toast.makeText(context, R.string.app_eol_redirect_toast, Toast.LENGTH_LONG).show()

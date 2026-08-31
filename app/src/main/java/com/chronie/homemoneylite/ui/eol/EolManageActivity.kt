@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -44,6 +45,12 @@ class EolManageActivity : AppCompatActivity() {
     @Volatile
     private var canLeave = false
 
+    /** observeEolStatus 是否已启动收集（防止 onNewIntent 重复启动） */
+    private var observing = false
+
+    /** 系统返回键拦截回调：强制模式下且尚未购买成功时拦截返回 */
+    private lateinit var backCallback: OnBackPressedCallback
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_eol_manage)
@@ -61,6 +68,21 @@ class EolManageActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(!forcedMode)
         }
 
+        backCallback = object : OnBackPressedCallback(forcedMode) {
+            override fun handleOnBackPressed() {
+                if (forcedMode && !canLeave) {
+                    // 强制模式且未购买成功：拦截返回，提示用户需先购买延期
+                    showForcedHint()
+                } else {
+                    // 非强制模式或已放行：恢复默认返回行为
+                    isEnabled = false
+                    onBackPressedDispatcher.onBackPressed()
+                    isEnabled = true
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, backCallback)
+
         // 拦截 GPC 授权回跳深链 gpc://oauth/callback?code=...&state=...
         handleIncomingIntent(intent)
 
@@ -70,13 +92,21 @@ class EolManageActivity : AppCompatActivity() {
             }
         }
 
-        if (forcedMode) {
-            observeEolStatus()
-        }
+        applyForcedMode()
+    }
+
+    /** 进入/恢复「强制模式」：通知 HealthCheckService 本页已在前台，并启动状态观察 */
+    private fun applyForcedMode() {
+        if (!forcedMode) return
+        healthCheckService.eolForcedActivityVisible = true
+        backCallback.isEnabled = true
+        observeEolStatus()
     }
 
     /** 强制模式下：一旦服务端确认已购买延期且仍在有效期，即放行并可自动退出 */
     private fun observeEolStatus() {
+        if (observing) return
+        observing = true
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.eolStatus.collect { st ->
@@ -93,6 +123,14 @@ class EolManageActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
+        // 若本 Activity 已在前台（例如从设置页打开 EOL 后服务到期触发强制跳转），
+        // 重新拉起时通过 onNewIntent 带上 EXTRA_FORCED=true，需要重新进入强制模式，
+        // 否则强制保持不会生效。
+        val reForced = intent?.getBooleanExtra(EXTRA_FORCED, false) ?: false
+        if (reForced) {
+            forcedMode = true
+            applyForcedMode()
+        }
         handleIncomingIntent(intent)
     }
 
@@ -111,21 +149,6 @@ class EolManageActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * 拦截系统返回键。
-     *  - 强制模式且尚未购买成功：阻止退出，提示用户需先购买延期。
-     *  - 其它情况：正常返回。
-     */
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        if (forcedMode && !canLeave) {
-            showForcedHint()
-            return
-        }
-        @Suppress("DEPRECATION")
-        super.onBackPressed()
-    }
-
     override fun onSupportNavigateUp(): Boolean {
         if (forcedMode && !canLeave) {
             showForcedHint()
@@ -133,6 +156,14 @@ class EolManageActivity : AppCompatActivity() {
         }
         finish()
         return true
+    }
+
+    override fun onDestroy() {
+        // 通知 HealthCheckService 本强制页已不在前台，下次检查可重新拉起（实现强制保持）
+        if (forcedMode) {
+            healthCheckService.eolForcedActivityVisible = false
+        }
+        super.onDestroy()
     }
 
     private fun showForcedHint() {
