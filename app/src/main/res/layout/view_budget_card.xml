@@ -124,21 +124,27 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- 下拉展开：触摸区与图标必须同心，间距一律用 layout_margin，
+                     禁止用 padding 拉开间距（非对称 padding 会让图标偏离点击高光中心） -->
                 <ImageButton
                     android:id="@+id/btnBudgetExpand"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="4dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/budget_expand"
-                    android:paddingRight="16sp"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
                     android:src="@drawable/ic_exp_chevron_down" />
 
                 <ImageButton
                     android:id="@+id/btnBudgetSettings"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/budget_settings"
+                    android:padding="8dp"
+                    android:scaleType="centerInside"
                     android:src="@drawable/ic_exp_settings" />
             </LinearLayout>
 
