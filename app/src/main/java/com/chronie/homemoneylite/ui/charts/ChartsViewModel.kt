@@ -98,14 +98,18 @@ class ChartsViewModel @Inject constructor(
                         // 生成每日数据
                         val dailyData = generateDailyData(expenses, startDate, endDate)
 
+                        // 生成分类数据（仅用于分类占比明细列表，不含柱状图）
+                        val categoryData = generateCategoryData(expenses)
+
                         // 生成星期数据
                         val weekdayData = generateWeekdayData(expenses)
 
-                        android.util.Log.d("ChartsViewModel", "Loaded data: expenses=${expenses.size}, dailyData=${dailyData.size}, weekdayData=${weekdayData.size}, stats=${statistics.totalAmount}")
+                        android.util.Log.d("ChartsViewModel", "Loaded data: expenses=${expenses.size}, dailyData=${dailyData.size}, categoryData=${categoryData.size}, weekdayData=${weekdayData.size}, stats=${statistics.totalAmount}")
 
                         _uiState.value = ChartsUiState.Success(
                             statistics = statistics,
                             dailyData = dailyData,
+                            categoryData = categoryData,
                             weekdayData = weekdayData,
                             startDate = startDate,
                             endDate = endDate
@@ -199,6 +203,24 @@ class ChartsViewModel @Inject constructor(
         return dailyData
     }
     
+    private fun generateCategoryData(expenses: List<Expense>): List<CategoryChartData> {
+        if (expenses.isEmpty()) return emptyList()
+
+        // 按类型分组
+        val expensesByType = expenses.groupBy { it.type }
+        val totalAmount = expenses.sumOf { it.amount }
+
+        return expensesByType.map { (type, typeExpenses) ->
+            val typeAmount = typeExpenses.sumOf { it.amount }
+            CategoryChartData(
+                type = type.name,
+                amount = typeAmount,
+                count = typeExpenses.size,
+                percentage = if (totalAmount > 0) (typeAmount / totalAmount * 100).toFloat() else 0f
+            )
+        }.sortedByDescending { it.amount }
+    }
+
     private fun generateWeekdayData(expenses: List<Expense>): List<WeekdayChartData> {
         if (expenses.isEmpty()) {
             // 返回7天的空数据（周日到周六）
@@ -261,6 +283,7 @@ sealed class ChartsUiState {
     data class Success(
         val statistics: ExpenseStatistics,
         val dailyData: List<DailyChartData>,
+        val categoryData: List<CategoryChartData>,
         val weekdayData: List<WeekdayChartData>,
         val startDate: LocalDate,
         val endDate: LocalDate

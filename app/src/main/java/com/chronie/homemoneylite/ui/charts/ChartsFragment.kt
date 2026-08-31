@@ -19,11 +19,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.databinding.FragmentChartsBinding
+import com.chronie.homemoneylite.databinding.ItemChartCategoryBinding
 import com.chronie.homemoneylite.databinding.ItemChartWeekdayBinding
 import com.chronie.homemoneylite.domain.model.TimeRange
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.common.slideNavOptions
 import com.chronie.homemoneylite.ui.components.showWheelDateRangePicker
+import com.chronie.homemoneylite.ui.expense.ExpenseTypeLocalizer
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.RadarChart
@@ -151,6 +153,7 @@ class ChartsFragment : Fragment() {
         binding.chartSection.removeAllViews()
         when (selectedChart) {
             ChartType.TREND -> buildTrendCard(state)
+            ChartType.CATEGORY -> buildCategoryCard(state)
             ChartType.WEEKDAY -> buildWeekdayCard(state)
         }
     }
@@ -217,6 +220,16 @@ class ChartsFragment : Fragment() {
             chart.axisRight.isEnabled = false
 
             inner.addView(chart)
+        }
+        binding.chartSection.addView(card)
+    }
+
+    private fun buildCategoryCard(state: ChartsUiState.Success) {
+        val (card, inner) = buildChartCard(R.string.category_breakdown)
+        if (state.categoryData.isEmpty()) {
+            inner.addView(noDataText())
+        } else {
+            inner.addView(buildCategoryList(state.categoryData))
         }
         binding.chartSection.addView(card)
     }
@@ -314,6 +327,28 @@ class ChartsFragment : Fragment() {
 
         card.addView(inner)
         return card to inner
+    }
+
+    @SuppressLint("DefaultLocale", "SetTextI18n")
+    private fun buildCategoryList(data: List<CategoryChartData>): View {
+        val container = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        }
+        data.forEach { category ->
+            val itemBinding = ItemChartCategoryBinding.inflate(layoutInflater)
+            itemBinding.catName.text = ExpenseTypeLocalizer.getLocalizedTypeName(requireContext(), category.type)
+            itemBinding.catPct.text = String.format("%.1f%%", category.percentage)
+            itemBinding.catProgress.progress = category.percentage.toInt()
+            itemBinding.catDetail.text = "${currencyFormat.format(category.amount)} (${category.count} ${getString(R.string.records)})"
+            container.addView(itemBinding.root)
+            val spacer = View(requireContext())
+            spacer.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(12))
+            container.addView(spacer)
+        }
+        return container
     }
 
     @SuppressLint("DefaultLocale")
@@ -448,6 +483,7 @@ class ChartsFragment : Fragment() {
 
     private enum class ChartType(val stringRes: Int) {
         TREND(R.string.trend_chart),
+        CATEGORY(R.string.category_breakdown),
         WEEKDAY(R.string.weekday_analysis)
     }
 
