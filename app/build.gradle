@@ -37,8 +37,8 @@ android {
             abiFilters 'arm64-v8a'
         }
         
-        versionCode = 260902
-        versionName = "2026.09.02"
+        versionCode = 260903
+        versionName = "2026.09.03"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
         aaptOptions {
