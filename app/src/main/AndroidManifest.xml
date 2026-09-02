@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
     <application
         android:name=".HomeMoneyApplication"
         android:allowBackup="true"
@@ -83,11 +80,19 @@
         </intent>
     </queries>
 
-    <!-- Permissions -->
+    <!-- Permissions
+         仅保留实际用到的：
+         - INTERNET：Retrofit / OkHttp 访问 Ollama 与钱包服务
+         - ACCESS_NETWORK_STATE：NetworkMonitor、HealthCheckService 通过
+           ConnectivityManager 判断联网状态（android.net.conn.CONNECTIVITY_CHANGE 相关
+           查询在部分 ROM 上仍要求此权限），属普通权限、无需运行时申请
+         已移除：ACCESS_WIFI_STATE（无任何 WifiManager 调用）、
+                 CAMERA（无任何相机调用，且从未运行时申请），
+                 随之移除配套的 uses-feature android.hardware.camera。
+         注意：WAKE_LOCK / RECEIVE_BOOT_COMPLETED / FOREGROUND_SERVICE 由 work-runtime
+         库合并带入，SyncWorker 为周期性任务（开机后需恢复调度），不可移除。 -->
 
     <uses-permission android:name="android.permission.INTERNET"
         tools:ignore="ManifestOrder" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
 </manifest>
