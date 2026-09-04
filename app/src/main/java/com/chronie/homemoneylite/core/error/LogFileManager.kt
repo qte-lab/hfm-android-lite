@@ -1,7 +1,6 @@
 package com.chronie.homemoneylite.core.error
 
 import android.content.Context
-import android.os.Environment
 import android.util.Log
 import java.io.File
 import java.io.FileWriter
@@ -26,14 +25,11 @@ class LogFileManager(private val context: Context) {
     private val timestampFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
 
     /**
-     * 获取日志目录
+     * 获取日志目录（应用内部私有目录，无需任何存储权限，且卸载应用时随应用一起清除）。
+     * 路径形如：/data/data/<package>/files/crash_logs
      */
     fun getLogDir(): File {
-        return if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-            File(context.getExternalFilesDir(null), CRASH_LOG_DIR)
-        } else {
-            File(context.filesDir, CRASH_LOG_DIR)
-        }
+        return File(context.filesDir, CRASH_LOG_DIR)
     }
 
     /**

@@ -3,6 +3,7 @@ package com.chronie.homemoneylite.core.error
 import android.content.Context
 import android.util.Log
 import androidx.annotation.WorkerThread
+import java.io.File
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -30,15 +31,11 @@ class ErrorReporter @Inject constructor(
     private val errorQueue = ArrayDeque<ErrorInfo>()
 
     /**
-     * 初始化错误收集器
+     * 初始化错误收集器：安装全局未捕获异常处理器。
+     * 必须在 Application.onCreate() 中尽早调用。
      */
     fun initialize() {
-        val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
-
-        Thread.setDefaultUncaughtExceptionHandler(
-            UncaughtExceptionHandler(defaultHandler ?: Thread.UncaughtExceptionHandler { _, _ -> }, this)
-        )
-
+        UncaughtExceptionHandler.install(this)
         Log.d(TAG, "Error reporter initialized")
     }
 
@@ -93,6 +90,19 @@ class ErrorReporter @Inject constructor(
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to save error to local file", e)
             }
+        }
+    }
+
+    /**
+     * 同步写出崩溃报告（应用内部目录 crash_logs/crash-*.txt）。
+     * 必须在崩溃线程上同步完成，不能依赖协程调度器——进程随时会被系统默认处理器终止。
+     */
+    fun saveCrashReportSync(thread: Thread, throwable: Throwable): File? {
+        return try {
+            logFileManager.saveCrashLog(thread, throwable)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to save crash report", e)
+            null
         }
     }
 
