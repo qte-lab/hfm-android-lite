@@ -17,9 +17,11 @@
         <item name="android:textColorSecondary">@color/text_secondary</item>
         <item name="android:windowBackground">@color/app_background</item>
         <item name="android:actionBarStyle">@style/HoloActionBar</item>
-        <item name="android:statusBarColor">@color/app_surface</item>
-        <!-- 状态栏图标深浅跟随深浅模式：浅色模式用深色图标、深色模式用浅色图标。
-             @bool/light_system_bars 在 values/bools.xml=true、values-night/bools.xml=false。 -->
+        <!-- 状态栏背景用 Holo 蓝（浅色模式下为深色背景），配合 windowLightStatusBar=false
+             使白色状态栏文字/图标始终清晰可读。 -->
+        <item name="android:statusBarColor">@color/brand_primary</item>
+        <!-- 状态栏图标/文字始终为浅色（白色）：@bool/light_system_bars 在
+             values/bools.xml=false、values-night/bools.xml=false。 -->
         <item name="android:windowLightStatusBar">@bool/light_system_bars</item>
         <!-- 老旧设备（API < 27）导航栏固定黑色，保证白色系统按钮可见 -->
         <item name="android:navigationBarColor">@android:color/black</item>
@@ -47,7 +49,7 @@
         <item name="android:textColorSecondary">@color/text_secondary</item>
         <item name="android:windowBackground">@color/app_background</item>
         <item name="android:actionBarStyle">@style/HoloActionBar</item>
-        <item name="android:statusBarColor">@color/app_surface</item>
+        <item name="android:statusBarColor">@color/brand_primary</item>
         <item name="android:windowLightStatusBar">@bool/light_system_bars</item>
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>

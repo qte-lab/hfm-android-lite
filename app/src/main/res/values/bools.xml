@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 浅色模式下系统栏图标用深色 -->
-    <bool name="light_system_bars">true</bool>
+    <!-- 状态栏文字/图标始终为白色：无论深浅模式均使用浅色（白）图标，
+         故 windowLightStatusBar 恒为 false。
+         浅色模式下状态栏背景已改用 @color/brand_primary（Holo 蓝），
+         以保证白色文字在浅色背景下清晰可读。 -->
+    <bool name="light_system_bars">false</bool>
 </resources>
