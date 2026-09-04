@@ -22,7 +22,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_exp_account_balance"
-            app:tint="?android:attr/colorAccent" />
+            app:tint="@color/brand_primary" />
 
         <TextView
             android:layout_width="wrap_content"

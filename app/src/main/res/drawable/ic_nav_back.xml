@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 返回箭头（统一用于各二级页导航键）。尺寸随 Toolbar 导航区，描边加粗以显得清晰不显小。
-     颜色跟随 ?android:attr/colorControlNormal：浅色页=深灰、深色页/蓝色标题栏（ThemeOverlay.Material 覆盖）=白色。 -->
+     颜色使用 @color/text_secondary（中性图标色，深浅模式自适应）；蓝色标题栏下为深灰，仍可见。 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
     <path
-        android:fillColor="?android:attr/colorControlNormal"
+        android:fillColor="@color/text_secondary"
         android:pathData="M17,4 L8,12 L17,20 L19.2,17.8 L12.4,11 L19.2,4.2 Z" />
 </vector>

@@ -55,6 +55,6 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:textAppearanceLarge"
             android:textStyle="bold"
-            android:textColor="?android:attr/colorError" />
+            android:textColor="@color/app_error" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
