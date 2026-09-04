@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?attr/colorBackgroundFloating">
+    android:background="?android:attr/colorBackgroundFloating">
 
     <!-- 顶部工具栏：标题 + 排序 / 添加 / 更多 -->
     <LinearLayout
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="?attr/colorSurface"
+        android:background="@color/app_surface"
         android:paddingHorizontal="16dp"
         android:paddingVertical="8dp">
 
@@ -20,14 +20,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textAppearance="?attr/textAppearanceTitleLarge" />
+            android:textAppearance="?android:textAppearanceLarge" />
 
         <ImageButton
             android:id="@+id/btnSort"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_exp_sort"
@@ -38,7 +38,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_exp_add"
@@ -49,7 +49,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_exp_more_vert"
@@ -59,7 +59,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/colorOutline" />
+        android:background="@color/divider" />
 
     <!-- 固定顶部：预算卡 + 统计卡 -->
     <LinearLayout
@@ -118,7 +118,7 @@
                 android:id="@+id/statusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:gravity="center" />
 
             <TextView
@@ -126,7 +126,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textAppearance="?android:textAppearanceSmall"
                 android:gravity="center"
                 android:visibility="gone" />
 

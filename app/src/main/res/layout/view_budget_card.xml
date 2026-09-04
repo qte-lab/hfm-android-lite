@@ -22,14 +22,14 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:src="@drawable/ic_exp_account_balance"
-            app:tint="?attr/colorPrimary" />
+            app:tint="?android:attr/colorAccent" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="@string/budget_enable_title"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textAppearance="?android:textAppearanceMedium"
             android:textStyle="bold" />
 
         <TextView
@@ -38,8 +38,8 @@
             android:layout_marginTop="4dp"
             android:alpha="0.7"
             android:text="@string/budget_enable_description"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            android:textColor="?attr/colorOnSurface" />
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="?android:attr/textColorPrimary" />
 
         <Button
             android:id="@+id/btnEnableBudget"
@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:cardElevation="1dp">
+        app:cardElevation="1dp" app:cardBackgroundColor="@color/app_surface">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -87,7 +87,7 @@
                             android:id="@+id/budgetMonthCollapsed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textAppearance="?android:textAppearanceSmall"
                             android:textStyle="bold" />
 
                         <TextView
@@ -95,7 +95,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textAppearance="?android:textAppearanceSmall"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -111,7 +111,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/budget_monthly_progress"
-                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textAppearance="?android:textAppearanceMedium"
                             android:textStyle="bold" />
 
                         <TextView
@@ -120,7 +120,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:alpha="0.7"
-                            android:textAppearance="?attr/textAppearanceBodySmall" />
+                            android:textAppearance="?android:textAppearanceSmall" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -131,7 +131,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginEnd="4dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/budget_expand"
                     android:padding="8dp"
                     android:scaleType="centerInside"
@@ -141,7 +141,7 @@
                     android:id="@+id/btnBudgetSettings"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/budget_settings"
                     android:padding="8dp"
                     android:scaleType="centerInside"
@@ -155,7 +155,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="@string/expense_budget_loading"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textAppearance="?android:textAppearanceSmall"
                 android:visibility="gone" />
 
             <!-- 详情（可展开） -->
@@ -177,7 +177,7 @@
                         android:id="@+id/budgetCurrentSpending"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                        android:textAppearance="?android:textAppearanceLarge"
                         android:textSize="30sp"
                         android:textStyle="bold" />
 
@@ -187,14 +187,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
                         android:alpha="0.7"
-                        android:textAppearance="?attr/textAppearanceTitleMedium" />
+                        android:textAppearance="?android:textAppearanceMedium" />
 
                     <TextView
                         android:id="@+id/budgetPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
-                        android:textAppearance="?attr/textAppearanceTitleSmall"
+                        android:textAppearance="?android:textAppearanceSmall"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -220,7 +220,7 @@
                         android:id="@+id/budgetAlertTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?attr/textAppearanceTitleSmall"
+                        android:textAppearance="?android:textAppearanceSmall"
                         android:textStyle="bold" />
 
                     <TextView
@@ -229,7 +229,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:alpha="0.85"
-                        android:textAppearance="?attr/textAppearanceBodySmall" />
+                        android:textAppearance="?android:textAppearanceSmall" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -249,14 +249,14 @@
                             android:layout_height="wrap_content"
                             android:alpha="0.7"
                             android:text="@string/budget_daily_average"
-                            android:textAppearance="?attr/textAppearanceBodySmall" />
+                            android:textAppearance="?android:textAppearanceSmall" />
 
                         <TextView
                             android:id="@+id/budgetDailyAverage"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:textAppearance="?attr/textAppearanceTitleSmall"
+                            android:textAppearance="?android:textAppearanceSmall"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -271,14 +271,14 @@
                             android:layout_height="wrap_content"
                             android:alpha="0.7"
                             android:text="@string/budget_recommended_daily"
-                            android:textAppearance="?attr/textAppearanceBodySmall" />
+                            android:textAppearance="?android:textAppearanceSmall" />
 
                         <TextView
                             android:id="@+id/budgetRecommendedDaily"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:textAppearance="?attr/textAppearanceTitleSmall"
+                            android:textAppearance="?android:textAppearanceSmall"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>

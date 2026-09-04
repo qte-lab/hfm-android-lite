@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- 基础应用主题（浅色 + Holo 蓝强调色）。
-         说明：本项目 compileSdk=37，而框架 Theme.Holo.* / Widget.Holo.* 在新版
-         Android 平台的 android.jar 中已被移除，无法作为主题 parent 链接。
-         因此改用 Theme.AppCompat.Light.*（AppCompat 库主题，可正常链接）来复刻
-         “浅色内容 + 深色(蓝)操作栏”的经典 Holo 观感；Holo 蓝 #33B5E5 作为强调色。
-         所有变体（浅色、API 分级）都继承此 Base。 -->
+    <!-- 基础应用主题：原生 Holo 蓝（无 Material/AppCompat 桥接、无自定义组件）。
+         compileSdk 37 下 android:Theme.Holo.Light 可正常 link（Holo 仅在 API 28
+         被 deprecated，从未从框架移除）。强调色 brand_primary #33B5E5 即框架原生
+         colorAccent，深色模式走 values-night/* 资源限定符翻色。 -->
 
-    <!-- 改用 DayNight：浅色模式渲染等价于 Light（观感不变）；系统开启深色模式时，
-         AppCompat 自动深色化 EditText/Spinner/AlertDialog/Checkbox 等基础控件，
-         与 values-night/* 资源（colors/styles）协同生效。 -->
-    <style name="AppTheme.Base" parent="Theme.AppCompat.DayNight.DarkActionBar">
+    <style name="AppTheme.Base" parent="android:Theme.Holo.Light">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
 
-        <!-- Holo 框架原生属性 -->
+        <!-- 全部使用框架原生 Holo 属性 -->
         <item name="android:colorAccent">@color/brand_primary</item>
         <item name="android:colorBackground">@color/app_background</item>
         <item name="android:textColorPrimary">@color/text_primary</item>
@@ -28,60 +23,21 @@
         <item name="android:windowLightStatusBar">@bool/light_system_bars</item>
         <!-- 老旧设备（API < 27）导航栏固定黑色，保证白色系统按钮可见 -->
         <item name="android:navigationBarColor">@android:color/black</item>
-
-        <!-- 兼容桥接：Material/AppCompat 属性，供 ?attr/ 引用解析（映射到 Holo 色板） -->
-        <item name="colorPrimary">@color/brand_primary</item>
-        <item name="colorPrimaryVariant">@color/brand_primary_variant</item>
-        <item name="colorSecondary">@color/brand_secondary</item>
-        <item name="colorSecondaryVariant">@color/brand_secondary_variant</item>
-        <item name="colorOnPrimary">@color/on_primary</item>
-        <item name="colorOnSecondary">@color/on_secondary</item>
-        <item name="colorError">@color/app_error</item>
-        <item name="colorOnError">@color/on_error</item>
-        <item name="colorSurface">@color/app_surface</item>
-        <item name="colorOnSurface">@color/text_primary</item>
-        <!-- 全局默认 CardView 样式：未显式设置 cardBackgroundColor 的卡片统一跟随表面色，
-             修掉深色模式下的“白卡”。已显式设背景（如品牌蓝）的卡片不受影响。 -->
-        <item name="cardViewStyle">@style/HoloCardView</item>
-        <item name="colorOnBackground">@color/text_primary</item>
-        <item name="colorOutline">@color/divider</item>
-
-        <!-- 排版桥接：映射到 AppCompat 文本样式（复刻 Holo 字号层级） -->
-        <item name="textAppearanceTitleLarge">@style/TextAppearance.AppCompat.Large</item>
-        <item name="textAppearanceTitleMedium">@style/TextAppearance.AppCompat.Medium</item>
-        <item name="textAppearanceTitleSmall">@style/TextAppearance.AppCompat.Small</item>
-        <item name="textAppearanceBodyLarge">@style/TextAppearance.AppCompat.Medium</item>
-        <item name="textAppearanceBodyMedium">@style/TextAppearance.AppCompat.Small</item>
-        <item name="textAppearanceBodySmall">@style/TextAppearance.AppCompat.Small</item>
-
-        <!-- 移除 Material 后本地声明的描边按钮属性（见 attrs.xml），映射到等价样式 -->
-        <item name="materialButtonOutlinedStyle">@style/Widget.Holo.OutlinedButton</item>
     </style>
 
-    <!-- Holo 蓝 ActionBar -->
-    <style name="HoloActionBar" parent="Widget.AppCompat.ActionBar.Solid">
+    <!-- Holo 蓝 ActionBar 背景（ActionBar 在本应用各页均被 windowActionBar=false 隐藏，
+         此处仅保留蓝底覆盖；不继承平台 Widget.Holo.ActionBar，避免引用不存在的平台样式）。 -->
+    <style name="HoloActionBar">
         <item name="android:background">@color/brand_primary</item>
-    </style>
-
-    <!-- 描边按钮（替代 Material 的 materialButtonOutlinedStyle）：透明底 + 品牌色描边 + 品牌色文字 -->
-    <style name="Widget.Holo.OutlinedButton" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/btn_outline_background</item>
-        <item name="android:textColor">@color/brand_primary</item>
-    </style>
-
-    <!-- 全局默认卡片：背景跟随表面色（浅色白 / 深色深灰），修掉深色模式“白卡” -->
-    <style name="HoloCardView">
-        <item name="cardBackgroundColor">@color/app_surface</item>
     </style>
 
     <!-- 默认（< API 27）使用的主题：直接继承 AppTheme.Base。
          API 27+ 在 values-v27 中以同名样式覆盖，仅追加导航栏相关项。 -->
     <style name="AppTheme.NoActionBar" parent="AppTheme.Base" />
 
-    <!-- EOL 管理页基础主题（桥接色板集中此处，不含窗口 ActionBar）。
-         供默认/values-v27/values-night-v27 三处 AppTheme.Eol 显式继承，
-         避免无 parent 的限定符样式隐式退化到不存在的 "AppTheme" 父。 -->
-    <style name="AppTheme.EolBase" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <!-- EOL 管理页基础主题（纯原生 Holo，无 AppCompat 命名空间属性）。
+         EolManageActivity 已改为 FragmentActivity，仅用 android: 窗口属性隐藏 ActionBar。 -->
+    <style name="AppTheme.EolBase" parent="android:Theme.Holo.Light">
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
 
@@ -90,32 +46,10 @@
         <item name="android:textColorPrimary">@color/text_primary</item>
         <item name="android:textColorSecondary">@color/text_secondary</item>
         <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:actionBarStyle">@style/HoloActionBar</item>
         <item name="android:statusBarColor">@color/app_surface</item>
         <item name="android:windowLightStatusBar">@bool/light_system_bars</item>
         <item name="android:navigationBarColor">@android:color/black</item>
-
-        <item name="colorPrimary">@color/brand_primary</item>
-        <item name="colorPrimaryVariant">@color/brand_primary_variant</item>
-        <item name="colorSecondary">@color/brand_secondary</item>
-        <item name="colorSecondaryVariant">@color/brand_secondary_variant</item>
-        <item name="colorOnPrimary">@color/on_primary</item>
-        <item name="colorOnSecondary">@color/on_secondary</item>
-        <item name="colorError">@color/app_error</item>
-        <item name="colorOnError">@color/on_error</item>
-        <item name="colorSurface">@color/app_surface</item>
-        <item name="colorOnSurface">@color/text_primary</item>
-        <item name="cardViewStyle">@style/HoloCardView</item>
-        <item name="colorOnBackground">@color/text_primary</item>
-        <item name="colorOutline">@color/divider</item>
-
-        <item name="textAppearanceTitleLarge">@style/TextAppearance.AppCompat.Large</item>
-        <item name="textAppearanceTitleMedium">@style/TextAppearance.AppCompat.Medium</item>
-        <item name="textAppearanceTitleSmall">@style/TextAppearance.AppCompat.Small</item>
-        <item name="textAppearanceBodyLarge">@style/TextAppearance.AppCompat.Medium</item>
-        <item name="textAppearanceBodyMedium">@style/TextAppearance.AppCompat.Small</item>
-        <item name="textAppearanceBodySmall">@style/TextAppearance.AppCompat.Small</item>
-
-        <item name="materialButtonOutlinedStyle">@style/Widget.Holo.OutlinedButton</item>
     </style>
 
     <!-- EOL 管理页主题（默认目录）：显式继承 EolBase，供 EolManageActivity 使用。 -->
@@ -129,16 +63,25 @@
         <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
     </style>
 
-    <!-- 日期选择器主题（浅色，蓝色强调） -->
-    <style name="DatePickerDialogLight" parent="Theme.AppCompat.Light.Dialog">
+    <!-- 日期选择器主题（原生 Holo，蓝色强调） -->
+    <style name="DatePickerDialogLight" parent="android:Theme.Holo.Light.Dialog">
         <item name="android:colorAccent">@color/brand_primary</item>
     </style>
 
-    <style name="DatePickerDialogDark" parent="Theme.AppCompat.Dialog">
+    <style name="DatePickerDialogDark" parent="android:Theme.Holo.Dialog">
         <item name="android:colorAccent">@color/brand_primary</item>
         <item name="android:textColorPrimary">#FFFFFFFF</item>
         <item name="android:textColorSecondary">#FFB0B0B0</item>
         <item name="android:windowBackground">#FF1E1E1E</item>
         <item name="android:colorBackground">#FF1E1E1E</item>
+    </style>
+
+    <!-- 通用对话框主题：继承 AppTheme.Base（含全部原生 Holo 属性），供按需引用。 -->
+    <style name="AppTheme.Dialog" parent="AppTheme.Base">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
     </style>
 </resources>

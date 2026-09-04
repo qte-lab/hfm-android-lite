@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/colorSurface"
+    android:background="@color/app_surface"
     android:fillViewport="true">
 
     <LinearLayout
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="@string/gpc_choose_product"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textAppearance="?android:textAppearanceMedium"
             android:textColor="@color/text_primary" />
 
         <!-- 延长 EOL -->
@@ -29,7 +29,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardBackgroundColor="@color/app_surface"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp">
 
@@ -50,7 +50,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/gpc_product_eol_title"
-                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="@color/text_primary"
                         android:textStyle="bold" />
 
@@ -58,7 +58,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/gpc_price_350"
-                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="@color/holo_blue"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="@string/gpc_product_eol_desc"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textAppearance="?android:textAppearanceSmall"
                     android:textColor="@color/text_secondary" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -81,7 +81,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
-            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardBackgroundColor="@color/app_surface"
             app:cardCornerRadius="12dp"
             app:cardElevation="0dp">
 
@@ -102,7 +102,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/gpc_product_port_title"
-                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="@color/text_primary"
                         android:textStyle="bold" />
 
@@ -110,7 +110,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/gpc_price_custom"
-                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textAppearance="?android:textAppearanceMedium"
                         android:textColor="@color/holo_blue"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -120,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="@string/gpc_product_port_desc"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textAppearance="?android:textAppearanceSmall"
                     android:textColor="@color/text_secondary" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -142,8 +142,8 @@
                 android:inputType="numberDecimal"
                 android:maxLines="1"
                 android:background="@drawable/edittext_bg"
-                android:textColor="?attr/colorOnSurface"
-                android:textColorHint="?attr/colorOutline"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textColorHint="@color/divider"
                 android:padding="10dp" />
 
             <TextView
@@ -151,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:text="@string/gpc_custom_notice"
-                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@color/text_secondary" />
         </LinearLayout>
 
@@ -161,7 +161,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@color/app_error"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textAppearance="?android:textAppearanceSmall"
             android:visibility="gone" />
     </LinearLayout>
 </ScrollView>

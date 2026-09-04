@@ -28,7 +28,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardElevation="2dp">
+                    app:cardElevation="2dp" app:cardBackgroundColor="@color/app_surface">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -72,7 +72,7 @@
                                 android:id="@+id/chartTypeButton"
                                 android:layout_width="48dp"
                                 android:layout_height="48dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:background="?android:attr/selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/select_chart"
                                 android:src="@drawable/ic_chart_type"
                                 android:tint="@color/text_primary" />
@@ -81,7 +81,7 @@
                                 android:id="@+id/dateRangeButton"
                                 android:layout_width="48dp"
                                 android:layout_height="48dp"
-                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:background="?android:attr/selectableItemBackgroundBorderless"
                                 android:contentDescription="@string/select_time_range"
                                 android:src="@drawable/ic_chart_date"
                                 android:tint="@color/text_primary"
@@ -96,7 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardElevation="2dp">
+                    app:cardElevation="2dp" app:cardBackgroundColor="@color/app_surface">
 
                     <LinearLayout
                         android:layout_width="match_parent"

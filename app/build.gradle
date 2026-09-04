@@ -37,8 +37,8 @@ android {
             abiFilters 'arm64-v8a'
         }
         
-        versionCode = 260903
-        versionName = "2026.09.03"
+        versionCode = 260904
+        versionName = "2026.09.04"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         
         aaptOptions {
@@ -99,14 +99,14 @@ dependencies {
     
     // Android Core
     implementation "androidx.core:core-ktx:$androidxCoreVersion"
-    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
-    
-    // ===== 传统 View 体系（XML 迁移目标）=====
-    // Material Components 已移除：原仅用于桥接 colorPrimary/colorSurface/textAppearance* 等属性，
-    // 现已在 styles.xml / attrs.xml 本地声明等价属性与样式（materialButtonOutlinedStyle、Headline6 等），
-    // 所有控件使用框架原生控件，不再依赖 Material 库。
+
+    // ===== 传统 View 体系（纯原生 Holo，无桥接、无自定义组件）=====
+    // Material Components 与 AppCompat 已全部移除：主题直接 parent 原生
+    // android:Theme.Holo.Light / android:Theme.Holo（夜间由 values-night 翻色），
+    // 所有 ?attr/* 引用改为 ?android:attr/* 框架原生属性 / @color/* 本地色板，
+    // 控件均为框架原生控件，不再依赖 Material / AppCompat 库。
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.2'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'

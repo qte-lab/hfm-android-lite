@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="2dp"
-    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardBackgroundColor="@color/app_surface"
     app:cardElevation="1dp">
 
     <LinearLayout
@@ -25,17 +25,17 @@
                 android:id="@+id/expenseType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textAppearance="?android:textAppearanceMedium"
                 android:textStyle="bold"
-                android:textColor="?attr/colorOnSurface" />
+                android:textColor="?android:attr/textColorPrimary" />
 
             <TextView
                 android:id="@+id/expenseRemark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?attr/colorOnSurface"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="?android:attr/textColorPrimary"
                 android:alpha="0.7"
                 android:visibility="gone" />
 
@@ -44,8 +44,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textAppearance="?attr/textAppearanceBodySmall"
-                android:textColor="?attr/colorOnSurface"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="?android:attr/textColorPrimary"
                 android:alpha="0.6" />
         </LinearLayout>
 
@@ -53,8 +53,8 @@
             android:id="@+id/expenseAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceTitleLarge"
+            android:textAppearance="?android:textAppearanceLarge"
             android:textStyle="bold"
-            android:textColor="?attr/colorError" />
+            android:textColor="?android:attr/colorError" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

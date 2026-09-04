@@ -1,4 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 深色模式无需整套覆盖：颜色走 values-night/colors.xml，
-     系统栏图标深浅走 @bool/light_system_bars。此文件保留占位。 -->
-<resources />
+<!-- 深色模式：覆盖主主题为原生 Holo 暗色变体（android:Theme.Holo）。
+     系统开深色模式时自动选中。所有 @color/* 引用走 values-night/colors.xml 翻色；
+     @bool/light_system_bars 在 night 下为 false（状态栏/导航栏用浅色图标）。
+     HoloActionBar 定义于 values/styles.xml，此处直接引用（night 下无需变化：蓝底）。 -->
+<resources>
+
+    <style name="AppTheme.Base" parent="android:Theme.Holo">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <item name="android:colorAccent">@color/brand_primary</item>
+        <item name="android:colorBackground">@color/app_background</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:actionBarStyle">@style/HoloActionBar</item>
+        <item name="android:statusBarColor">@color/app_surface</item>
+        <item name="android:windowLightStatusBar">@bool/light_system_bars</item>
+        <!-- 老旧设备（API < 27）导航栏固定黑色，保证白色系统按钮可见 -->
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+
+    <style name="AppTheme.EolBase" parent="android:Theme.Holo">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <item name="android:colorAccent">@color/brand_primary</item>
+        <item name="android:colorBackground">@color/app_background</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:windowBackground">@color/app_background</item>
+        <item name="android:actionBarStyle">@style/HoloActionBar</item>
+        <item name="android:statusBarColor">@color/app_surface</item>
+        <item name="android:windowLightStatusBar">@bool/light_system_bars</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+
+</resources>

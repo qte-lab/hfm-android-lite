@@ -6,13 +6,13 @@
     android:orientation="vertical"
     android:background="@color/app_background">
 
-    <androidx.appcompat.widget.Toolbar
+    <android.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="?android:attr/actionBarSize"
         android:background="@color/app_surface"
-        app:navigationIcon="?attr/homeAsUpIndicator"
-        app:elevation="3dp">
+        android:navigationIcon="?android:attr/homeAsUpIndicator"
+        android:elevation="3dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -36,7 +36,7 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
         </LinearLayout>
-    </androidx.appcompat.widget.Toolbar>
+    </android.widget.Toolbar>
 
     <FrameLayout
         android:layout_width="match_parent"

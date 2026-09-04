@@ -19,7 +19,7 @@
             android:layout_weight="1"
             android:text="@string/budget_enable_feature"
             android:textAlignment="center"
-            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textAppearance="?android:textAppearanceMedium"
             android:visibility="visible" />
 
         <Switch
@@ -39,7 +39,7 @@
             android:id="@+id/btnLimitMinus"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_exp_remove"
             android:contentDescription="@null" />
 
@@ -58,7 +58,7 @@
             android:id="@+id/btnLimitPlus"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_exp_add"
             android:contentDescription="@null" />
     </LinearLayout>
@@ -74,7 +74,7 @@
             android:id="@+id/btnThresholdMinus"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_exp_remove"
             android:contentDescription="@null" />
 
@@ -93,7 +93,7 @@
             android:id="@+id/btnThresholdPlus"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_exp_add"
             android:contentDescription="@null" />
     </LinearLayout>
@@ -103,7 +103,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textAppearance="?attr/textAppearanceBodySmall"
-        android:textColor="?attr/colorError"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="?android:attr/colorError"
         android:visibility="gone" />
 </LinearLayout>

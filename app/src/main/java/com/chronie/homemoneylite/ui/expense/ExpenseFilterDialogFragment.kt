@@ -59,7 +59,10 @@ class ExpenseFilterDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
         val context = requireContext()
-        val view = LayoutInflater.from(context).inflate(R.layout.dialog_expense_filter, null)
+        // 强制用 AppTheme（原生 Holo 属性）inflate 对话框视图，
+        // 避免 AlertDialog.Builder 套用框架默认对话框主题导致 ?android:attr/ 引用解析异常。
+        val view = LayoutInflater.from(android.view.ContextThemeWrapper(context, R.style.AppTheme_NoActionBar))
+            .inflate(R.layout.dialog_expense_filter, null)
 
         editKeyword = view.findViewById(R.id.editKeyword)
         editMin = view.findViewById(R.id.editMinAmount)

@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?attr/colorSurface">
+    android:background="@color/app_surface">
 
-    <androidx.appcompat.widget.Toolbar
+    <android.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorSurface"
-        app:navigationIcon="@drawable/ic_add_back"
-        app:titleTextColor="@color/text_primary" />
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/app_surface"
+        android:navigationIcon="?android:attr/homeAsUpIndicator"
+        android:titleTextColor="@color/text_primary" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardBackgroundColor="?attr/colorSurface"
+                app:cardBackgroundColor="@color/app_surface"
                 app:cardElevation="0dp"
                 app:cardUseCompatPadding="false">
 
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
-                android:textColor="?attr/colorError"
+                android:textColor="?android:attr/colorError"
                 android:textSize="12sp"
                 android:visibility="gone" />
 

@@ -5,9 +5,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import android.widget.Toolbar
 import androidx.fragment.app.commit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -31,7 +31,7 @@ import javax.inject.Inject
  * 此处拦截并交给共享的 EolManageViewModel 兑换 token 完成绑定。
  */
 @AndroidEntryPoint
-class EolManageActivity : AppCompatActivity() {
+class EolManageActivity : FragmentActivity() {
 
     @Inject
     lateinit var healthCheckService: HealthCheckService
@@ -55,17 +55,20 @@ class EolManageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_eol_manage)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
 
         // 与 Fragment 共享同一 ViewModel 实例（activity 作用域）
         viewModel = ViewModelProvider(this)[EolManageViewModel::class.java]
 
         forcedMode = intent?.getBooleanExtra(EXTRA_FORCED, false) ?: false
 
-        supportActionBar?.apply {
-            setTitle(R.string.eol_manage_title)
+        // 原生 Toolbar（无 AppCompat 委托）：手动设置标题与返回键
+        toolbar.setTitle(R.string.eol_manage_title)
+        if (forcedMode) {
             // 强制模式下隐藏返回箭头，避免用户误以为可退出
-            setDisplayHomeAsUpEnabled(!forcedMode)
+            toolbar.navigationIcon = null
+        } else {
+            toolbar.setNavigationIcon(R.drawable.ic_nav_back)
+            toolbar.setNavigationOnClickListener { handleNavigateUp() }
         }
 
         backCallback = object : OnBackPressedCallback(forcedMode) {
@@ -149,13 +152,12 @@ class EolManageActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
+    private fun handleNavigateUp() {
         if (forcedMode && !canLeave) {
             showForcedHint()
-            return true
+            return
         }
         finish()
-        return true
     }
 
     override fun onDestroy() {

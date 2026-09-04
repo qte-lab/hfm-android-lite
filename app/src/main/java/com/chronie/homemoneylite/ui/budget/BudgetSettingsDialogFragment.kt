@@ -38,7 +38,10 @@ class BudgetSettingsDialogFragment : DialogFragment() {
     @SuppressLint("UseGetLayoutInflater", "UseSwitchCompatOrMaterialCode")
     override fun onCreateDialog(savedInstanceState: Bundle?): android.app.Dialog {
         val context = requireContext()
-        val view = LayoutInflater.from(context).inflate(R.layout.dialog_budget_settings, null)
+        // 强制用 AppTheme（原生 Holo 属性）inflate 对话框视图，
+        // 避免 AlertDialog.Builder 套用框架默认对话框主题导致 ?android:attr/ 引用解析异常。
+        val view = LayoutInflater.from(android.view.ContextThemeWrapper(context, R.style.AppTheme_NoActionBar))
+            .inflate(R.layout.dialog_budget_settings, null)
 
         val switchEnabled = view.findViewById<Switch>(R.id.switchEnabled)
         val editLimit = view.findViewById<EditText>(R.id.editMonthlyLimit)

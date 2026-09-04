@@ -14,6 +14,9 @@
     <!-- 分隔线：白色低透明度（在深色背景上显现为浅色细线） -->
     <color name="divider">#1FFFFFFF</color>
 
+    <!-- 控件按下高亮（ripple），深色模式用浅灰 -->
+    <color name="control_highlight">#40FFFFFF</color>
+
     <!-- EOL 网页端引导卡片：深色背景下提高蓝色底透明度，保证文字可读 -->
     <color name="eol_portal_card_bg">#2E33B5E5</color>
 </resources>

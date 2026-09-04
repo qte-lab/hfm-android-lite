@@ -40,7 +40,11 @@ class GpcProductDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): AlertDialog {
         val context = requireContext()
-        _binding = DialogGpcPaymentBinding.inflate(LayoutInflater.from(context))
+        // 强制用 AppTheme（原生 Holo 属性）inflate 对话框视图，
+        // 避免 AlertDialog.Builder 套用框架默认对话框主题导致 ?android:attr/ 引用解析异常。
+        _binding = DialogGpcPaymentBinding.inflate(
+            LayoutInflater.from(android.view.ContextThemeWrapper(context, R.style.AppTheme_NoActionBar))
+        )
         val b = binding
 
         updateSelectionUI()

@@ -20,13 +20,13 @@
             android:layout_weight="1"
             android:text="@string/expense_list_filter_title"
             android:textAlignment="center"
-            android:textAppearance="?attr/textAppearanceTitleLarge" />
+            android:textAppearance="?android:textAppearanceLarge" />
 
         <ImageButton
             android:id="@+id/btnClose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_exp_close"
             android:contentDescription="@string/cancel" />
     </LinearLayout>
@@ -34,7 +34,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/colorOutline" />
+        android:background="@color/divider" />
 
     <!-- 滚动内容 -->
     <androidx.core.widget.NestedScrollView
@@ -59,7 +59,7 @@
 
             <Button
                 android:id="@+id/btnSelectType"
-                style="?attr/materialButtonOutlinedStyle"
+                style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="39dp"
                 android:layout_marginTop="16dp"
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/expense_list_filter_date_range"
-                android:textAppearance="?attr/textAppearanceTitleSmall" />
+                android:textAppearance="?android:textAppearanceSmall" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -80,7 +80,7 @@
 
                 <Button
                     android:id="@+id/btnStartDate"
-                    style="@style/Widget.Holo.OutlinedButton"
+                    style="?android:attr/buttonStyle"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_weight="1"
@@ -88,7 +88,7 @@
 
                 <Button
                     android:id="@+id/btnEndDate"
-                    style="@style/Widget.Holo.OutlinedButton"
+                    style="?android:attr/buttonStyle"
                     android:layout_width="0dp"
                     android:layout_height="30dp"
                     android:layout_marginStart="8dp"
@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/expense_list_filter_amount_range"
-                android:textAppearance="?attr/textAppearanceTitleSmall" />
+                android:textAppearance="?android:textAppearanceSmall" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -136,7 +136,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?attr/colorOutline" />
+        android:background="@color/divider" />
 
     <!-- 底部按钮 -->
     <LinearLayout
@@ -147,7 +147,7 @@
 
         <Button
             android:id="@+id/btnClear"
-            style="?attr/materialButtonOutlinedStyle"
+            style="?android:attr/buttonStyle"
             android:layout_width="0dp"
             android:layout_height="38dp"
             android:layout_weight="1"

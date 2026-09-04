@@ -111,3 +111,4 @@ app/release/baselineProfiles/1/app-release.dm
 .workbuddy/memory/*.md
 
 node_modules/*
+app/release/
