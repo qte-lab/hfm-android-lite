@@ -100,7 +100,6 @@ dependencies {
     // Android Core
     implementation "androidx.core:core-ktx:$androidxCoreVersion"
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
-    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
 
     // ===== 传统 View 体系（纯原生 Holo，无桥接、无自定义组件）=====
     // Material Components 与 AppCompat 已全部移除：主题直接 parent 原生

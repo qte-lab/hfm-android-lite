@@ -47,7 +47,7 @@
                     android:layout_height="20dp"
                     android:contentDescription="@string/eol_web_portal_card_text"
                     android:src="@drawable/ic_set_chevron"
-                    app:tint="@color/holo_blue" />
+                    android:tint="@color/holo_blue" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

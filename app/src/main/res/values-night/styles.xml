@@ -36,4 +36,9 @@
         <item name="android:navigationBarColor">@android:color/black</item>
     </style>
 
+    <!-- 深色模式启动主题：冷启动直接显示纯黑背景（浅色版见 values/styles.xml）。 -->
+    <style name="AppTheme.NoActionBarLaunch" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
+
 </resources>

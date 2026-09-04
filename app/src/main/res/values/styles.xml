@@ -57,12 +57,11 @@
     <!-- EOL 管理页主题（默认目录）：显式继承 EolBase，供 EolManageActivity 使用。 -->
     <style name="AppTheme.Eol" parent="AppTheme.EolBase" />
 
-    <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
+    <!-- 启动主题：不依赖 core-splashscreen 库。冷启动时直接显示纯色背景
+         （浅色模式=纯白、深色模式=纯黑，见 values-night/styles.xml），
+         避免启动瞬间黑屏闪烁。MainActivity.onCreate 内 setTheme 切回主主题。 -->
+    <style name="AppTheme.NoActionBarLaunch" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 
     <!-- 日期选择器主题（原生 Holo，蓝色强调） -->
