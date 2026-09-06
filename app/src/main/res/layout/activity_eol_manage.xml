@@ -9,7 +9,6 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/brand_primary"
         android:elevation="4dp"
         android:theme="@android:style/ThemeOverlay.Material" />
 
