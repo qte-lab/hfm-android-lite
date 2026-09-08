@@ -1,6 +1,7 @@
 package com.chronie.homemoneylite.ui.eol
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -14,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.chronie.homemoneylite.R
+import com.chronie.homemoneylite.core.common.AppLanguageManager
 import com.chronie.homemoneylite.service.HealthCheckService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -37,6 +39,10 @@ class EolManageActivity : FragmentActivity() {
     lateinit var healthCheckService: HealthCheckService
 
     private lateinit var viewModel: EolManageViewModel
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(AppLanguageManager.wrapContext(newBase))
+    }
 
     /** 是否处于「强制模式」（由服务到期检查跳转而来，必须停留购买） */
     private var forcedMode = false

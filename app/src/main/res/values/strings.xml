@@ -286,4 +286,12 @@
     <string name="eol_port_notice">每个新功能移植需要 500-5000 GPC 不等，下单前请先联系开发团队。2027 年起停止销售。</string>
     <string name="eol_buy_port">去支付（移植）</string>
     <string name="eol_error_amount">请输入有效的金额</string>
+
+    <!-- 语言设置（跟随系统 / 简体中文 / English） -->
+    <string name="language_title">语言</string>
+    <string name="language_desc">选择显示语言</string>
+    <string name="language_dialog_title">选择语言</string>
+    <string name="language_follow_system">跟随系统</string>
+    <string name="language_chinese">简体中文</string>
+    <string name="language_english">English</string>
 </resources>

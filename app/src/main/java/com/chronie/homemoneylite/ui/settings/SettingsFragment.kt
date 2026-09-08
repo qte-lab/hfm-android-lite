@@ -1,5 +1,6 @@
 package com.chronie.homemoneylite.ui.settings
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -11,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.chronie.homemoneylite.R
+import com.chronie.homemoneylite.core.common.AppLanguageManager
 import com.chronie.homemoneylite.databinding.FragmentSettingsBinding
 import com.chronie.homemoneylite.domain.model.SyncStatus
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
@@ -41,6 +43,7 @@ class SettingsFragment : Fragment() {
         setupClickListeners()
         setupObservers()
         setupVersion()
+        setupLanguage()
     }
 
     override fun onDestroyView() {
@@ -53,7 +56,41 @@ class SettingsFragment : Fragment() {
         binding.btnOpenGoldPigCoin.setOnClickListener {
             startActivity(Intent(requireContext(), EolManageActivity::class.java))
         }
+        binding.cardLanguage.setOnClickListener { showLanguageDialog() }
     }
+
+    // region 语言设置
+    private fun setupLanguage() {
+        binding.tvLanguageValue.text = languageLabel(AppLanguageManager.getPreference(requireContext()))
+    }
+
+    private fun languageLabel(tag: String): String = when (tag) {
+        AppLanguageManager.ZH -> getString(R.string.language_chinese)
+        AppLanguageManager.EN -> getString(R.string.language_english)
+        else -> getString(R.string.language_follow_system)
+    }
+
+    private fun showLanguageDialog() {
+        val options = AppLanguageManager.OPTIONS
+        val labels = options.map { languageLabel(it) }.toTypedArray()
+        val current = AppLanguageManager.getPreference(requireContext())
+        val checked = options.indexOf(current).coerceAtLeast(0)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.language_dialog_title)
+            .setSingleChoiceItems(labels, checked) { dialog, which ->
+                val tag = options[which]
+                dialog.dismiss()
+                if (tag != current) {
+                    AppLanguageManager.setLanguage(requireContext(), tag)
+                    // 重建宿主 Activity，attachBaseContext 会用新语言重新包装上下文
+                    activity?.recreate()
+                }
+            }
+            .setNegativeButton(R.string.common_cancel, null)
+            .show()
+    }
+    // endregion
 
         // region 数据观察
     private fun setupObservers() {

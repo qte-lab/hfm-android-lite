@@ -1,9 +1,11 @@
 package com.chronie.homemoneylite
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import com.chronie.homemoneylite.core.common.AppLanguageManager
 import com.chronie.homemoneylite.core.error.ErrorReporter
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
@@ -16,6 +18,11 @@ class HomeMoneyApplication : Application(), Configuration.Provider {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
+
+    // 语言必须在上下文建立前注入，否则首屏资源（含 Activity 标题）会用系统语言解析
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(AppLanguageManager.wrapContext(base))
+    }
 
     override fun onCreate() {
         super.onCreate()

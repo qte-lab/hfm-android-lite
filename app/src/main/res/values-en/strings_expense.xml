@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Expense list / filter / budget strings (English) -->
+<resources>
+    <string name="expense_load_more">Load more</string>
+    <string name="expense_budget_loading">Loading budget…</string>
+    <string name="expense_filter_type_selector_title">Select categories</string>
+</resources>

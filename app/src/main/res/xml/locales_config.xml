@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 13+ 应用级语言（per-app language）可选列表。
+     系统「设置 → 系统 → 语言 → 应用语言」会按此列表展示本应用可用语言。 -->
+<locale-config xmlns:android="http://schemas.android.com/apk/res/android">
+    <locale android:name="zh" />
+    <locale android:name="en" />
+</locale-config>

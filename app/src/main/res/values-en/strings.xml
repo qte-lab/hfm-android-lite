@@ -1,0 +1,293 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Home Ledger Lite</string>
+    <string name="title_activity_main">Home Ledger Lite</string>
+    <string name="package_name">com.chronie.homemoneylite</string>
+    <string name="custom_url_scheme">com.chronie.homemoneylite</string>
+
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="settings_choose_category">Choose a settings category to continue</string>
+    <string name="settings_category_function">Features</string>
+    <string name="settings_category_function_description">Budget &amp; AI</string>
+    <string name="settings_category_data_sync">Data sync</string>
+    <string name="settings_category_data_sync_description">Sync, import &amp; export</string>
+    <string name="api_key_set">Set: %s</string>
+
+    <!-- Web portal entry: link card on top of the EOL service page -->
+    <string name="web_portal_url">http://192.168.10.9:3010</string>
+    <string name="eol_web_portal_card_text">This app has reached EOL. You can switch to an Android 15+ device to keep using it for free, purchase a service extension below, or tap here to use the free web version.</string>
+    <string name="eol_web_portal_open_failed">Unable to open the web version. Please make sure a browser is installed.</string>
+
+    <!-- Common -->
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+
+    <!-- Currency -->
+    <string name="currency_symbol">¥</string>
+    <string name="currency_format" formatted="false">%s%.2f</string>
+    <string name="currency_format_no_decimal" formatted="false">%s%.0f</string>
+
+    <!-- Database test -->
+    <string name="total_amount">Total amount</string>
+    <string name="no_data">No data</string>
+
+    <!-- Sync -->
+    <string name="sync_title">Data sync</string>
+    <string name="sync_status">Sync status</string>
+    <string name="sync_status_idle">Idle</string>
+    <string name="sync_status_syncing">Syncing…</string>
+    <string name="sync_status_success">Success</string>
+    <string name="sync_status_failed">Failed</string>
+    <string name="sync_status_conflict">Conflict</string>
+    <string name="sync_last_time">Last sync</string>
+    <string name="sync_never">Never synced</string>
+    <string name="sync_pending_count">Pending items</string>
+    <string name="sync_manual_trigger">Sync now</string>
+    <string name="sync_syncing">Syncing…</string>
+
+    <!-- Delete confirmation dialog -->
+    <string name="delete_confirm_title">Confirm deletion</string>
+    <string name="delete_confirm_message">Delete this expense record?</string>
+    <string name="delete_second_confirm_title">Confirm delete</string>
+    <string name="delete_second_confirm_message">This cannot be undone. Delete anyway?</string>
+
+    <!-- Expense categories -->
+    <string name="expense_type_daily_goods">Daily necessities</string>
+    <string name="expense_type_luxury">Luxury goods</string>
+    <string name="expense_type_communication">Communication</string>
+    <string name="expense_type_food">Food</string>
+    <string name="expense_type_snacks">Snacks &amp; candy</string>
+    <string name="expense_type_cold_drinks">Cold drinks</string>
+    <string name="expense_type_convenience_food">Instant food</string>
+    <string name="expense_type_textiles">Textiles</string>
+    <string name="expense_type_beverages">Beverages</string>
+    <string name="expense_type_condiments">Condiments</string>
+    <string name="expense_type_transportation">Transportation</string>
+    <string name="expense_type_dining">Dining out</string>
+    <string name="expense_type_medical">Medical</string>
+    <string name="expense_type_fruits">Fruits</string>
+    <string name="expense_type_other">Other</string>
+    <string name="expense_type_seafood">Seafood</string>
+    <string name="expense_type_dairy">Dairy</string>
+    <string name="expense_type_gifts">Gifts &amp; favors</string>
+    <string name="expense_type_travel">Travel</string>
+    <string name="expense_type_government">Government services</string>
+    <string name="expense_type_utilities">Utilities</string>
+    <string name="expense_type_beauty">Beauty &amp; hair</string>
+    <string name="expense_type_bean_products">Soy products</string>
+    <string name="expense_type_cosmetics">Personal care</string>
+    <string name="expense_type_electronics">Electronics</string>
+    <string name="expense_type_household_appliances">Home appliances</string>
+    <string name="expense_type_hardware">Hardware</string>
+    <string name="expense_type_clothing">Clothing</string>
+
+    <!-- Expense list -->
+    <string name="expense_list_title">Expenses</string>
+    <string name="expense_list_empty">No expense records</string>
+    <string name="expense_list_empty_description">Add a record or adjust the filters</string>
+    <string name="expense_list_search_hint">Search remarks…</string>
+    <string name="expense_list_filter_amount_range">Amount range</string>
+    <string name="expense_list_filter_min_amount">Min amount</string>
+    <string name="expense_list_filter_max_amount">Max amount</string>
+    <string name="expense_list_sort">Sort</string>
+    <string name="expense_list_sort_date_desc">Date: newest first</string>
+    <string name="expense_list_sort_date_asc">Date: oldest first</string>
+    <string name="expense_list_sort_amount_desc">Amount: high to low</string>
+    <string name="expense_list_sort_amount_asc">Amount: low to high</string>
+    <string name="expense_list_apply_filters">Apply filters</string>
+    <string name="expense_list_clear_filters">Clear filters</string>
+    <string name="expense_list_filter_title">Filter &amp; search</string>
+    <string name="expense_list_filter_date_range">Date range</string>
+    <string name="expense_list_filter_start_date">Start date</string>
+    <string name="expense_list_filter_end_date">End date</string>
+    <string name="expense_list_filter_all_types">All categories</string>
+    <string name="expense_list_filter_select_types">Select categories</string>
+    <string name="common_search">Search</string>
+    <string name="common_filter">Filter</string>
+
+    <!-- Expense statistics -->
+    <string name="expense_stats_count">Total records</string>
+    <string name="expense_stats_total">Total amount</string>
+    <string name="expense_stats_average">Average</string>
+    <string name="expense_stats_median">Median</string>
+
+    <!-- Common -->
+    <string name="common_loading">Loading…</string>
+    <string name="common_error">Error</string>
+    <string name="common_retry">Retry</string>
+    <string name="common_more_functions">More</string>
+
+    <!-- Add expense -->
+    <string name="add_expense_title">Add expense</string>
+    <string name="add_expense_type_label">Category *</string>
+    <string name="add_expense_type_hint">Select category</string>
+    <string name="add_expense_amount_label">Amount *</string>
+    <string name="add_expense_amount_hint">0.00</string>
+    <string name="add_expense_date_label">Date *</string>
+    <string name="add_expense_remark_label">Remark</string>
+    <string name="add_expense_remark_hint">Enter a remark…</string>
+    <string name="add_expense_save_failed">Save failed: %s</string>
+    <string name="add_expense_validation_type_required">Please select a category</string>
+    <string name="add_expense_validation_amount_required">Please enter an amount</string>
+    <string name="add_expense_validation_amount_invalid">Amount must be greater than 0</string>
+    <string name="add_expense_validation_date_required">Please select a date</string>
+    <string name="edit_expense_title">Edit expense</string>
+
+    <string name="search_category">Search categories…</string>
+    <string name="search_results_count">%d results</string>
+    <string name="no_results_found">No matches found</string>
+    <string name="clear">Clear</string>
+
+    <!-- Budget -->
+    <string name="budget_enable_title">Enable budget management</string>
+    <string name="budget_enable_description">Set a monthly budget and plan your spending</string>
+    <string name="budget_enable_button">Enable budget</string>
+    <string name="budget_enable_feature">Enable budget</string>
+    <string name="budget_monthly_progress">Monthly budget progress</string>
+    <string name="budget_settings">Budget settings</string>
+    <string name="budget_settings_title">Budget settings</string>
+    <string name="budget_monthly_limit">Monthly budget</string>
+    <string name="budget_warning_threshold">Alert threshold (%)</string>
+    <string name="budget_daily_average">Daily average spend</string>
+    <string name="budget_recommended_daily">Recommended daily</string>
+    <string name="budget_expand">Expand</string>
+    <string name="budget_collapse">Collapse</string>
+    <string name="budget_alert_normal_title">Budget OK</string>
+    <string name="budget_alert_normal_message">%1$s remaining, %2$.0f%% available</string>
+    <string name="budget_alert_warning_title">Budget alert</string>
+    <string name="budget_alert_warning_message">%1$s remaining (%2$.0f%%), please watch your spending</string>
+    <string name="common_save">Save</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="budget_alert_over_title">Over budget</string>
+    <string name="budget_alert_over_message">Over by %1$s, please plan your spending</string>
+    <string name="budget_error_invalid_limit">Please enter a valid budget amount</string>
+    <string name="budget_error_invalid_threshold">Alert threshold must be between 0 and 100</string>
+
+    <!-- Charts -->
+    <string name="charts_title">Statistics</string>
+    <string name="statistics_summary">Summary</string>
+    <string name="count">Records</string>
+    <string name="average_amount">Average amount</string>
+    <string name="median_amount">Median amount</string>
+    <string name="trend_chart">Trend chart</string>
+    <string name="daily_amount">Daily amount</string>
+    <string name="category_breakdown">Category breakdown</string>
+    <string name="weekday_analysis">Weekday distribution</string>
+    <string name="records">items</string>
+    <string name="expense_details">Expense details</string>
+    <string name="percentage_of_total">Share of total</string>
+    <string name="select_time_range">Select time range</string>
+    <string name="select_chart">Select chart</string>
+    <string name="select_date">Select date</string>
+    <string name="this_week">This week</string>
+    <string name="this_month">This month</string>
+    <string name="last_month">Last month</string>
+    <string name="this_quarter">This quarter</string>
+    <string name="this_year">This year</string>
+    <string name="custom_range">Custom</string>
+    <string name="start_date">Start date</string>
+    <string name="end_date">End date</string>
+    <string name="custom_range_invalid">Start date cannot be later than end date</string>
+    <string name="retry">Retry</string>
+
+    <!-- Weekdays -->
+    <string name="sunday">Sunday</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday_short">Sun</string>
+    <string name="monday_short">Mon</string>
+    <string name="tuesday_short">Tue</string>
+    <string name="wednesday_short">Wed</string>
+    <string name="thursday_short">Thu</string>
+    <string name="friday_short">Fri</string>
+    <string name="saturday_short">Sat</string>
+
+    <!-- Health check -->
+    <string name="server_connection_error_message">Cannot connect to the server, please check your network</string>
+    <string name="server_connection_restored">Connection restored</string>
+
+    <!-- App EOL notice (Toast / forced page) -->
+    <string name="app_eol_redirect_toast">Service expired. Go to the EOL Service page to purchase an extension.</string>
+    <string name="eol_forced_stay_hint">Service expired. Purchase an extension to continue. Going back is not available.</string>
+
+    <!-- Date formatting -->
+    <string name="date_today">Today</string>
+    <string name="date_yesterday">Yesterday</string>
+    <string name="date_days_ago">%d days ago</string>
+
+    <!-- Gold Pig Coin (GPC) cross-app payment service -->
+    <string name="gpc_service_title">Gold Pig Coin Service</string>
+    <string name="gpc_service_desc">Use Gold Pig Coin (GPC) to buy an extended support period or new feature porting.</string>
+    <string name="gpc_open_payment">Open GPC payment</string>
+
+    <string name="gpc_payment_title">GPC Payment</string>
+    <string name="gpc_choose_product">Select service</string>
+    <string name="gpc_pay_now">Pay now</string>
+
+    <string name="gpc_product_eol_title">Extend EOL support</string>
+    <string name="gpc_product_eol_desc">Monthly subscription that extends this app EOL date. 350 GPC per month.</string>
+    <string name="gpc_price_350">350 GPC/month</string>
+
+    <string name="gpc_product_port_title">New feature porting</string>
+    <string name="gpc_product_port_desc">Port the features you need into this app. The amount is up to you.</string>
+    <string name="gpc_price_custom">Custom</string>
+    <string name="gpc_custom_amount_hint">Amount (GPC)</string>
+    <string name="gpc_custom_notice">Each feature porting costs 500-5000 GPC. Please contact the dev team before ordering.</string>
+
+    <string name="gpc_intent_id_hint">Payment order ID (issued by the server)</string>
+
+    <string name="gpc_payment_password_title">Enter payment password</string>
+    <string name="gpc_payment_password_hint">GPC payment password</string>
+
+    <string name="gpc_error_intent_id_required">Please enter the payment order ID</string>
+    <string name="gpc_error_amount_range">Feature porting amount must be between 500 and 5000 GPC</string>
+    <string name="gpc_error_pw_required">Please enter your payment password</string>
+    <string name="gpc_error_app_not_installed">GPC app not found. Please install gold-pig-coin before paying.</string>
+    <string name="gpc_error_no_browser">No browser available on this device to open the GPC authorization page.</string>
+
+    <string name="gpc_pay_success_title">Payment successful</string>
+    <string name="gpc_pay_success_msg" formatted="false">Paid %.2f GPC. Order ID: %s</string>
+    <string name="gpc_pay_review_title">Payment pending review</string>
+    <string name="gpc_pay_review_msg">%.2f GPC submitted, awaiting admin approval.</string>
+
+    <!-- EOL management page -->
+    <string name="eol_manage_title">EOL Service</string>
+    <string name="eol_current_title">Current expiry date</string>
+    <string name="eol_active_hint">Your support period is active. You can keep using the app.</string>
+    <string name="eol_expired_hint">Service expired. Please purchase an extension to continue.</string>
+    <string name="eol_gpc_account_title">Gold Pig Coin (GPC) account</string>
+    <string name="eol_not_bound">Not authorized with GPC (required before buying an EOL extension)</string>
+    <string name="eol_bound_format">Authorized: %s</string>
+    <string name="eol_bind">Sign in with GPC</string>
+    <string name="eol_unbind">Unbind</string>
+    <string name="eol_bind_hint">GPC user ID (userId)</string>
+    <string name="eol_bind_message">Tap the button below to authorize through the Gold Pig Coin app. Once authorized, this app can query and purchase your EOL extension.</string>
+    <string name="eol_extend_title">Extend EOL support</string>
+    <string name="eol_price_format" formatted="false">Current monthly price: %d GPC/month (%d months, tiered price varies by month)</string>
+    <string name="eol_price_unavailable">EOL extension sales have stopped (from September 2027)</string>
+    <string name="eol_total_format">Total due: %d GPC</string>
+    <string name="eol_buy_extend">Pay (extend)</string>
+    <string name="eol_port_title">New feature porting</string>
+    <string name="eol_port_desc">Port the features you need into this app.</string>
+    <string name="eol_port_amount_hint">Amount (GPC)</string>
+    <string name="eol_port_notice">Each feature porting costs 500-5000 GPC. Please contact the dev team before ordering. Sales stop after 2027.</string>
+    <string name="eol_buy_port">Pay (porting)</string>
+    <string name="eol_error_amount">Please enter a valid amount</string>
+
+    <!-- Language settings -->
+    <string name="language_title">Language</string>
+    <string name="language_desc">Choose the display language</string>
+    <string name="language_dialog_title">Select language</string>
+    <string name="language_follow_system">Follow system</string>
+    <string name="language_chinese">Simplified Chinese</string>
+    <string name="language_english">English</string>
+</resources>

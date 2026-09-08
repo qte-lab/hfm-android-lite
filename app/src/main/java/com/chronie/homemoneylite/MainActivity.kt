@@ -1,8 +1,10 @@
 package com.chronie.homemoneylite
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import com.chronie.homemoneylite.core.common.AppLanguageManager
 import com.chronie.homemoneylite.service.HealthCheckService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -20,6 +22,10 @@ class MainActivity : FragmentActivity() {
 
     @Inject
     lateinit var healthCheckService: HealthCheckService
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(AppLanguageManager.wrapContext(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
