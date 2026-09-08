@@ -223,6 +223,7 @@
     <string name="date_today">Today</string>
     <string name="date_yesterday">Yesterday</string>
     <string name="date_days_ago">%d days ago</string>
+    <string name="date_with_weekday">%1$s (%2$s)</string>
 
     <!-- Gold Pig Coin (GPC) cross-app payment service -->
     <string name="gpc_service_title">Gold Pig Coin Service</string>

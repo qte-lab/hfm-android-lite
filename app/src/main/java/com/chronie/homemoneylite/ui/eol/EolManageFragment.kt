@@ -13,12 +13,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.chronie.homemoneylite.R
+import com.chronie.homemoneylite.ui.expense.formatDateTimeByLocale
 import com.chronie.homemoneylite.core.common.GpcAppUtils
 import com.chronie.homemoneylite.data.remote.GpcOauthConfig
 import com.chronie.homemoneylite.databinding.FragmentEolManageBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
@@ -222,9 +222,5 @@ class EolManageFragment : Fragment() {
         }
     }
 
-    @SuppressLint("SimpleDateFormat")
-    private fun formatDate(epochMs: Long): String {
-        val fmt = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA)
-        return fmt.format(Date(epochMs))
-    }
+    private fun formatDate(epochMs: Long): String = formatDateTimeByLocale(requireContext(), epochMs)
 }

@@ -8,14 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.chronie.homemoneylite.R
 import com.chronie.homemoneylite.databinding.ItemChartCategoryDetailBinding
 import com.chronie.homemoneylite.ui.expense.ExpenseTypeLocalizer
-import java.text.NumberFormat
-import java.util.Locale
 
 /**
  * 星期详情页「分类占比」列表适配器（item_chart_category_detail.xml）。
  */
 class WeekdayDetailAdapter(
-    private val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
+    /** 金额格式化（固定 ¥ 符号，见 CurrencyFormatter） */
+    private val formatAmount: (Double) -> String
 ) : ListAdapter<CategoryChartData, WeekdayDetailAdapter.ViewHolder>(DIFF) {
 
     class ViewHolder(val binding: ItemChartCategoryDetailBinding) :
@@ -36,7 +35,7 @@ class WeekdayDetailAdapter(
         holder.binding.itemProgress.progress = item.percentage.toInt()
         holder.binding.itemCount.text =
             "${item.count} ${holder.itemView.context.getString(R.string.records)}"
-        holder.binding.itemAmount.text = currencyFormat.format(item.amount)
+        holder.binding.itemAmount.text = formatAmount(item.amount)
     }
 
     companion object {

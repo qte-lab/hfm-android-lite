@@ -26,7 +26,9 @@ import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import com.chronie.homemoneylite.ui.common.slideNavOptions
 import com.chronie.homemoneylite.ui.components.showWheelDateRangePicker
 import com.chronie.homemoneylite.ui.expense.ExpenseTypeLocalizer
+import com.chronie.homemoneylite.core.common.CurrencyFormatter
 import com.chronie.homemoneylite.ui.expense.formatDateByLocale
+import com.chronie.homemoneylite.ui.expense.formatMonthDay
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.components.XAxis
@@ -41,10 +43,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 @AndroidEntryPoint
 class ChartsFragment : Fragment() {
@@ -54,9 +54,8 @@ class ChartsFragment : Fragment() {
 
     private val viewModel: ChartsViewModel by viewModels()
 
-    private val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
-
-    private val shortDateFormatter = DateTimeFormatter.ofPattern("MM/dd", Locale.getDefault())
+    /** 金额格式化：符号固定为 ¥（不随语言本地化），数字分组仍随语言习惯 */
+    private val formatAmount: (Double) -> String by lazy { CurrencyFormatter.formatter(requireContext()) }
 
     private var selectedChart = ChartType.TREND
     private var lastSuccess: ChartsUiState.Success? = null
@@ -138,15 +137,15 @@ class ChartsFragment : Fragment() {
         }
         binding.timeRangeTitle.text = getTimeRangeText(requireContext(), viewModel.selectedTimeRange.value)
         binding.timeRangeSubtitle.text =
-            "${formatDateByLocale(currentStartStr)} - ${formatDateByLocale(currentEndStr)}"
+            "${formatDateByLocale(requireContext(), currentStartStr)} - ${formatDateByLocale(requireContext(), currentEndStr)}"
     }
 
     private fun renderSummary(state: ChartsUiState.Success) {
         val s = state.statistics
-        binding.statTotal.text = currencyFormat.format(s.totalAmount)
+        binding.statTotal.text = formatAmount(s.totalAmount)
         binding.statCount.text = "${s.count}"
-        binding.statAverage.text = currencyFormat.format(s.averageAmount)
-        binding.statMedian.text = currencyFormat.format(s.medianAmount)
+        binding.statAverage.text = formatAmount(s.averageAmount)
+        binding.statMedian.text = formatAmount(s.medianAmount)
     }
 
     private fun renderChartSection(state: ChartsUiState.Success) {
@@ -207,7 +206,7 @@ class ChartsFragment : Fragment() {
             xAxis.granularity = 1f
             xAxis.setLabelCount((state.dailyData.size).coerceAtMost(6), false)
             xAxis.valueFormatter = IndexAxisValueFormatter(
-                state.dailyData.map { it.date.format(shortDateFormatter) }
+                state.dailyData.map { formatMonthDay(requireContext(), it.date.toString()) }
             )
 
             val left = chart.axisLeft
@@ -342,7 +341,7 @@ class ChartsFragment : Fragment() {
             itemBinding.catName.text = ExpenseTypeLocalizer.getLocalizedTypeName(requireContext(), category.type)
             itemBinding.catPct.text = String.format("%.1f%%", category.percentage)
             itemBinding.catProgress.progress = category.percentage.toInt()
-            itemBinding.catDetail.text = "${currencyFormat.format(category.amount)} (${category.count} ${getString(R.string.records)})"
+            itemBinding.catDetail.text = "${formatAmount(category.amount)} (${category.count} ${getString(R.string.records)})"
             container.addView(itemBinding.root)
             val spacer = View(requireContext())
             spacer.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(12))
@@ -364,7 +363,7 @@ class ChartsFragment : Fragment() {
                 val itemBinding = ItemChartWeekdayBinding.inflate(layoutInflater)
                 itemBinding.wdName.text = getWeekdayName(requireContext(), wd.dayOfWeek)
                 itemBinding.wdPct.text = String.format("%.1f%%", wd.percentage)
-                itemBinding.wdAmount.text = currencyFormat.format(wd.amount)
+                itemBinding.wdAmount.text = formatAmount(wd.amount)
                 // 点击整行进入星期详情
                 itemBinding.root.setOnClickListener { navigateToWeekdayDetail(wd) }
                 itemBinding.root.isClickable = true
@@ -439,7 +438,7 @@ class ChartsFragment : Fragment() {
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
 
     private fun currencyAxisFormatter(): ValueFormatter = object : ValueFormatter() {
-        override fun getFormattedValue(value: Float): String = currencyFormat.format(value.toDouble())
+        override fun getFormattedValue(value: Float): String = formatAmount(value.toDouble())
     }
 
     private fun getTimeRangeText(context: android.content.Context, timeRange: TimeRange): String {

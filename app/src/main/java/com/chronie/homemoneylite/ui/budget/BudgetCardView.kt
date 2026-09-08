@@ -123,7 +123,7 @@ class BudgetCardView @JvmOverloads constructor(
         }
 
         val symbol = context.getString(R.string.currency_symbol)
-        val monthLabel = formatMonthLabelByLocale(usage.currentMonth + "-01")
+        val monthLabel = formatMonthLabelByLocale(context, usage.currentMonth + "-01")
         val pct = usage.spendingPercentage
 
         monthCollapsed.text = monthLabel

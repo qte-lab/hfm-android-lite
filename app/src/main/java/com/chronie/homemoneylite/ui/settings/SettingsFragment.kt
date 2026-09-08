@@ -137,7 +137,7 @@ class SettingsFragment : Fragment() {
             val parts = value.split(' ')
             val datePart = parts.getOrNull(0) ?: value
             val timePart = if (parts.size > 1) parts[1] else ""
-            val formatted = formatDateByLocale(datePart)
+            val formatted = formatDateByLocale(requireContext(), datePart)
             if (timePart.isNotEmpty()) "$formatted $timePart" else formatted
         } catch (_: Exception) {
             value

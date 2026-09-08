@@ -9,11 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.chronie.homemoneylite.R
+import com.chronie.homemoneylite.core.common.CurrencyFormatter
 import com.chronie.homemoneylite.databinding.FragmentWeekdayDetailBinding
 import com.chronie.homemoneylite.ui.common.collectWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.NumberFormat
-import java.util.Locale
 
 @AndroidEntryPoint
 class WeekdayDetailFragment : Fragment() {
@@ -23,8 +22,9 @@ class WeekdayDetailFragment : Fragment() {
 
     private val viewModel: WeekdayDetailViewModel by viewModels()
 
-    private val currencyFormat: NumberFormat = NumberFormat.getCurrencyInstance(Locale.getDefault())
-    private val adapter = WeekdayDetailAdapter(currencyFormat)
+    /** 金额格式化：符号固定为 ¥，不随语言本地化 */
+    private val formatAmount: (Double) -> String by lazy { CurrencyFormatter.formatter(requireContext()) }
+    private val adapter by lazy { WeekdayDetailAdapter(formatAmount) }
 
     // 说明：导航传入的 arguments 会由默认的 SavedStateViewModelFactory 自动填充进
     // WeekdayDetailViewModel 的 SavedStateHandle（dayOfWeek/startDate/endDate），无需手动写入。
@@ -45,7 +45,7 @@ class WeekdayDetailFragment : Fragment() {
         binding.titleText.text = getWeekdayName(requireContext(), dayOfWeek)
         binding.subtitleText.setText(R.string.expense_details)
 
-        binding.headerTotal.text = currencyFormat.format(
+        binding.headerTotal.text = formatAmount(
             requireArguments().getFloat("amount", 0f).toDouble()
         )
         binding.headerCount.text = "${requireArguments().getInt("count", 0)} ${getString(R.string.records)}"

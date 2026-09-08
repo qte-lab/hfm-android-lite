@@ -146,7 +146,7 @@ class ExpenseListAdapter(
             } else {
                 binding.expenseRemark.visibility = android.view.View.GONE
             }
-            binding.expenseDate.text = formatDateByLocale(expense.date)
+            binding.expenseDate.text = formatDateByLocale(context, expense.date)
             binding.expenseAmount.text = "-" + currency(expense.amount)
 
             binding.root.setOnClickListener { onItemClick?.invoke(expense) }
